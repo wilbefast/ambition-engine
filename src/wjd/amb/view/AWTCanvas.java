@@ -85,12 +85,6 @@ public class AWTCanvas extends JPanel implements ICanvas
   private Rect tmpRect = new Rect();
 
   /* METHODS */
-  // query
-  @Override
-  public boolean isCameraActive()
-  {
-    return use_camera;
-  }
     
   // creation
   /**
@@ -103,6 +97,13 @@ public class AWTCanvas extends JPanel implements ICanvas
   
   /* IMPLEMENTATIONS -- ICANVAS */
   
+  // query
+  @Override
+  public boolean isCameraActive()
+  {
+    return use_camera;
+  }
+  
   // modify the canvas itself
   @Override
   public ICanvas setSize(V2 size)
@@ -111,7 +112,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     this.size = size;
     
     // reset camera
-    camera.setCanvasSize(size);
+    if(use_camera)
+      camera.setCanvasSize(size);
     
     return this;
   }

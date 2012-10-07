@@ -127,6 +127,7 @@ public class AWTWindow extends JFrame implements IWindow
     this.scene = scene;
     // view
     awtCanvas = new AWTCanvas();
+    awtCanvas.setSize(size);
     setContentPane(awtCanvas);
     // control
     awtInput = AWTInput.getInstance();

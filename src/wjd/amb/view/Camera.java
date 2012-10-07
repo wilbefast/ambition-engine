@@ -214,7 +214,7 @@ public class Camera implements IInteractive
   { 
     V2 target_true = getGlobal(target);
     V2 target_relative = new V2(canvas_size.x() / target.x(),
-      canvas_size.y() / target.y());
+                                canvas_size.y() / target.y());
 
     // reset zoom counter, don't zoom too much
     zoom += delta * zoom;

@@ -141,7 +141,7 @@ public class GLCanvas implements ICanvas
   public ICanvas setColour(Colour colour)
   {
     slickColour = new Color(colour.r, colour.g, colour.b, colour.a);
-    glColor3f(colour.r, colour.b, colour.g);
+    glColor3f(colour.r, colour.g, colour.b);
     return this;
   }
 
@@ -192,6 +192,7 @@ public class GLCanvas implements ICanvas
   public void circle(V2 centre, float radius)
   {
     // move based on camera position where applicable
+    radius *= camera.getZoom();
     tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
     
     // draw the circle
