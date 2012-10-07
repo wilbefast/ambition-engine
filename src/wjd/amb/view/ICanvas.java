@@ -14,9 +14,9 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package wjd.amb.view;
 
+import wjd.amb.control.IInteractive;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -27,9 +27,44 @@ import wjd.math.V2;
  * @author wdyce
  * @since Aug 1, 2012
  */
-public interface ICanvas
+public interface ICanvas extends IInteractive
 {
-  // setup functions
+  // query
+  /**
+   * Does this canvas draw shapes relative to a Camera view.
+   * 
+   * @return true if the camera is active, false otherwise.
+   */
+  public boolean isCameraActive();
+  
+  
+  // modify the canvas itself
+  /**
+   * The size of the canvas container has changed: update the size of the canvas
+   * to make up for this.
+   *
+   * @param size the new size of the canvas.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas setSize(V2 size);
+
+  /**
+   * The Camera defines what part of the Scene is viewed by the Canvas.
+   *
+   * @param camera the new Camera to be used.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas setCamera(Camera camera);
+  
+  /**
+   * The Camera defines what part of the Scene is viewed by the Canvas.
+   *
+   * @param camera the new Camera to be used.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas createCamera(Rect boundary);
+
+  // modify the paintbrush state
   /**
    * Set the Colour to be applied to all future drawing operations.
    *
@@ -53,14 +88,20 @@ public interface ICanvas
    * @return a reference to this, so multiple operations can be queued.
    */
   public ICanvas setFont(Object font);
+  
+  /** We'll want to turn off the Camera for GUI elements.
+   * 
+   * @param use_camera true to use the camera, false to not use it.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas toggleCamera(boolean use_camera);
 
   // drawing functions
-  
   /**
    * Clear the screen.
    */
   public void clear();
-  
+
   /**
    * Draw a circle outline around the specified position, using the given
    * radius.

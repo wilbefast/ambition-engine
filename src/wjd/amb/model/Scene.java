@@ -21,8 +21,6 @@ import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
 import wjd.amb.control.IInteractive;
 import wjd.amb.view.IVisible;
-import wjd.amb.window.IWindow;
-import wjd.math.V2;
 
 /**
  * The Scene is the content that is display by the Window: it is possible to
@@ -38,18 +36,8 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
    * The Scene to switch to after this one.
    */
   protected Scene next = null;
-  protected IWindow window;
 
   /* METHODS */
-  
-  /** Create a Scene within a given Window.
-   * 
-   * @param window the scene's container
-   */
-  public Scene(IWindow window)
-  {
-    this.window = window;
-  }
   
   /**
    * It's time to switch to a new Scene, but which?
@@ -63,24 +51,15 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
   }
 
   /* ABSTRACT METHODS */
-  /**
-   * The Window size has change, and the scene may want to do something about
-   * this!
-   *
-   * @param new_size the new vector size of the Windows.
-   */
-  public abstract void processWindowResize(V2 new_size);
 
   /**
    * Process the static part of the input, that is the key- and mouse-button
    * states, not the state-change events.
    *
    * @param input the IInput object containing key-states.
-   * @param window_size the size of the window for use with mouse coordinates.
    * @return
    */
-  public abstract EUpdateResult processStaticInput(IInput input,
-                                                   V2 window_size);
+  public abstract EUpdateResult processStaticInput(IInput input);
 
   /**
    * Treat a single KeyPress event.
@@ -100,7 +79,7 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
 
   /* IMPLEMENTATIONS -- IINTERACTIVE */
   @Override
-  public final EUpdateResult processInput(IInput input, V2 window_size)
+  public final EUpdateResult processInput(IInput input)
   {
     IInput.Event e;
     while ((e = input.pollEvents()) != null)
@@ -120,6 +99,6 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
       }
 
     // all the events are dealt with, now there's just the static state
-    return processStaticInput(input, window_size);
+    return processStaticInput(input);
   }
 }

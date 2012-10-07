@@ -22,10 +22,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
 import wjd.amb.control.AWTInput;
-import wjd.amb.control.EUpdateResult;
-import wjd.math.V2;
+import wjd.amb.control.IInput;
 import wjd.amb.model.Scene;
 import wjd.amb.view.AWTCanvas;
+import wjd.amb.view.ICanvas;
+import wjd.math.V2;
 
 /** 
  * Application using IWindow AWT: only use this version if your computer does not 
@@ -44,11 +45,36 @@ public class AWTWindow extends JFrame implements IWindow
   // model
   private Scene scene;
   // view
-  private AWTCanvas canvas;
+  private AWTCanvas awtCanvas;
   // control
-  private AWTInput input;
+  private AWTInput awtInput;
 
-  /* METHODS */
+  /* IMPLEMENTATION -- IWINDOW */
+  
+  @Override
+  public Scene getCurrentScene()
+  {
+    return scene;
+  }
+
+  @Override
+  public ICanvas getCanvas()
+  {
+    return awtCanvas;
+  }
+  
+  @Override
+  public IInput getInput()
+  {
+    return awtInput;
+  }
+  
+  @Override
+  public IWindow setScene(Scene scene)
+  {
+    this.scene = scene;
+    return this;
+  }
   
   /**
    * How big is the Window?
@@ -100,66 +126,47 @@ public class AWTWindow extends JFrame implements IWindow
     // model 
     this.scene = scene;
     // view
-    canvas = new AWTCanvas();
-    setContentPane(canvas);
+    awtCanvas = new AWTCanvas();
+    setContentPane(awtCanvas);
     // control
-    input = AWTInput.getInstance();
-    addKeyListener(input);
-    addMouseListener(input);
-    addMouseMotionListener(input);
-    addMouseWheelListener(input);
+    awtInput = AWTInput.getInstance();
+    addKeyListener(awtInput);
+    addMouseListener(awtInput);
+    addMouseMotionListener(awtInput);
+    addMouseWheelListener(awtInput);
     // This should always be last
     setVisible(true);
   }
-
-  /**
-   * Launch the application and run until some event interrupts its execution.
-   */
+  
   @Override
-  public void run()
+  public void destroy()
   {
-    // Run until told to stop
-    boolean running = true;
-    while(running)
-    {
-      // update
-      if(scene.processInput(input, size)  == EUpdateResult.STOP
-        || scene.update(TimeManager.getDelta(timeNow())) == EUpdateResult.STOP)
-      {
-          // change to new Scene if a new one if offered
-          Scene next = scene.getNext();
-          if(next != null)
-            scene = next;
-          // exit otherwise
-          else
-            running = false;
-      }
-      // queue rendering
-      scene.render(canvas, null); // use the Scene's own camera where applicable
-      repaint();
-
-      // Catch exceptions
-      try
-      {
-        // Leave some time for other threads
-        Thread.sleep(1000/MAX_FPS);
-      } 
-      catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
-    }
-
-    // End of the loop : close the window
+    // close the window
     WindowEvent e = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(e);
   }
   
+  @Override
+  public void refreshDisplay()
+  {
+    // queue rendering
+    scene.render(awtCanvas);
+    repaint();
+  }
+  
   /**
-   * Clean up anything we might have allocated.
+   * Leave some time for other processes.
    */
   @Override
-  public void destroy()
+  public void sleep()
   {
+    try
+    {
+      Thread.sleep(1000/MAX_FPS);
+    } 
+    catch (InterruptedException e)
+    {
+      // do nothing
+    }
   }
 }

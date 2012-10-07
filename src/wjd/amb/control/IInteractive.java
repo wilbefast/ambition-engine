@@ -16,8 +16,6 @@
  */
 package wjd.amb.control;
 
-import wjd.math.V2;
-
 /**
  * @author wdyce
  * @since 01-Oct-2012
@@ -30,11 +28,9 @@ public interface IInteractive
    *
    * @param input the input state object, containing the key- and mouse-button 
    * states.
-   * @param window_size this is required if we're take make any sense of the
-   * mouse position data.
    * @return a value indicating the result of the update, generally <a
    * href="EUpdateResult#CONTINUE">CONTINUE</a> if nothing out of the ordinary
    * has happened.
    */
-  public EUpdateResult processInput(IInput input, V2 window_size);
+  public EUpdateResult processInput(IInput input);
 }

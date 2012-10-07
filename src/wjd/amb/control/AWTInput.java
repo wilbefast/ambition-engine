@@ -133,6 +133,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public int getMouseWheelDelta()
   {
+    if(mouse.last_scroll != 0)
+      System.out.println("mouse.last_scroll = " + -mouse.last_scroll );
     int delta = (int)(mouse.last_scroll * Mouse.WHEEL_DELTA_MULTIPLIER);
     mouse.last_scroll = 0.0;
     return delta;
@@ -171,7 +173,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   }
 
   @Override
-  public V2 getMousePosition(V2 window_size)
+  public V2 getMousePosition()
   {
     return mouse.position;
   }

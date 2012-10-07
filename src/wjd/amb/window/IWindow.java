@@ -16,8 +16,10 @@
  */
 package wjd.amb.window;
 
-import wjd.math.V2;
+import wjd.amb.control.IInput;
 import wjd.amb.model.Scene;
+import wjd.amb.view.ICanvas;
+import wjd.math.V2;
 
 /**
  * @author wdyce
@@ -25,30 +27,35 @@ import wjd.amb.model.Scene;
  */
 public interface IWindow
 {
-  /* NESTING */
-  public abstract class TimeManager
-  {
-    // attributes
-    private static long t_previous = -1; // -1 => uninitialised
-
-    /**
-     * Return the amount of time since the method was last called.
-     *
-     * @param t_now the current system time in milliseconds.
-     * @return the current time in milliseconds since this method was last
-     * called, or 0 the first time the method is called.
-     */
-    public static int getDelta(long t_now)
-    {
-      int t_delta = (t_previous < 0) ? 0 : (int) (t_now - t_previous);
-      t_previous = t_now;
-      return t_delta;
-    }
-  }
   /* CONSTANTS */
   public static final int MAX_FPS = 60;
-
+  
   /* ACCESSORS */
+  
+  /** Get the current Scene.
+   * 
+   * @return the Scene that this Window is currently displaying.
+   */
+  public Scene getCurrentScene();
+  
+  /** Get the Canvas object.
+   * 
+   * @return the Canvas object this Window uses.
+   */
+  public ICanvas getCanvas();
+  
+  /** Get the Input object.
+   * 
+   * @return the Input object this Window uses.
+   */
+  public IInput getInput();
+  
+  /** Change to a new Scene.
+   * 
+   * @return reference to this IWindow so multiple messages can be queued.
+   */
+  public IWindow setScene(Scene scene);
+  
   /**
    * How big is the Window?
    *
@@ -77,12 +84,17 @@ public interface IWindow
   public void create(String name, V2 size, Scene scene) throws Exception;
 
   /**
-   * Launch the application and run until some event interrupts its execution.
-   */
-  public abstract void run();
-
-  /**
-   * Clean up anything we might have allocated.
+   * Clean up anything we might have allocated and close the Window.
    */
   public void destroy();
+  
+  /**
+   * Redraw the contents of the screen.
+   */
+  public void refreshDisplay();
+  
+  /**
+   * Leave some time for other processes.
+   */
+  public void sleep();
 }

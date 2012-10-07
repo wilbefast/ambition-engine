@@ -29,6 +29,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
+import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IInput;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -67,11 +69,29 @@ public class AWTCanvas extends JPanel implements ICanvas
     public Object font;
     public FontChange(Object font) { this.font = font; }
   }
+  private static class ToggleCamera
+  {
+    public boolean active;
+    public ToggleCamera(boolean active) { this.active = active; }
+  }
   
   /* ATTRIBUTES */
   private Queue<Object> draw_queue;
+  private Camera camera = null;
+  private V2 size = new V2();
+  private boolean use_camera = false;
+  // temporary objects, to avoid to many calls to 'new'
+  private V2 tmpV2a = new V2(), tmpV2b = new V2();
+  private Rect tmpRect = new Rect();
 
   /* METHODS */
+  // query
+  @Override
+  public boolean isCameraActive()
+  {
+    return use_camera;
+  }
+    
   // creation
   /**
    * Create the JPanel.
@@ -80,8 +100,43 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     draw_queue = new LinkedList<Object>();
   }
+  
+  /* IMPLEMENTATIONS -- ICANVAS */
+  
+  // modify the canvas itself
+  @Override
+  public ICanvas setSize(V2 size)
+  {
+    // reset size
+    this.size = size;
+    
+    // reset camera
+    camera.setCanvasSize(size);
+    
+    return this;
+  }
+  
+  @Override
+  public ICanvas setCamera(Camera camera)
+  {
+    this.camera = camera;
+    
+    // maintain invariant: (camera == null) => use_camera = false
+    if(!use_camera && camera != null)
+      use_camera = true;
+    else if(camera == null)
+      use_camera = false;
+    
+    return this;
+  }
+  
+  @Override
+  public ICanvas createCamera(Rect boundary)
+  {
+    return setCamera(new Camera(size, boundary));
+  }
 
-  // setup functions
+  // modify the paintbrush state
   @Override
   public ICanvas setColour(Colour colour)
   {
@@ -100,6 +155,13 @@ public class AWTCanvas extends JPanel implements ICanvas
   public ICanvas setFont(Object new_font)
   {
     draw_queue.add(new FontChange(new_font));
+    return this;
+  }
+  
+  @Override
+  public ICanvas toggleCamera(boolean use_camera)
+  {
+    draw_queue.add(new ToggleCamera(use_camera));
     return this;
   }
 
@@ -124,7 +186,10 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
-    draw_queue.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
+    
+    draw_queue.add(new Ellipse2D.Float(tmpV2a.x(), tmpV2a.y(), radius*2, radius*2));
   }
 
   /**
@@ -136,7 +201,12 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void line(V2 start, V2 end)
   {
-    draw_queue.add(new Line2D.Float(start.x(), start.y(), end.x(), end.y()));
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
+    tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
+    
+    draw_queue.add(new Line2D.Float(tmpV2a.x(), tmpV2a.y(), 
+                                    tmpV2b.x(), tmpV2b.y()));
   }
 
   /**
@@ -147,7 +217,11 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void box(Rect rect)
   {
-    draw_queue.add(new Rectangle2D.Float(rect.x(), rect.y(), rect.w(), rect.h()));
+    // move based on camera position where applicable
+    tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
+    
+    draw_queue.add(new Rectangle2D.Float(tmpRect.x(), tmpRect.y(), 
+                                          tmpRect.w(), tmpRect.h()));
   }
 
   /**
@@ -159,7 +233,10 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void text(String string, V2 position)
   {
-    draw_queue.add(new DrawText(string, position));
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
+    
+    draw_queue.add(new DrawText(string, tmpV2a));
   }
   
   @Override
@@ -201,9 +278,24 @@ public class AWTCanvas extends JPanel implements ICanvas
         else
           System.out.println("Incorrect font type " + new_font);
       }
+      // activate or deactivate camera
+      else if(command instanceof ToggleCamera)
+      {
+      // maintain invariant: (camera == null) => use_camera = false
+      if(!use_camera || camera != null)
+        this.use_camera = ((ToggleCamera)command).active;
+      }
       // unknown or unsupported command
       else
         System.out.println("Unrecognized command type " + command);
     }
+  }
+  
+  /* IMPLEMENTATION -- IINTERACTIVE */
+
+  @Override
+  public EUpdateResult processInput(IInput input)
+  {
+    return (use_camera) ? camera.processInput(input) : EUpdateResult.CONTINUE;
   }
 }

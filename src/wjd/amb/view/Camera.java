@@ -97,8 +97,20 @@ public class Camera implements IInteractive
    */
   public V2 getPerspective(V2 position)
   {
-    return new V2((position.x() - view.x()) * zoom, (position.y() - view.y())
-      * zoom);
+    return new V2((position.x() - view.x()) * zoom, (position.y() - view.y()) * zoom);
+  }
+
+  /**
+   * Convert a rectangle relative to the world origin (for instance, an agent's
+   * hit-box) into a rectangle relative to the view.
+   *
+   * @param rect the rectangle to convert.
+   * @return a new vector position corresponding to a new version of the  
+   * rectangle relative to the view.
+   */
+  public Rect getPerspective(Rect rect)
+  {
+    return new Rect(getPerspective(rect.pos()), rect.size().clone().scale(zoom));
   }
 
   /**
@@ -113,6 +125,19 @@ public class Camera implements IInteractive
   {
     return new V2(position.x() / zoom + view.x(), position.y() / zoom + view.y());
   }
+  
+  /**
+   * Convert a position relative to the view (for instance, the position of the
+   * mouse cursor) into a position relative to the world origin.
+   *
+   * @param position the vector position to convert.
+   * @return a new vector position corresponding to the absolute position of the
+   * specified point.
+   */
+  public Rect getGlobal(Rect rect)
+  {
+    return new Rect(getGlobal(rect.pos()), rect.size().clone().scale(1/zoom));
+  }
 
   /**
    * Return true if the specified position is in view, false if not.
@@ -121,7 +146,7 @@ public class Camera implements IInteractive
    * the Window.
    * @return true if the position is inside the view Rectangle.
    */
-  public boolean containsPoint(V2 position)
+  public boolean canSee(V2 position)
   {
     return view.contains(position);
   }
@@ -186,7 +211,7 @@ public class Camera implements IInteractive
    * @param target vector position on the screen to move towards or away from.
    */
   public void zoom(float delta, V2 target)
-  {
+  { 
     V2 target_true = getGlobal(target);
     V2 target_relative = new V2(canvas_size.x() / target.x(),
       canvas_size.y() / target.y());
@@ -210,13 +235,13 @@ public class Camera implements IInteractive
   
   /* IMPLEMENTATIONS */
   @Override
-  public EUpdateResult processInput(IInput input, V2 window_size)
+  public EUpdateResult processInput(IInput input)
   {
     EUpdateResult result = processKeyboard(input);
     if(result != EUpdateResult.CONTINUE)
       return result;
     else
-      return processMouse(input, window_size);
+      return processMouse(input);
     
   }
 
@@ -263,10 +288,10 @@ public class Camera implements IInteractive
     return EUpdateResult.CONTINUE;
   }
   
-  private EUpdateResult processMouse(IInput input, V2 window_size)
+  private EUpdateResult processMouse(IInput input)
   {
     // mouse position
-    V2 mouse_pos = input.getMousePosition(window_size); 
+    V2 mouse_pos = input.getMousePosition(); 
 
     // mouse near edges = pan
     /*V2 scroll_dir = new V2();

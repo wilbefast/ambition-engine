@@ -17,9 +17,12 @@
 package wjd.amb.view;
 
 import java.awt.Font;
+import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IInput;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -47,6 +50,12 @@ public class GLCanvas implements ICanvas
   /* ATTRIBUTES */
   private org.newdawn.slick.Color slickColour = Color.black;
   private TrueTypeFont font;
+  private boolean use_camera;
+  private Camera camera;
+  private V2 size = new V2();
+  // temporary objects, to avoid to many calls to 'new'
+  private V2 tmpV2a = new V2(), tmpV2b = new V2();
+  private Rect tmpRect = new Rect();
 
   /* METHODS */
   // creation
@@ -71,8 +80,63 @@ public class GLCanvas implements ICanvas
     // load a default font
     font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
   }
-
-  // setup functions
+  
+  /* IMPLEMENTATION -- ICANVAS */
+  
+  // query
+  @Override
+  public boolean isCameraActive()
+  {
+    return use_camera;
+  }
+  
+  // modify the canvas itself
+  @Override
+  public ICanvas setSize(V2 size)
+  {
+    // reset size
+    this.size = size;
+    
+    // reset camera
+    if(use_camera)
+      camera.setCanvasSize(size);
+    
+    //Here we are using a 2D Scene
+    glViewport(0, 0, (int)size.x(), (int)size.y());
+    // projection
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, size.x(), size.y(), 0, -1, 1);
+    glPushMatrix();
+    // model view
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glPushMatrix();
+    
+    return this;
+  }
+  
+  @Override
+  public ICanvas setCamera(Camera camera)
+  {
+    this.camera = camera;
+    
+    // maintain invariant: (camera == null) => use_camera = false
+    if(!use_camera && camera != null)
+      use_camera = true;
+    else if(camera == null)
+      use_camera = false;
+    
+    return this;
+  }
+  
+  @Override
+  public ICanvas createCamera(Rect boundary)
+  {
+    return setCamera(new Camera(size, boundary));
+  }
+  
+  // modify the paintbrush state
   @Override
   public ICanvas setColour(Colour colour)
   {
@@ -93,6 +157,16 @@ public class GLCanvas implements ICanvas
   {
     if (new_font instanceof TrueTypeFont)
       font = (TrueTypeFont) new_font;
+    return this;
+  }
+  
+  @Override
+  public ICanvas toggleCamera(boolean use_camera)
+  {
+    // maintain invariant: (camera == null) => use_camera = false
+    if(!use_camera || camera != null)
+      this.use_camera = use_camera;
+    
     return this;
   }
 
@@ -117,14 +191,18 @@ public class GLCanvas implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
+    
+    // draw the circle
     int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(centre.x(), centre.y());
+    glVertex2f(tmpV2a.x(), tmpV2a.y());
     for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
     {
       double rad = deg * Math.PI / 180;
-      glVertex2f((float) (centre.x() + Math.cos(rad) * radius),
-        (float) (centre.y() + Math.sin(rad) * radius));
+      glVertex2f((float) (tmpV2a.x() + Math.cos(rad) * radius),
+        (float) (tmpV2a.y() + Math.sin(rad) * radius));
     }
     glEnd();
   }
@@ -138,9 +216,13 @@ public class GLCanvas implements ICanvas
   @Override
   public void line(V2 start, V2 end)
   {
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
+    tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
+    
     glBegin(GL_LINES);
-      glVertex2d(start.x(), start.y());
-      glVertex2d(end.x(), end.y());
+      glVertex2d(tmpV2a.x(), tmpV2a.y());
+      glVertex2d(tmpV2b.x(), tmpV2b.y());
     glEnd();
   }
 
@@ -152,11 +234,14 @@ public class GLCanvas implements ICanvas
   @Override
   public void box(Rect rect)
   {
+    // move based on camera position where applicable
+    tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
+    
     glBegin(GL_QUADS);
-      glVertex2f(rect.x(), rect.y());
-      glVertex2f(rect.x() + rect.w(), rect.y());
-      glVertex2f(rect.x() + rect.w(), rect.y() + rect.h());
-      glVertex2f(rect.x(), rect.y() + rect.h());
+      glVertex2f(tmpRect.x(), tmpRect.y());
+      glVertex2f(tmpRect.x() + tmpRect.w(), tmpRect.y());
+      glVertex2f(tmpRect.x() + tmpRect.w(), tmpRect.y() + tmpRect.h());
+      glVertex2f(tmpRect.x(), tmpRect.y() + tmpRect.h());
     glEnd();
   }
 
@@ -169,8 +254,26 @@ public class GLCanvas implements ICanvas
   @Override
   public void text(String string, V2 position)
   {
+    // move based on camera position where applicable
+    tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
+    
     glEnable(GL_BLEND);
-    font.drawString(position.x(), position.y(), string, slickColour);
+    font.drawString(tmpV2a.x(), tmpV2a.y(), string, slickColour);
     glDisable(GL_BLEND);
+  }
+  
+  /* IMPLEMENTATION -- IINTERACTIVE */
+
+  @Override
+  public EUpdateResult processInput(IInput input)
+  {
+    // check whether we should stop running
+    if(Display.isCloseRequested())
+      return EUpdateResult.STOP;
+    
+    // update the Camera
+    return (use_camera) 
+          ? camera.processInput(input) 
+          : EUpdateResult.CONTINUE;
   }
 }

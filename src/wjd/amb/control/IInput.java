@@ -80,7 +80,7 @@ public interface IInput
    *
    * @return the vector position of the mouse.
    */
-  public V2 getMousePosition(V2 window_size);
+  public V2 getMousePosition();
 
   /**
    * Get the direction that the user is pressing using a combination of arrow

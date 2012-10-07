@@ -98,10 +98,12 @@ public class LWJGLInput implements IInput
              mouse_position = new V2();
   private Event nextMouseEvent;
   private Event nextKeyEvent;
+  private int window_height; // needed to invert mouse coordinates
   
   
   /* METHODS */
   
+  // constructors
   private LWJGLInput() throws LWJGLException
   {
     // LWJGL - Keyboard
@@ -112,6 +114,11 @@ public class LWJGLInput implements IInput
     Mouse.create();
   }
   
+  // accessors
+  public void setWindowHeight(int window_height)
+  {
+    this.window_height = window_height;
+  }
   
   /* IMPLEMENTATIONS -- IINPUT */
   
@@ -122,9 +129,9 @@ public class LWJGLInput implements IInput
   }
 
   @Override
-  public V2 getMousePosition(V2 window_size)
+  public V2 getMousePosition()
   {
-    mouse_position.xy(Mouse.getX(), window_size.y() - Mouse.getY());
+    mouse_position.xy(Mouse.getX(), window_height - Mouse.getY());
     return mouse_position;
   }
 
@@ -218,5 +225,4 @@ public class LWJGLInput implements IInput
     }
     return null;
   }
-  
 }

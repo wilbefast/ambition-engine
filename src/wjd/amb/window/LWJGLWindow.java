@@ -22,12 +22,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import static org.lwjgl.opengl.GL11.*;
-import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
 import wjd.amb.control.LWJGLInput;
 import wjd.amb.model.Scene;
 import wjd.amb.view.GLCanvas;
+import wjd.amb.view.ICanvas;
 import wjd.math.V2;
 
 /**
@@ -48,9 +47,9 @@ public class LWJGLWindow implements IWindow
   // view
   private GLCanvas glCanvas;
   // control
-  private IInput input;
+  private LWJGLInput lwjglInput;
 
-  /* METHODS */
+  /* IMPLEMENTATION -- IWINDOW */
   
   /**
    * How big is the Window?
@@ -61,6 +60,30 @@ public class LWJGLWindow implements IWindow
   public V2 getSizeV2()
   {
     return size;
+  }
+  @Override
+  public Scene getCurrentScene()
+  {
+    return scene;
+  }
+
+  @Override
+  public ICanvas getCanvas()
+  {
+    return glCanvas;
+  }
+  
+  @Override
+  public IInput getInput()
+  {
+    return lwjglInput;
+  }
+  
+  @Override
+  public IWindow setScene(Scene scene)
+  {
+    this.scene = scene;
+    return this;
   }
   
   /**
@@ -73,8 +96,6 @@ public class LWJGLWindow implements IWindow
   {
     return (Sys.getTime() * 1000) / Sys.getTimerResolution();
   }
-  
-  /* IMPLEMENTATION -- IWINDOW */
 
   /**
    * Create a LWJGL Display of the given size, with a corresponding OpenGL 
@@ -94,72 +115,19 @@ public class LWJGLWindow implements IWindow
     this.size = size.floor();
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x(), (int)size.y()));
-    Display.setFullscreen(false);
     Display.setTitle(name);
-    Display.create();
+    Display.setFullscreen(false);
+    Display.setVSyncEnabled(true);
     Display.setResizable(true);
+    Display.create();
     // model
     this.scene = scene;
     // view
     glCanvas = GLCanvas.getInstance(); // must be after Display initialisation!
+    glCanvas.setSize(size);
     // control
-    input = LWJGLInput.getInstance();
-
-    // OpenGL
-    resizeGL();
-  }
-
-  // launch and update
-  /**
-   * Launch the application and run until some event interrupts its execution.
-   */
-  @Override
-  public void run()
-  {
-    boolean running = true;
-    while(running)
-    {
-      // don't update if display is not in focus
-      if (Display.isVisible())
-      {
-        // update
-        if(scene.processInput(input, size)  == EUpdateResult.STOP
-        || scene.update(TimeManager.getDelta(timeNow())) == EUpdateResult.STOP)
-        {
-          // change to new Scene if a new one if offered
-          Scene next = scene.getNext();
-          if(next != null)
-            scene = next;
-          // exit otherwise
-          else
-            running = false;
-        }
-        // check for window events
-        processWindow();
-        // render
-        scene.render(glCanvas, null);
-      }
-      else
-      {
-        // redraw screen if out of date
-        if (Display.isDirty())
-          scene.render(glCanvas, null);
-        try
-        {
-          Thread.sleep(100);
-        }
-        catch (InterruptedException ex)
-        {
-          // Thread interrupted by another
-        }
-      }
-      Display.update();
-      Display.sync(MAX_FPS);
-      
-      // check whether we should stop running
-      if(Display.isCloseRequested())
-        running = false;
-    }
+    lwjglInput = LWJGLInput.getInstance();
+    lwjglInput.setWindowHeight((int)size.y());
   }
   
   /**
@@ -174,40 +142,49 @@ public class LWJGLWindow implements IWindow
     Display.destroy();
   }
   
-  /* SUBROUTINES */
-
-  /**
-   * Resize the OpenGL canvas.
-   */
-  private void resizeGL()
-  {
-    //Here we are using a 2D Scene
-    glViewport(0, 0, (int)size.x(), (int)size.y());
-    // projection
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, size.x(), size.y(), 0, -1, 1);
-    glPushMatrix();
-    // model view
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glPushMatrix();
-    
-    // resize camera viewport too
-    scene.processWindowResize(new V2((int)size.x(), (int)size.y()));
-  }
-
-  /**
-   * Treat any IWindow events that might has occurred, for instance minimisation
-   * or resizing of the IWindow.
-   */
-  private void processWindow()
+  @Override
+  public void refreshDisplay()
   {
     // check if window was resized
     if (Display.wasResized())
     {
       size.xy(Display.getWidth(), Display.getHeight());
-      resizeGL();
+      glCanvas.setSize(size);
+      lwjglInput.setWindowHeight((int)size.y());
     }
+    
+    // check if window is in focus
+    if (Display.isVisible())
+    {
+      // render if this window has the focus
+      scene.render(glCanvas);
+    }
+    else
+    {
+      // render anyway if the the display has been corrupted somehow
+      if (Display.isDirty())
+        scene.render(glCanvas);
+      // update less often if out of focus
+      try 
+      { 
+        Thread.sleep(100); 
+      }
+      catch (InterruptedException ex) 
+      { 
+        // do nothing if interrupted
+      }
+    }
+      
+    // swap buffers
+    Display.update();
+  }
+  
+  /**
+   * Leave some time for other processes.
+   */
+  @Override
+  public void sleep()
+  {
+    Display.sync(MAX_FPS);
   }
 }

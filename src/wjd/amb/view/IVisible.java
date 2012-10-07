@@ -22,5 +22,5 @@ package wjd.amb.view;
 */
 public interface IVisible 
 {
-  public void render(ICanvas canvas, Camera camera);
+  public void render(ICanvas canvas);
 }
