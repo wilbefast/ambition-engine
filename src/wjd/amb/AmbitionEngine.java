@@ -77,13 +77,12 @@ public abstract class AmbitionEngine
 
   /* FUNCTIONS */
   public static void mainLoop(IWindow window, String window_name, V2 window_size,
-                         Scene first_scene) throws Exception
+                         Scene scene) throws Exception
   {
     // start up
-    window.create(window_name, window_size, first_scene);
+    window.create(window_name, window_size);
     
     // cache references
-    Scene scene = window.getCurrentScene();
     ICanvas canvas = window.getCanvas();
     IInput input = window.getInput();
 
@@ -94,19 +93,19 @@ public abstract class AmbitionEngine
       // update -- model
       int t_delta = TimeManager.getDelta(window.timeNow());
       if (canvas.processInput(input) == EUpdateResult.STOP
-      || scene.processInput(input) == EUpdateResult.STOP
-      || scene.update(t_delta) == EUpdateResult.STOP)
+        || scene.processInput(input) == EUpdateResult.STOP
+        || scene.update(t_delta) == EUpdateResult.STOP)
       {
         // change to new Scene if a new one if offered
         Scene next = scene.getNext();
         if (next != null)
-          window.setScene(next);
+          scene = next;
         // exit otherwise
         else
           running = false;
       }
       // update -- view
-      window.refreshDisplay();
+      window.refreshDisplay(scene);
       
       // leave some time for other processes
       window.sleep();

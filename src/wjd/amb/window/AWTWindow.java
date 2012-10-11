@@ -42,20 +42,12 @@ public class AWTWindow extends JFrame implements IWindow
   /* ATTRIBUTES */
   // window
   private V2 size;
-  // model
-  private Scene scene;
   // view
   private AWTCanvas awtCanvas;
   // control
   private AWTInput awtInput;
 
   /* IMPLEMENTATION -- IWINDOW */
-  
-  @Override
-  public Scene getCurrentScene()
-  {
-    return scene;
-  }
 
   @Override
   public ICanvas getCanvas()
@@ -67,13 +59,6 @@ public class AWTWindow extends JFrame implements IWindow
   public IInput getInput()
   {
     return awtInput;
-  }
-  
-  @Override
-  public IWindow setScene(Scene scene)
-  {
-    this.scene = scene;
-    return this;
   }
   
   /**
@@ -113,7 +98,7 @@ public class AWTWindow extends JFrame implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size, Scene scene)
+  public void create(String name, V2 size)
   {
     // window
     this.size = size;
@@ -123,8 +108,6 @@ public class AWTWindow extends JFrame implements IWindow
     setSize((int)size.x(), (int)size.y());
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
-    // model 
-    this.scene = scene;
     // view
     awtCanvas = new AWTCanvas();
     awtCanvas.setSize(size);
@@ -148,7 +131,7 @@ public class AWTWindow extends JFrame implements IWindow
   }
   
   @Override
-  public void refreshDisplay()
+  public void refreshDisplay(Scene scene)
   {
     // queue rendering
     scene.render(awtCanvas);

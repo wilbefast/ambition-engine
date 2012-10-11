@@ -44,7 +44,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   /* UTILITY */
   private static Color ColourToAWTColor(Colour c)
   {
-    return new Color(c.r, c.b, c.g, c.a);
+    return new Color(c.r, c.g, c.b, c.a);
   }
   
   /* POSSIBLE DRAW COMMANDS TO BE QUEUED */
@@ -98,6 +98,12 @@ public class AWTCanvas extends JPanel implements ICanvas
   /* IMPLEMENTATIONS -- ICANVAS */
   
   // query
+  @Override
+  public Camera getCamera()
+  {
+    return camera;
+  }
+  
   @Override
   public boolean isCameraActive()
   {

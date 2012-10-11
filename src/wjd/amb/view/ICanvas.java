@@ -31,13 +31,19 @@ public interface ICanvas extends IInteractive
 {
   // query
   /**
+   * What Camera does this Canvas draw its contents based on, if any?
+   *
+   * @return the attached Camera, or null if there is none.
+   */
+  public Camera getCamera();
+
+  /**
    * Does this canvas draw shapes relative to a Camera view.
-   * 
+   *
    * @return true if the camera is active, false otherwise.
    */
   public boolean isCameraActive();
-  
-  
+
   // modify the canvas itself
   /**
    * The size of the canvas container has changed: update the size of the canvas
@@ -55,7 +61,7 @@ public interface ICanvas extends IInteractive
    * @return a reference to this, so multiple operations can be queued.
    */
   public ICanvas setCamera(Camera camera);
-  
+
   /**
    * The Camera defines what part of the Scene is viewed by the Canvas.
    *
@@ -88,9 +94,10 @@ public interface ICanvas extends IInteractive
    * @return a reference to this, so multiple operations can be queued.
    */
   public ICanvas setFont(Object font);
-  
-  /** We'll want to turn off the Camera for GUI elements.
-   * 
+
+  /**
+   * We'll want to turn off the Camera for GUI elements.
+   *
    * @param use_camera true to use the camera, false to not use it.
    * @return a reference to this, so multiple operations can be queued.
    */

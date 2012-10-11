@@ -159,18 +159,18 @@ public class Camera implements IInteractive
    * the maximum grid cell. 
    * @param cell_size the size of each square cell.
    */
-  public void getVisibleGridCells(V2 min, V2 max, V2 grid_size, float cell_inv_size)
+  public void getVisibleGridCells(V2 min, V2 max, V2 grid_size, 
+                                  float cell_inv_size)
   {
     // top-left cell
     min.xy((float)Math.max(0, Math.floor(view.x()*cell_inv_size)), /* col */
           (float)Math.max(0, Math.floor(view.y()*cell_inv_size))); /* row */
     
     // bottom-right cell
-    max.xy((float)Math.min(grid_size.y(), Math.ceil(min.x() /* col */
-                        + view.w()*cell_inv_size) + 1),
-          (float)Math.min(grid_size.x(), Math.ceil(min.y() /* row */
-                        + view.h()*cell_inv_size) + 1)); 
-
+    max.xy((float)Math.min(grid_size.x(), Math.ceil(min.x() /* col */
+                                          + view.w()*cell_inv_size) + 1),
+          (float)Math.min(grid_size.y(), Math.ceil(min.y() /* row */
+                                          + view.h()*cell_inv_size) + 1)); 
   }
 
   // modification

@@ -67,14 +67,15 @@ public class GLCanvas implements ICanvas
   {
     // background colour and depth
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClearDepth(1);
+    glClearDepth(1.0f);
 
     // 2d initialisation
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
-    // we need blending (alpha) for drawing strings
+    // we need blending (alpha) for drawing text
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // load a default font
@@ -84,6 +85,13 @@ public class GLCanvas implements ICanvas
   /* IMPLEMENTATION -- ICANVAS */
   
   // query
+  
+  @Override
+  public Camera getCamera()
+  {
+    return camera;
+  }
+  
   @Override
   public boolean isCameraActive()
   {
@@ -141,7 +149,7 @@ public class GLCanvas implements ICanvas
   public ICanvas setColour(Colour colour)
   {
     slickColour = new Color(colour.r, colour.g, colour.b, colour.a);
-    glColor3f(colour.r, colour.g, colour.b);
+    glColor4f(colour.r, colour.g, colour.b, colour.a);
     return this;
   }
 
@@ -177,7 +185,7 @@ public class GLCanvas implements ICanvas
   @Override
   public void clear()
   {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
     glLoadIdentity();
   }
   
@@ -235,6 +243,7 @@ public class GLCanvas implements ICanvas
   @Override
   public void box(Rect rect)
   {
+    glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     

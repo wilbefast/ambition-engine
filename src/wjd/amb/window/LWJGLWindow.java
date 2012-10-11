@@ -42,8 +42,6 @@ public class LWJGLWindow implements IWindow
   /* ATTRIBUTES */
   // window
   private V2 size;
-  // model
-  private Scene scene;
   // view
   private GLCanvas glCanvas;
   // control
@@ -61,11 +59,6 @@ public class LWJGLWindow implements IWindow
   {
     return size;
   }
-  @Override
-  public Scene getCurrentScene()
-  {
-    return scene;
-  }
 
   @Override
   public ICanvas getCanvas()
@@ -77,13 +70,6 @@ public class LWJGLWindow implements IWindow
   public IInput getInput()
   {
     return lwjglInput;
-  }
-  
-  @Override
-  public IWindow setScene(Scene scene)
-  {
-    this.scene = scene;
-    return this;
   }
   
   /**
@@ -109,7 +95,7 @@ public class LWJGLWindow implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size, Scene scene) throws LWJGLException
+  public void create(String name, V2 size) throws LWJGLException
   {
     // window
     this.size = size.floor();
@@ -120,8 +106,6 @@ public class LWJGLWindow implements IWindow
     Display.setVSyncEnabled(true);
     Display.setResizable(true);
     Display.create();
-    // model
-    this.scene = scene;
     // view
     glCanvas = GLCanvas.getInstance(); // must be after Display initialisation!
     glCanvas.setSize(size);
@@ -143,7 +127,7 @@ public class LWJGLWindow implements IWindow
   }
   
   @Override
-  public void refreshDisplay()
+  public void refreshDisplay(Scene scene)
   {
     // check if window was resized
     if (Display.wasResized())

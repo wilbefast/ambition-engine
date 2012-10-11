@@ -32,12 +32,6 @@ public interface IWindow
   
   /* ACCESSORS */
   
-  /** Get the current Scene.
-   * 
-   * @return the Scene that this Window is currently displaying.
-   */
-  public Scene getCurrentScene();
-  
   /** Get the Canvas object.
    * 
    * @return the Canvas object this Window uses.
@@ -49,12 +43,6 @@ public interface IWindow
    * @return the Input object this Window uses.
    */
   public IInput getInput();
-  
-  /** Change to a new Scene.
-   * 
-   * @return reference to this IWindow so multiple messages can be queued.
-   */
-  public IWindow setScene(Scene scene);
   
   /**
    * How big is the Window?
@@ -81,7 +69,7 @@ public interface IWindow
    * @param height the height of the IWindow, in pixels.
    * @throws an Exception if there's or problem: this is optional.
    */
-  public void create(String name, V2 size, Scene scene) throws Exception;
+  public void create(String name, V2 size) throws Exception;
 
   /**
    * Clean up anything we might have allocated and close the Window.
@@ -90,8 +78,10 @@ public interface IWindow
   
   /**
    * Redraw the contents of the screen.
+   * 
+   * @param scene the Scene to be drawn onto the Window's Canvas.
    */
-  public void refreshDisplay();
+  public void refreshDisplay(Scene scene);
   
   /**
    * Leave some time for other processes.
