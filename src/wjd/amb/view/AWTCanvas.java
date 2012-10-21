@@ -48,35 +48,47 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   /* POSSIBLE DRAW COMMANDS TO BE QUEUED */
-  private static class DrawText
+  private static interface DrawCommand { }
+  
+  private static class DrawShape implements DrawCommand
+  {
+    public Shape shape;
+    public DrawShape(Shape shape) { this.shape = shape; }
+  }
+  private static class DrawText implements DrawCommand
   {
     public String text;
     public V2 pos;
     public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
   }
-  private static class ColourChange
+  private static class ColourChange implements DrawCommand
   {
     public Colour colour;
     public ColourChange(Colour colour) { this.colour = colour; }
   }
-  private static class LineWidthChange
+  private static class LineWidthChange implements DrawCommand
   {
     public float lineWidth;
     public LineWidthChange(float lineWidth) { this.lineWidth = lineWidth; }
   }
-  private static class FontChange
+  private static class FontChange implements DrawCommand
   {
-    public Object font;
-    public FontChange(Object font) { this.font = font; }
+    public Font font;
+    public FontChange(Font font) { this.font = font; }
   }
-  private static class ToggleCamera
+  private static class FontSizeChange implements DrawCommand
+  {
+    public int size;
+    public FontSizeChange(int size) { this.size = size; }
+  } 
+  private static class ToggleCamera implements DrawCommand
   {
     public boolean active;
     public ToggleCamera(boolean active) { this.active = active; }
   }
   
   /* ATTRIBUTES */
-  private Queue<Object> draw_queue;
+  private Queue<DrawCommand> draw_queue;
   private Camera camera = null;
   private V2 size = new V2();
   private boolean use_camera = false;
@@ -92,7 +104,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    */
   public AWTCanvas()
   {
-    draw_queue = new LinkedList<Object>();
+    draw_queue = new LinkedList<DrawCommand>();
   }
   
   /* IMPLEMENTATIONS -- ICANVAS */
@@ -160,9 +172,16 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
 
   @Override
-  public ICanvas setFont(Object new_font)
+  public ICanvas setCanvasFont(Font new_font)
   {
     draw_queue.add(new FontChange(new_font));
+    return this;
+  }
+  
+  @Override
+  public ICanvas setFontSize(int size)
+  {
+    draw_queue.add(new FontSizeChange(size));
     return this;
   }
   
@@ -197,7 +216,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     // move based on camera position where applicable
     tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
     
-    draw_queue.add(new Ellipse2D.Float(tmpV2a.x(), tmpV2a.y(), radius*2, radius*2));
+    draw_queue.add(new DrawShape(new Ellipse2D.Float(tmpV2a.x(), tmpV2a.y(), 
+                                                    radius*2, radius*2)));
   }
 
   /**
@@ -213,8 +233,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
     tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
     
-    draw_queue.add(new Line2D.Float(tmpV2a.x(), tmpV2a.y(), 
-                                    tmpV2b.x(), tmpV2b.y()));
+    draw_queue.add(new DrawShape(new Line2D.Float(tmpV2a.x(), tmpV2a.y(), 
+                                    tmpV2b.x(), tmpV2b.y())));
   }
 
   /**
@@ -228,8 +248,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     
-    draw_queue.add(new Rectangle2D.Float(tmpRect.x(), tmpRect.y(), 
-                                          tmpRect.w(), tmpRect.h()));
+    draw_queue.add(new DrawShape(new Rectangle2D.Float(tmpRect.x(), tmpRect.y(), 
+                                                    tmpRect.w(), tmpRect.h())));
   }
 
   /**
@@ -263,8 +283,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     while((command = draw_queue.poll()) != null)
     {
       // draw a shape
-      if(command instanceof Shape)
-        g2d.fill((Shape)command);
+      if(command instanceof DrawShape)
+        g2d.fill(((DrawShape)command).shape);
       // draw text
       else if(command instanceof DrawText)
       {
@@ -279,13 +299,7 @@ public class AWTCanvas extends JPanel implements ICanvas
         g2d.setStroke(new BasicStroke(((LineWidthChange)command).lineWidth));
       // change new_font
       else if(command instanceof FontChange)
-      {
-        Object new_font = ((FontChange)command).font;
-        if(new_font instanceof Font)
-          g2d.setFont((Font)(new_font));
-        else
-          System.out.println("Incorrect font type " + new_font);
-      }
+        g2d.setFont((Font)(((FontChange)command).font));
       // activate or deactivate camera
       else if(command instanceof ToggleCamera)
       {

@@ -49,7 +49,7 @@ public class GLCanvas implements ICanvas
   
   /* ATTRIBUTES */
   private org.newdawn.slick.Color slickColour = Color.black;
-  private TrueTypeFont font;
+  private org.newdawn.slick.Font font;
   private boolean use_camera;
   private Camera camera;
   private V2 size = new V2();
@@ -79,7 +79,7 @@ public class GLCanvas implements ICanvas
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // load a default font
-    font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
+    font = new TrueTypeFont(new java.awt.Font("Arial", Font.PLAIN, 12), false);
   }
   
   /* IMPLEMENTATION -- ICANVAS */
@@ -161,10 +161,16 @@ public class GLCanvas implements ICanvas
   }
 
   @Override
-  public ICanvas setFont(Object new_font)
+  public ICanvas setCanvasFont(java.awt.Font awt_font)
   {
-    if (new_font instanceof TrueTypeFont)
-      font = (TrueTypeFont) new_font;
+    font = new TrueTypeFont(awt_font, false); // not anti-aliasing
+    return this;
+  }
+  
+  @Override
+  public ICanvas setFontSize(int new_size)
+  {
+    font = new TrueTypeFont(new Font("Arial", Font.PLAIN, new_size), false);
     return this;
   }
   
@@ -243,7 +249,6 @@ public class GLCanvas implements ICanvas
   @Override
   public void box(Rect rect)
   {
-    glColor4f(0.5f, 0.5f, 0.5f, 0.5f);
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     

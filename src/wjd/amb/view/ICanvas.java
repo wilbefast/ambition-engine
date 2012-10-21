@@ -88,12 +88,21 @@ public interface ICanvas extends IInteractive
   public ICanvas setLineWidth(float lineWidth);
 
   /**
-   * Set the text font to be used for all future drawing operations.
+   * Set the text font to be used for all future drawing operations (the name
+   * should, by rights, be 'setFont' but this is already a member of JComponent!
    *
    * @param font the new font Object to be used.
    * @return a reference to this, so multiple operations can be queued.
    */
-  public ICanvas setFont(Object font);
+  public ICanvas setCanvasFont(java.awt.Font font);
+  
+  /**
+   * Set the text font size to be used for all future drawing operations.
+   *
+   * @param size the point-size to be used.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas setFontSize(int size);
 
   /**
    * We'll want to turn off the Camera for GUI elements.
