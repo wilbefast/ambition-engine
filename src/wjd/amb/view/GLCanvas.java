@@ -51,7 +51,7 @@ public class GLCanvas implements ICanvas
   private org.newdawn.slick.Color slickColour = Color.black;
   private org.newdawn.slick.Font font;
   private boolean use_camera;
-  private Camera camera;
+  private ICamera camera;
   private V2 size = new V2();
   // temporary objects, to avoid to many calls to 'new'
   private V2 tmpV2a = new V2(), tmpV2b = new V2();
@@ -87,7 +87,7 @@ public class GLCanvas implements ICanvas
   // query
   
   @Override
-  public Camera getCamera()
+  public ICamera getCamera()
   {
     return camera;
   }
@@ -107,7 +107,7 @@ public class GLCanvas implements ICanvas
     
     // reset camera
     if(use_camera)
-      camera.setCanvasSize(size);
+      camera.setProjectionSize(size);
     
     //Here we are using a 2D Scene
     glViewport(0, 0, (int)size.x(), (int)size.y());
@@ -125,9 +125,12 @@ public class GLCanvas implements ICanvas
   }
   
   @Override
-  public ICanvas setCamera(Camera camera)
+  public ICanvas setCamera(ICamera camera)
   {
+    // attach camera and reset its field size
     this.camera = camera;
+    System.out.println("this.camera = " + camera);
+    camera.setProjectionSize(size);
     
     // maintain invariant: (camera == null) => use_camera = false
     if(!use_camera && camera != null)
@@ -136,12 +139,6 @@ public class GLCanvas implements ICanvas
       use_camera = false;
     
     return this;
-  }
-  
-  @Override
-  public ICanvas createCamera(Rect boundary)
-  {
-    return setCamera(new Camera(size, boundary));
   }
   
   // modify the paintbrush state
@@ -286,7 +283,7 @@ public class GLCanvas implements ICanvas
     if(Display.isCloseRequested())
       return EUpdateResult.STOP;
     
-    // update the Camera
+    // update the ICamera
     return (use_camera) 
           ? camera.processInput(input) 
           : EUpdateResult.CONTINUE;

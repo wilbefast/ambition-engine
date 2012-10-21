@@ -405,6 +405,17 @@ public class V2
   {
     return xy(x - amount.x, y - amount.y);
   }
+  
+  /**
+   * Copy the contents other another vector into this one.
+   * 
+   * @param new_value vector to copy new values of abscissa and ordinate from.
+   * @return this, so that multiple operations can be queued. 
+   */
+  public V2 reset(V2 new_value)
+  {
+    return xy(new_value.x, new_value.y);
+  }
 
   /**
    * Multiply a vector element-wise by another.

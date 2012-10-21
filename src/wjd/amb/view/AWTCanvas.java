@@ -89,7 +89,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   
   /* ATTRIBUTES */
   private Queue<DrawCommand> draw_queue;
-  private Camera camera = null;
+  private ICamera camera = null;
   private V2 size = new V2();
   private boolean use_camera = false;
   // temporary objects, to avoid to many calls to 'new'
@@ -111,7 +111,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   
   // query
   @Override
-  public Camera getCamera()
+  public ICamera getCamera()
   {
     return camera;
   }
@@ -131,15 +131,17 @@ public class AWTCanvas extends JPanel implements ICanvas
     
     // reset camera
     if(use_camera)
-      camera.setCanvasSize(size);
+      camera.setProjectionSize(size);
     
     return this;
   }
   
   @Override
-  public ICanvas setCamera(Camera camera)
+  public ICanvas setCamera(ICamera camera)
   {
+    // attach camera and reset its field size
     this.camera = camera;
+    camera.setProjectionSize(size);
     
     // maintain invariant: (camera == null) => use_camera = false
     if(!use_camera && camera != null)
@@ -148,12 +150,6 @@ public class AWTCanvas extends JPanel implements ICanvas
       use_camera = false;
     
     return this;
-  }
-  
-  @Override
-  public ICanvas createCamera(Rect boundary)
-  {
-    return setCamera(new Camera(size, boundary));
   }
 
   // modify the paintbrush state

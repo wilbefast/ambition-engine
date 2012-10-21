@@ -24,7 +24,6 @@ import org.lwjgl.LWJGLException;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
 import wjd.amb.model.Scene;
-import wjd.amb.model.TestScene;
 import wjd.amb.view.ICanvas;
 import wjd.amb.window.AWTWindow;
 import wjd.amb.window.IWindow;
@@ -158,16 +157,5 @@ public abstract class AmbitionEngine
       if (window != null)
         window.destroy();
     }
-  }
-
-  /* SIMPLE TEST */
-  public static void main(String[] args)
-  {
-    /* NB - LWJGL uses native libraries, so this program will crash at mainLoop-time
-     * unless you indicate to the JVM where to find them! As such the program
-     * must be mainLoop with the following argument: 
-     * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
-     */
-    AmbitionEngine.launch("test", new V2(640, 480), new TestScene());
   }
 }
