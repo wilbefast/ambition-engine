@@ -30,13 +30,13 @@ import wjd.amb.view.IVisible;
  * @author wdyce
  * @since 06-Oct-2012
  */
-public abstract class Scene implements IDynamic, IVisible, IInteractive
+public abstract class AScene implements IDynamic, IVisible, IInteractive
 {
   /* ATTRIBUTES */
   /**
    * The Scene to switch to after this one.
    */
-  protected Scene next = null;
+  protected AScene next = null;
   private Controller controller = null;
 
   /* METHODS */
@@ -48,12 +48,18 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
    * @return the next Scene that the Window will display, allocated but the
    * current Scene.
    */
-  public Scene getNext()
+  public AScene getNext()
   {
     return next;
   }
   
   // mutators
+  
+  public void setNext(AScene next)
+  {
+    this.next = next;
+  }
+  
   /**
    * The same Scene object can be controlled in different ways: we can implement
    * IController to treat input events for the Scene.

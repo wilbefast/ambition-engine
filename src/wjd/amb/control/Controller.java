@@ -16,25 +16,14 @@
  */
 package wjd.amb.control;
 
-import wjd.amb.model.Scene;
-
 /**
  *
  * @author wdyce
  * @since Nov 1, 2012
  */
-public abstract class Controller implements IInteractive
+public class Controller implements IInteractive
 {
-  /* ATTRIBUTES */
-  private Scene scene;
-  
   /* METHODS */
-  public Controller(Scene scene)
-  {
-    this.scene = scene;
-  }
-  
-  /* ABSTRACT METHODS */
 
   /**
    * Treat a single KeyPress event.
@@ -42,7 +31,10 @@ public abstract class Controller implements IInteractive
    * @param event a KeyPress event that has occurred.
    * @return the result of the update, normally CONTINUE.
    */
-  public abstract EUpdateResult processKeyPress(IInput.KeyPress event);
+  public EUpdateResult processKeyPress(IInput.KeyPress event)
+  {
+    return EUpdateResult.CONTINUE;
+  }
 
   /**
    * Treat a single MouseClick event.
@@ -50,5 +42,16 @@ public abstract class Controller implements IInteractive
    * @param event a MouseClick event that has occurred.
    * @return the result of the update, normally CONTINUE.
    */
-  public abstract EUpdateResult processMouseClick(IInput.MouseClick event);
+  public EUpdateResult processMouseClick(IInput.MouseClick event)
+  {
+    return EUpdateResult.CONTINUE;
+  }
+
+  /* IMPLEMENTS -- IDYNAMIC */
+  
+  @Override
+  public EUpdateResult processInput(IInput input)
+  {
+    return EUpdateResult.CONTINUE;
+  }
 }

@@ -39,18 +39,20 @@ public interface IInput
   public static class Event
   {
     public long t_stamp;
-    public Event(long t_stamp)
+    public IInput input;
+    public Event(long t_stamp, IInput input)
     {
       this.t_stamp = t_stamp;
+      this.input = input;
     }
   }
   public static class KeyPress extends Event
   {
     public EKeyCode key;
     public boolean state;
-    public KeyPress(long t_stamp, EKeyCode key, boolean state)
+    public KeyPress(long t_stamp, IInput input, EKeyCode key, boolean state)
     {
-      super(t_stamp);
+      super(t_stamp, input);
       this.key = key;
       this.state = state;
     }
@@ -59,9 +61,10 @@ public interface IInput
   {
     public EMouseButton button;
     public boolean state;
-    public MouseClick(long t_stamp, EMouseButton button, boolean state)
+    public MouseClick(long t_stamp, IInput input, EMouseButton button, 
+                                                  boolean state)
     {
-      super(t_stamp);
+      super(t_stamp, input);
       this.button = button;
       this.state = state;
     }

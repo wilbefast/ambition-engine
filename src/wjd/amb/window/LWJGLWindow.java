@@ -24,7 +24,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import wjd.amb.control.IInput;
 import wjd.amb.control.LWJGLInput;
-import wjd.amb.model.Scene;
+import wjd.amb.model.AScene;
 import wjd.amb.view.GLCanvas;
 import wjd.amb.view.ICanvas;
 import wjd.math.V2;
@@ -127,7 +127,7 @@ public class LWJGLWindow implements IWindow
   }
   
   @Override
-  public void refreshDisplay(Scene scene)
+  public void refreshDisplay(AScene scene)
   {
     // check if window was resized
     if (Display.wasResized())

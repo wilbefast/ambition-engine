@@ -205,24 +205,24 @@ public class LWJGLInput implements IInput
   }
 /* SUBROUTINES */
   
-  public KeyPress nextKeyPress()
+public KeyPress nextKeyPress()
+{
+  return (Keyboard.next())
+    ? new KeyPress(Keyboard.getEventNanoseconds()/1000, this,
+                  bridgeKeyEvent(Keyboard.getEventKey()),
+                  Keyboard.getEventKeyState())
+    : null;
+}
+
+public MouseClick nextMouseClick()
+{
+  while(Mouse.next())
   {
-    return (Keyboard.next())
-      ? new KeyPress(Keyboard.getEventNanoseconds()/1000, 
-                    bridgeKeyEvent(Keyboard.getEventKey()),
-                    Keyboard.getEventKeyState())
-      : null;
+    if(Mouse.getEventButton() != -1)
+      return new MouseClick(Mouse.getEventNanoseconds()/1000, this,
+                            bridgeMouseEvent(Keyboard.getEventKey()),
+                            Mouse.getEventButtonState());
   }
-  
-  public MouseClick nextMouseClick()
-  {
-    while(Mouse.next())
-    {
-      if(Mouse.getEventButton() != -1)
-        return new MouseClick(Mouse.getEventNanoseconds()/1000, 
-                              bridgeMouseEvent(Keyboard.getEventKey()),
-                              Mouse.getEventButtonState());
-    }
-    return null;
-  }
+  return null;
+}
 }

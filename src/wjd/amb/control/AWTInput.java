@@ -197,14 +197,16 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     if(isKeyHeld(code))
       return;
     
-    events.add(new KeyPress(System.currentTimeMillis(), bridgeKeyEvent(e), true));
+    events.add(new KeyPress(System.currentTimeMillis(), this, 
+                bridgeKeyEvent(e), true));
     setKeyState(e, true);
   }
 
   @Override
   public void keyReleased(KeyEvent e)
   {
-    events.add(new KeyPress(System.currentTimeMillis(), bridgeKeyEvent(e), false));
+    events.add(new KeyPress(System.currentTimeMillis(), this, 
+              bridgeKeyEvent(e), false));
     setKeyState(e, false);
   }
 

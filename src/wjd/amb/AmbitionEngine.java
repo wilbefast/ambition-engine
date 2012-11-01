@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
-import wjd.amb.model.Scene;
+import wjd.amb.model.AScene;
 import wjd.amb.view.ICanvas;
 import wjd.amb.window.AWTWindow;
 import wjd.amb.window.IWindow;
@@ -76,7 +76,7 @@ public abstract class AmbitionEngine
 
   /* FUNCTIONS */
   public static void mainLoop(IWindow window, String window_name, V2 window_size,
-                         Scene scene) throws Exception
+                         AScene scene) throws Exception
   {
     // start up
     window.create(window_name, window_size);
@@ -96,7 +96,7 @@ public abstract class AmbitionEngine
         || scene.update(t_delta) == EUpdateResult.STOP)
       {
         // change to new Scene if a new one if offered
-        Scene next = scene.getNext();
+        AScene next = scene.getNext();
         if (next != null)
           scene = next;
         // exit otherwise
@@ -115,7 +115,7 @@ public abstract class AmbitionEngine
   }
 
   public static void launch(String window_name, V2 window_size,
-                            Scene first_scene)
+                            AScene first_scene)
   {
     /* NB - LWJGL uses native libraries, so this program will crash at mainLoop-time
      * unless you indicate to the JVM where to find them! As such the program

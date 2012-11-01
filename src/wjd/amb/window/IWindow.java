@@ -17,7 +17,7 @@
 package wjd.amb.window;
 
 import wjd.amb.control.IInput;
-import wjd.amb.model.Scene;
+import wjd.amb.model.AScene;
 import wjd.amb.view.ICanvas;
 import wjd.math.V2;
 
@@ -81,7 +81,7 @@ public interface IWindow
    * 
    * @param scene the Scene to be drawn onto the Window's Canvas.
    */
-  public void refreshDisplay(Scene scene);
+  public void refreshDisplay(AScene scene);
   
   /**
    * Leave some time for other processes.

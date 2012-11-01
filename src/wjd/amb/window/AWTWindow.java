@@ -23,7 +23,7 @@ import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
 import wjd.amb.control.AWTInput;
 import wjd.amb.control.IInput;
-import wjd.amb.model.Scene;
+import wjd.amb.model.AScene;
 import wjd.amb.view.AWTCanvas;
 import wjd.amb.view.ICanvas;
 import wjd.math.V2;
@@ -131,7 +131,7 @@ public class AWTWindow extends JFrame implements IWindow
   }
   
   @Override
-  public void refreshDisplay(Scene scene)
+  public void refreshDisplay(AScene scene)
   {
     // queue rendering
     scene.render(awtCanvas);
