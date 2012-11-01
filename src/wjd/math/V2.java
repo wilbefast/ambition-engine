@@ -339,7 +339,7 @@ public class V2
    */
   public V2 inc()
   {
-    return (xy(x + 1, y + 1));
+    return xy(x + 1, y + 1);
   }
 
   /**
@@ -349,7 +349,17 @@ public class V2
    */
   public V2 dinc()
   {
-    return (xy(x - 1, y - 1));
+    return xy(x - 1, y - 1);
+  }
+  
+  /**
+   * Invert the vector, setting its components to 1/x and 1/y.
+   * 
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 inv()
+  {
+    return xy (1 / x, 1 / y);
   }
 
   /**
@@ -360,7 +370,7 @@ public class V2
    */
   public V2 abs()
   {
-    return (xy((float) Math.abs(x), (float) Math.abs(y)));
+    return xy((float) Math.abs(x), (float) Math.abs(y));
   }
 
   /**
@@ -370,7 +380,7 @@ public class V2
    */
   public V2 floor()
   {
-    return (xy((float) Math.floor(x), (float) Math.floor(y)));
+    return xy((float) Math.floor(x), (float) Math.floor(y));
   }
 
   /**
@@ -380,7 +390,7 @@ public class V2
    */
   public V2 ceil()
   {
-    return (xy((float) Math.ceil(x), (float) Math.ceil(y)));
+    return xy((float) Math.ceil(x), (float) Math.ceil(y));
   }
   // element-wise arithmetic mutators
 
@@ -428,6 +438,19 @@ public class V2
   {
     return xy(x * multiplier.x, y * multiplier.y);
   }
+  
+  /**
+   * Divide a vector element-wise by another.
+   * 
+   * @param divisor a vector containing the values that the abscissa (x) and
+   * ordinate (y) of this vector will be divided by.
+   * @return this, so that multiple operations can be queued. 
+   */
+  public V2 shrink(V2 divisor)
+  {
+    return xy(x / divisor.x, y / divisor.y);
+  }
+  
   // geometric mutators
 
   /**

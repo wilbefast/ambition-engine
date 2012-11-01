@@ -16,6 +16,7 @@
  */
 package wjd.amb.model;
 
+import wjd.amb.control.Controller;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
@@ -36,9 +37,11 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
    * The Scene to switch to after this one.
    */
   protected Scene next = null;
+  private Controller controller = null;
 
   /* METHODS */
   
+  // accessors
   /**
    * It's time to switch to a new Scene, but which?
    *
@@ -49,33 +52,18 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
   {
     return next;
   }
-
-  /* ABSTRACT METHODS */
-
+  
+  // mutators
   /**
-   * Process the static part of the input, that is the key- and mouse-button
-   * states, not the state-change events.
-   *
-   * @param input the IInput object containing key-states.
-   * @return
+   * The same Scene object can be controlled in different ways: we can implement
+   * IController to treat input events for the Scene.
+   * 
+   * @param controller the new IController to be used to manipulate this Scene.
    */
-  public abstract EUpdateResult processStaticInput(IInput input);
-
-  /**
-   * Treat a single KeyPress event.
-   *
-   * @param event a KeyPress event that has occurred.
-   * @return the result of the update, normally CONTINUE.
-   */
-  public abstract EUpdateResult processKeyPress(IInput.KeyPress event);
-
-  /**
-   * Treat a single MouseClick event.
-   *
-   * @param event a MouseClick event that has occurred.
-   * @return the result of the update, normally CONTINUE.
-   */
-  public abstract EUpdateResult processMouseClick(IInput.MouseClick event);
+  public void setController(Controller controller)
+  {
+    this.controller = controller;
+  }
 
   /* IMPLEMENTATIONS -- IINTERACTIVE */
   @Override
@@ -84,21 +72,24 @@ public abstract class Scene implements IDynamic, IVisible, IInteractive
     IInput.Event e;
     while ((e = input.pollEvents()) != null)
       // event is a keypress
-      if (e instanceof IInput.KeyPress)
+      if (e instanceof IInput.KeyPress && controller != null)
       {
-        EUpdateResult result = processKeyPress((IInput.KeyPress) e);
+        EUpdateResult result = controller.processKeyPress((IInput.KeyPress) e);
         if (result != EUpdateResult.CONTINUE)
           return result;
       }
       // event is a mouse-click
-      else if (e instanceof IInput.MouseClick)
+      else if (e instanceof IInput.MouseClick && controller != null)
       {
-        EUpdateResult result = processMouseClick((IInput.MouseClick) e);
+        EUpdateResult result 
+                        = controller.processMouseClick((IInput.MouseClick) e);
         if (result != EUpdateResult.CONTINUE)
           return result;
       }
 
     // all the events are dealt with, now there's just the static state
-    return processStaticInput(input);
+    return (controller != null 
+            ? controller.processInput(input) 
+            : EUpdateResult.CONTINUE);
   }
 }

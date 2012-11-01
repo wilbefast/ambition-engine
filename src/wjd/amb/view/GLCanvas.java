@@ -129,7 +129,6 @@ public class GLCanvas implements ICanvas
   {
     // attach camera and reset its field size
     this.camera = camera;
-    System.out.println("this.camera = " + camera);
     camera.setProjectionSize(size);
     
     // maintain invariant: (camera == null) => use_camera = false
