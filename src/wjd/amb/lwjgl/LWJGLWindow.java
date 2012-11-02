@@ -24,6 +24,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import wjd.amb.AScene;
 import wjd.amb.AWindow;
+import wjd.amb.control.EUpdateResult;
 import wjd.math.V2;
 
 /**
@@ -41,6 +42,18 @@ public class LWJGLWindow extends AWindow
   public LWJGLWindow(String _name, V2 _size, AScene first_scene)
   {
     super(_name, _size, first_scene);
+  }
+  
+  /* OVERRIDES -- AWINDOW */
+ 
+  @Override
+  public EUpdateResult update(int t_delta)
+  {
+    // check whether we should stop running
+    if(Display.isCloseRequested())
+      return EUpdateResult.STOP;
+    
+    return EUpdateResult.CONTINUE;
   }
   
   /* IMPLEMENTATION -- AWINDOW */

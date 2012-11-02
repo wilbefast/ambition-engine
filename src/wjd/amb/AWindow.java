@@ -16,7 +16,9 @@
  */
 package wjd.amb;
 
+import org.lwjgl.opengl.Display;
 import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
 import wjd.amb.view.ICanvas;
 import wjd.math.V2;
@@ -25,7 +27,7 @@ import wjd.math.V2;
  * @author wdyce
  * @since 1 Aug, 2012
  */
-public abstract class AWindow
+public abstract class AWindow implements IDynamic
 {
   /* CONSTANTS */
   public static final int MAX_FPS = 60;
@@ -91,9 +93,9 @@ public abstract class AWindow
     {
       // update -- model
       int t_delta = TimeManager.getDelta(timeNow());
-      if (canvas.processInput(input) == EUpdateResult.STOP
-        || scene.processInput(input) == EUpdateResult.STOP
-        || scene.update(t_delta) == EUpdateResult.STOP)
+      if (this.update(t_delta) == EUpdateResult.STOP
+      || scene.processInput(input) == EUpdateResult.STOP
+      || scene.update(t_delta) == EUpdateResult.STOP)
       {
         // change to new Scene if a new one if offered
         AScene next = scene.getNext();
@@ -114,6 +116,14 @@ public abstract class AWindow
     destroy();
   }
   
+  /* IMPLEMENTS -- IDYNAMIC */
+
+  @Override
+  public EUpdateResult update(int t_delta)
+  {
+    // can be overridden if needed...
+    return EUpdateResult.CONTINUE;
+  }
   
   /* INTERFACE */
   

@@ -30,7 +30,7 @@ public interface IInput
   public static enum EKeyCode
   {
     UP, RIGHT, DOWN, LEFT, L_SHIFT, L_CTRL, L_ALT, SPACE, R_ALT, R_CTRL,
-    R_SHIFT, ENTER, ESC, BACKSPACE
+    R_SHIFT, ENTER, ESC, BACKSPACE, ALPHANUMERIC
   }
   public static enum EMouseButton
   {

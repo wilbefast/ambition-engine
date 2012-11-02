@@ -92,6 +92,45 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
       case KeyEvent.VK_ENTER: return EKeyCode.ENTER;
       case KeyEvent.VK_ESCAPE: return EKeyCode.ESC;
         
+      // alphanumeric keys
+      case KeyEvent.VK_0:
+      case KeyEvent.VK_1:
+      case KeyEvent.VK_2:
+      case KeyEvent.VK_3:
+      case KeyEvent.VK_4:
+      case KeyEvent.VK_5:
+      case KeyEvent.VK_6:
+      case KeyEvent.VK_7:
+      case KeyEvent.VK_8:
+      case KeyEvent.VK_9:
+      case KeyEvent.VK_A:
+      case KeyEvent.VK_B:
+      case KeyEvent.VK_C:
+      case KeyEvent.VK_D:
+      case KeyEvent.VK_E:
+      case KeyEvent.VK_F:
+      case KeyEvent.VK_G:
+      case KeyEvent.VK_H:
+      case KeyEvent.VK_I:
+      case KeyEvent.VK_J:
+      case KeyEvent.VK_K:
+      case KeyEvent.VK_L:
+      case KeyEvent.VK_M:
+      case KeyEvent.VK_N:
+      case KeyEvent.VK_O:
+      case KeyEvent.VK_P:
+      case KeyEvent.VK_Q:
+      case KeyEvent.VK_R:
+      case KeyEvent.VK_S:
+      case KeyEvent.VK_T:
+      case KeyEvent.VK_U:
+      case KeyEvent.VK_V:
+      case KeyEvent.VK_W:
+      case KeyEvent.VK_X:
+      case KeyEvent.VK_Y:
+      case KeyEvent.VK_Z:
+        return EKeyCode.ALPHANUMERIC;
+        
       // unknown
       default: return null;
     }

@@ -132,11 +132,13 @@ public class LWJGLCanvas implements ICanvas
   {
     // attach camera and reset its field size
     this.camera = camera;
-    camera.setProjectionSize(size);
     
     // maintain invariant: (camera == null) => use_camera = false
     if(!use_camera && camera != null)
+    {
       use_camera = true;
+      camera.setProjectionSize(size);
+    }
     else if(camera == null)
       use_camera = false;
     
@@ -279,20 +281,5 @@ public class LWJGLCanvas implements ICanvas
     glEnable(GL_BLEND);
       font.drawString(tmpV2a.x, tmpV2a.y, string, slickColour);
     glDisable(GL_BLEND);
-  }
-  
-  /* IMPLEMENTATION -- IINTERACTIVE */
-
-  @Override
-  public EUpdateResult processInput(IInput input)
-  {
-    // check whether we should stop running
-    if(Display.isCloseRequested())
-      return EUpdateResult.STOP;
-    
-    // update the ICamera
-    return (use_camera) 
-          ? camera.processInput(input) 
-          : EUpdateResult.CONTINUE;
   }
 }

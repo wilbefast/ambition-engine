@@ -37,7 +37,7 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
    * The Scene to switch to after this one.
    */
   protected AScene next = null;
-  private Controller controller = null;
+  protected Controller controller = null;
 
   /* METHODS */
   
@@ -77,6 +77,7 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
   {
     IInput.Event e;
     while ((e = input.pollEvents()) != null)
+    {
       // event is a keypress
       if (e instanceof IInput.KeyPress && controller != null)
       {
@@ -92,7 +93,7 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
         if (result != EUpdateResult.CONTINUE)
           return result;
       }
-
+    }
     // all the events are dealt with, now there's just the static state
     return (controller != null 
             ? controller.processInput(input) 

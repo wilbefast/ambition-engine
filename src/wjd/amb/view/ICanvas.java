@@ -27,7 +27,7 @@ import wjd.math.V2;
  * @author wdyce
  * @since Aug 1, 2012
  */
-public interface ICanvas extends IInteractive
+public interface ICanvas
 {
   // query
   /**

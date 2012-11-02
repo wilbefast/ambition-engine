@@ -33,6 +33,7 @@ public class Controller implements IInteractive
    */
   public EUpdateResult processKeyPress(IInput.KeyPress event)
   {
+    // override if need be
     return EUpdateResult.CONTINUE;
   }
 
@@ -44,6 +45,7 @@ public class Controller implements IInteractive
    */
   public EUpdateResult processMouseClick(IInput.MouseClick event)
   {
+    // override if need be
     return EUpdateResult.CONTINUE;
   }
 
@@ -52,6 +54,7 @@ public class Controller implements IInteractive
   @Override
   public EUpdateResult processInput(IInput input)
   {
+    // override if need be
     return EUpdateResult.CONTINUE;
   }
 }

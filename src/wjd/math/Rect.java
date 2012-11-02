@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package wjd.math;
 
+import java.io.Serializable;
+
 /**
  * A 2D Rectangle class, mostly useful for views and collision-testing between
  * box-shaped objects (this Rectangle does not rotate though).
@@ -24,7 +26,7 @@ package wjd.math;
  * @author wdyce
  * @since 24 Aug, 2012
  */
-public class Rect
+public class Rect implements Serializable
 {
   /* CONSTANTS */
 

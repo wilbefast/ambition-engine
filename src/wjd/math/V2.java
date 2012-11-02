@@ -16,6 +16,8 @@
  */
 package wjd.math;
 
+import java.io.Serializable;
+
 /**
  * A useful Java vector class for games and graphic applications: the norm is
  * cached and recalculated only when needed, and there are a number of useful
@@ -24,7 +26,7 @@ package wjd.math;
  * @author wdyce
  * @since 24 Aug, 2012
  */
-public class V2
+public class V2 implements Serializable
 {
   /* CONSTANTS */
   /**

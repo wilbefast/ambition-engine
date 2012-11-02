@@ -317,12 +317,4 @@ public class AWTCanvas extends JPanel implements ICanvas
         System.out.println("Unrecognized command type " + command);
     }
   }
-  
-  /* IMPLEMENTATION -- IINTERACTIVE */
-
-  @Override
-  public EUpdateResult processInput(IInput input)
-  {
-    return (use_camera) ? camera.processInput(input) : EUpdateResult.CONTINUE;
-  }
 }
