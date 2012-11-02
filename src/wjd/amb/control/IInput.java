@@ -34,7 +34,7 @@ public interface IInput
   }
   public static enum EMouseButton
   {
-    LEFT, MIDDLE, RIGHT
+    LEFT, MIDDLE, RIGHT, ANY
   }
   public static class Event
   {

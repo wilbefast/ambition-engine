@@ -167,7 +167,9 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public boolean isMouseClicking(EMouseButton button)
   {
-    return mouse.clicking[button.ordinal()];
+    return (button == EMouseButton.ANY)
+      ? (mouse.clicking[0] || mouse.clicking[1] || mouse.clicking[2])
+      : mouse.clicking[button.ordinal()];
   }
 
   @Override

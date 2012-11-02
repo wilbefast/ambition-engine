@@ -167,7 +167,9 @@ public class LWJGLInput implements IInput
   @Override
   public boolean isMouseClicking(EMouseButton button)
   {
-    return Mouse.isButtonDown(button.ordinal());
+    return (button == EMouseButton.ANY) 
+      ? (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || Mouse.isButtonDown(2))
+      : Mouse.isButtonDown(button.ordinal());
   }
 
   @Override
@@ -220,7 +222,7 @@ public MouseClick nextMouseClick()
   {
     if(Mouse.getEventButton() != -1)
       return new MouseClick(Mouse.getEventNanoseconds()/1000, this,
-                            bridgeMouseEvent(Keyboard.getEventKey()),
+                            bridgeMouseEvent(Mouse.getEventButton()),
                             Mouse.getEventButtonState());
   }
   return null;
