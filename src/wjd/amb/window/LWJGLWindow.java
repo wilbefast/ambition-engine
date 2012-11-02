@@ -100,7 +100,7 @@ public class LWJGLWindow implements IWindow
     // window
     this.size = size.floor();
     // LWJGL - Display
-    Display.setDisplayMode(new DisplayMode((int)size.x(), (int)size.y()));
+    Display.setDisplayMode(new DisplayMode((int)size.x, (int)size.y));
     Display.setTitle(name);
     Display.setFullscreen(false);
     Display.setVSyncEnabled(true);
@@ -111,7 +111,7 @@ public class LWJGLWindow implements IWindow
     glCanvas.setSize(size);
     // control
     lwjglInput = LWJGLInput.getInstance();
-    lwjglInput.setWindowHeight((int)size.y());
+    lwjglInput.setWindowHeight((int)size.y);
   }
   
   /**
@@ -134,7 +134,7 @@ public class LWJGLWindow implements IWindow
     {
       size.xy(Display.getWidth(), Display.getHeight());
       glCanvas.setSize(size);
-      lwjglInput.setWindowHeight((int)size.y());
+      lwjglInput.setWindowHeight((int)size.y);
     }
     
     // check if window is in focus

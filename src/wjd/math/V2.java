@@ -94,22 +94,12 @@ public class V2
   /**
    * abscissa value: horizontal component.
    */
-  private float x;
+  public float x;
   /**
    * ordinate value: vertical component.
    */
-  private float y;
-  /**
-   * cached norm (also known as magnitude or length): set to -1 if out of date.
-   */
-  private float norm;
-  /**
-   * cached square norm (also known as magnitude or length): set to -1 if out of
-   * date.
-   */
-  private float norm2;
-  /* NB - cached norm and norm2 are negative if out-of-date */
-
+  public float y;
+ 
   /* METHODS */
   // constructors
   /**
@@ -117,7 +107,7 @@ public class V2
    */
   public V2()
   {
-    x = y = norm = norm2 = 0.0f;
+    x = y = 0.0f;
   }
 
   /**
@@ -130,7 +120,6 @@ public class V2
   {
     this.x = x;
     this.y = y;
-    norm = norm2 = -1.0f;
   }
 
   /**
@@ -144,37 +133,9 @@ public class V2
   {
     x = destination.x - source.x;
     y = destination.y - source.y;
-    norm = norm2 = -1;  // norm not yet calculated
-  }
-
-  private V2(float _x, float _y, float _norm, float _norm2)
-  {
-    x = _x;
-    y = _y;
-    norm = _norm;
-    norm2 = _norm2;
   }
 
   // accessors
-  /**
-   * Return the abscissa (x).
-   *
-   * @return the abscissa of the vector, its horizontal component.
-   */
-  public float x()
-  {
-    return x;
-  }
-
-  /**
-   * Return the ordinate (y).
-   *
-   * @return the ordinate of the vector, its vertical component.
-   */
-  public float y()
-  {
-    return y;
-  }
 
   /**
    * Check if this is a null vector.
@@ -197,8 +158,7 @@ public class V2
   public float norm2()
   {
     // recalculate norm2 only if nessecary
-    if (norm2 < 0.0f) norm2 = x * x + y * y;
-    return norm2;
+    return (x*x + y*y);
   }
 
   /**
@@ -211,9 +171,7 @@ public class V2
    */
   public float norm()
   {
-    // recalculate norm only if nessecary
-    if (norm < 0.0f) norm = (float) Math.sqrt(norm2());
-    return norm;
+    return (float)Math.sqrt(x*x + y*y);
   }
 
   /**
@@ -241,35 +199,10 @@ public class V2
   @Override
   public V2 clone()
   {
-    return new V2(x, y, norm, norm2);
+    return new V2(x, y);
   }
 
   // base mutators
-  /**
-   * Set the horizontal component of the vector.
-   *
-   * @param x the new value for the abscissa.
-   * @return this, so that multiple operations can be queued.
-   */
-  public V2 x(float x)
-  {
-    this.x = x;
-    norm = norm2 = -1.0f;
-    return this;
-  }
-
-  /**
-   * Set the vertical component of the vector.
-   *
-   * @param y the new value for the ordinate.
-   * @return this, so that multiple operations can be queued.
-   */
-  public V2 y(float y)
-  {
-    this.y = y;
-    norm = norm2 = -1.0f;
-    return this;
-  }
 
   /**
    * Reset the horizontal and vertical components of the vector.
@@ -282,32 +215,10 @@ public class V2
   {
     this.x = x;
     this.y = y;
-    norm = norm2 = -1.0f;
     return this;
   }
 
   // arithmetic mutators
-  /**
-   * Add a real value to the abscissa (x).
-   *
-   * @param dx amount to be added to the horizontal component
-   * @return this, so that multiple operations can be queued.
-   */
-  public V2 xadd(float dx)
-  {
-    return x(x + dx);
-  }
-
-  /**
-   * Add a real value to the ordinate (y).
-   *
-   * @param dy amount to be added to the vertical component
-   * @return this, so that multiple operations can be queued.
-   */
-  public V2 yadd(float dy)
-  {
-    return y(y + dy);
-  }
 
   /**
    * Add a real value to the abscissa (x) and the ordinate (y).

@@ -212,7 +212,7 @@ public class AWTCanvas extends JPanel implements ICanvas
     // move based on camera position where applicable
     tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
     
-    draw_queue.add(new DrawShape(new Ellipse2D.Float(tmpV2a.x(), tmpV2a.y(), 
+    draw_queue.add(new DrawShape(new Ellipse2D.Float(tmpV2a.x, tmpV2a.y, 
                                                     radius*2, radius*2)));
   }
 
@@ -229,8 +229,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
     tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
     
-    draw_queue.add(new DrawShape(new Line2D.Float(tmpV2a.x(), tmpV2a.y(), 
-                                    tmpV2b.x(), tmpV2b.y())));
+    draw_queue.add(new DrawShape(new Line2D.Float(tmpV2a.x, tmpV2a.y, 
+                                    tmpV2b.x, tmpV2b.y)));
   }
 
   /**
@@ -244,8 +244,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     
-    draw_queue.add(new DrawShape(new Rectangle2D.Float(tmpRect.x(), tmpRect.y(), 
-                                                    tmpRect.w(), tmpRect.h())));
+    draw_queue.add(new DrawShape(new Rectangle2D.Float(tmpRect.x, tmpRect.y, 
+                                                    tmpRect.w, tmpRect.h)));
   }
 
   /**
@@ -285,7 +285,7 @@ public class AWTCanvas extends JPanel implements ICanvas
       else if(command instanceof DrawText)
       {
         DrawText text_cmd = (DrawText)command;
-        g2d.drawString(text_cmd.text, text_cmd.pos.x(), text_cmd.pos.y());
+        g2d.drawString(text_cmd.text, text_cmd.pos.x, text_cmd.pos.y);
       }
       // change colour
       else if(command instanceof ColourChange)

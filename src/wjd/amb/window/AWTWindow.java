@@ -105,7 +105,7 @@ public class AWTWindow extends JFrame implements IWindow
     // set up AWT window
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize((int)size.x(), (int)size.y());
+    setSize((int)size.x, (int)size.y);
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
     // view

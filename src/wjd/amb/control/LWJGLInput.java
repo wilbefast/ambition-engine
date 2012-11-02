@@ -143,13 +143,13 @@ public class LWJGLInput implements IInput
     
     // Update keyboard direction vector
     if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      key_direction.yadd(1);
+      key_direction.y += 1;
     if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      key_direction.yadd(-1);
+      key_direction.y -= 1;
     if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      key_direction.xadd(1);
+      key_direction.x += 1;
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      key_direction.xadd(-1);
+      key_direction.x -= 1;
     
     // Return the vector
     return key_direction;

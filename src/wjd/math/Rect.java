@@ -34,20 +34,20 @@ public class Rect
   /**
    * The horizontal offset.
    */
-  private float x;
+  public float x;
   /**
    * The vertical offset.
    */
-  private float y;
+  public float y;
   /**
    * The width.
    */
-  private float w;
+  public float w;
   /**
    * The height.
    */
-  private float h;
-
+  public float h;
+  
   /* METHODS */
   // constructors
   /**
@@ -82,33 +82,13 @@ public class Rect
    */
   public Rect(V2 position, V2 size)
   {
-    x = position.x();
-    y = position.y();
-    w = size.x();
-    h = size.y();
+    x = position.x;
+    y = position.y;
+    w = size.x;
+    h = size.y;
   }
 
   // accessors
-  /**
-   * Get the horizontal position of the Rectangle.
-   *
-   * @return the horizontal offset.
-   */
-  public float x()
-  {
-    return x;
-  }
-
-  /**
-   * Get the vertical position of the Rectangle.
-   *
-   * @return the vertical offset.
-   */
-  public float y()
-  {
-    return y;
-  }
-
   /**
    * Get the horizontal position of the bottom-right corner of the rectangle.
    *
@@ -127,26 +107,6 @@ public class Rect
   public float endy()
   {
     return y + h;
-  }
-
-  /**
-   * Get the width of the Rectangle.
-   *
-   * @return the width.
-   */
-  public float w()
-  {
-    return w;
-  }
-
-  /**
-   * Get the height of the Rectangle.
-   *
-   * @return the height.
-   */
-  public float h()
-  {
-    return h;
   }
 
   /**
@@ -217,7 +177,7 @@ public class Rect
    */
   public boolean contains(V2 position)
   {
-    return contains(position.x(), position.y());
+    return contains(position.x, position.y);
   }
 
   /**
@@ -260,11 +220,11 @@ public class Rect
   public boolean collides(V2 start, V2 end)
   {
     // discard useless states
-    if (Math.min(start.x(), end.x()) > x + w
-      || Math.max(start.x(), end.x()) < x)
+    if (Math.min(start.x, end.x) > x + w
+      || Math.max(start.x, end.x) < x)
       return false;
-    if (Math.min(start.y(), end.y()) > y + h
-      || Math.max(start.y(), end.y()) < y)
+    if (Math.min(start.y, end.y) > y + h
+      || Math.max(start.y, end.y) < y)
       return false;
 
     // otherwise it's all good!
@@ -449,7 +409,7 @@ public class Rect
    */
   public Rect pos(V2 position)
   {
-    return xy(position.x(), position.y());
+    return xy(position.x, position.y);
   }
 
   /**
@@ -460,7 +420,7 @@ public class Rect
    */
   public Rect size(V2 size)
   {
-    return wh(size.x(), size.y());
+    return wh(size.x, size.y);
   }
 
   /**
@@ -473,7 +433,7 @@ public class Rect
    */
   public Rect reset(V2 position, V2 size)
   {
-    return reset(position.x(), position.y(), size.x(), size.y());
+    return reset(position.x, position.y, size.x, size.y);
   }
 
   /**
@@ -485,7 +445,7 @@ public class Rect
    */
   public Rect shift(V2 shift)
   {
-    return xy(x + shift.x(), y + shift.y());
+    return xy(x + shift.x, y + shift.y);
   }
 
   /**
@@ -497,7 +457,7 @@ public class Rect
    */
   public Rect unshift(V2 unshift)
   {
-    return xy(x - unshift.x(), y - unshift.y());
+    return xy(x - unshift.x, y - unshift.y);
   }
 
   /**
@@ -510,7 +470,7 @@ public class Rect
    */
   public Rect stretch(V2 multiplier)
   {
-    return wh(w * multiplier.x(), h * multiplier.y());
+    return wh(w * multiplier.x, h * multiplier.y);
   }
   // geometric mutators
 
@@ -524,8 +484,8 @@ public class Rect
   public Rect centreOn(V2 position)
   {
     this.
-    x = position.x() - w * 0.5f;
-    y = position.y() - h * 0.5f;
+    x = position.x - w * 0.5f;
+    y = position.y - h * 0.5f;
     return this;
   }
 

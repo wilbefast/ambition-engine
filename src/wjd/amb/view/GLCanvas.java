@@ -110,11 +110,11 @@ public class GLCanvas implements ICanvas
       camera.setProjectionSize(size);
     
     //Here we are using a 2D Scene
-    glViewport(0, 0, (int)size.x(), (int)size.y());
+    glViewport(0, 0, (int)size.x, (int)size.y);
     // projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, size.x(), size.y(), 0, -1, 1);
+    glOrtho(0, size.x, size.y, 0, -1, 1);
     glPushMatrix();
     // model view
     glMatrixMode(GL_MODELVIEW);
@@ -208,12 +208,12 @@ public class GLCanvas implements ICanvas
     // draw the circle
     int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(tmpV2a.x(), tmpV2a.y());
+    glVertex2f(tmpV2a.x, tmpV2a.y);
     for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
     {
       double rad = deg * Math.PI / 180;
-      glVertex2f((float) (tmpV2a.x() + Math.cos(rad) * radius),
-        (float) (tmpV2a.y() + Math.sin(rad) * radius));
+      glVertex2f((float) (tmpV2a.x + Math.cos(rad) * radius),
+        (float) (tmpV2a.y + Math.sin(rad) * radius));
     }
     glEnd();
   }
@@ -232,8 +232,8 @@ public class GLCanvas implements ICanvas
     tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
     
     glBegin(GL_LINES);
-      glVertex2d(tmpV2a.x(), tmpV2a.y());
-      glVertex2d(tmpV2b.x(), tmpV2b.y());
+      glVertex2d(tmpV2a.x, tmpV2a.y);
+      glVertex2d(tmpV2b.x, tmpV2b.y);
     glEnd();
   }
 
@@ -249,10 +249,10 @@ public class GLCanvas implements ICanvas
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     
     glBegin(GL_QUADS);
-      glVertex2f(tmpRect.x(), tmpRect.y());
-      glVertex2f(tmpRect.x() + tmpRect.w(), tmpRect.y());
-      glVertex2f(tmpRect.x() + tmpRect.w(), tmpRect.y() + tmpRect.h());
-      glVertex2f(tmpRect.x(), tmpRect.y() + tmpRect.h());
+      glVertex2f(tmpRect.x, tmpRect.y);
+      glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y);
+      glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y + tmpRect.h);
+      glVertex2f(tmpRect.x, tmpRect.y + tmpRect.h);
     glEnd();
   }
 
@@ -269,7 +269,7 @@ public class GLCanvas implements ICanvas
     tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
     
     glEnable(GL_BLEND);
-    font.drawString(tmpV2a.x(), tmpV2a.y(), string, slickColour);
+    font.drawString(tmpV2a.x, tmpV2a.y, string, slickColour);
     glDisable(GL_BLEND);
   }
   

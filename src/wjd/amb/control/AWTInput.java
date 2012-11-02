@@ -146,13 +146,13 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     
     // Update keyboard direction vector
     if (keyboard.pressing[EKeyCode.DOWN.ordinal()])
-      keyboard.direction.yadd(1);
+      keyboard.direction.y += 1;
     if (keyboard.pressing[EKeyCode.UP.ordinal()])
-      keyboard.direction.yadd(-1);
+      keyboard.direction.y -= 1;
     if (keyboard.pressing[EKeyCode.RIGHT.ordinal()])
-      keyboard.direction.xadd(1);
+      keyboard.direction.x += 1;
     if (keyboard.pressing[EKeyCode.LEFT.ordinal()])
-      keyboard.direction.xadd(-1);
+      keyboard.direction.x -= 1;
     
     // Return the vector
     return keyboard.direction;
