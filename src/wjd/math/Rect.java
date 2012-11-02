@@ -75,6 +75,18 @@ public class Rect implements Serializable
     this.w = w;
     this.h = h;
   }
+  
+  /**
+   * Create a rectangle of the specified size at the origin.
+   * 
+   * @param size the size vector: (w, h). 
+   */
+  public Rect(V2 size)
+  {
+    x = y = 0.0f;
+    w = size.x;
+    h = size.y;
+  }
 
   /**
    * Create a rectangle with the specified vector offset (position) and size.
