@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.view;
+package wjd.amb.lwjgl;
 
 import java.awt.Font;
 import org.lwjgl.opengl.Display;
@@ -23,6 +23,9 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
+import wjd.amb.view.Colour;
+import wjd.amb.view.ICamera;
+import wjd.amb.view.ICanvas;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -33,17 +36,17 @@ import wjd.math.V2;
  * @author wdyce
  * @since 16-Feb-2012
  */
-public class GLCanvas implements ICanvas
+public class LWJGLCanvas implements ICanvas
 {
   /* CONSTANTS */
   private static final int CIRCLE_BASE_SEGMENTS = 6;
   
   /* SINGLETON */
-  private static GLCanvas instance;
-  public static GLCanvas getInstance()
+  private static LWJGLCanvas instance;
+  public static LWJGLCanvas getInstance()
   {
     if(instance == null)
-      instance = new GLCanvas();
+      instance = new LWJGLCanvas();
     return instance;
   }
   
@@ -63,7 +66,7 @@ public class GLCanvas implements ICanvas
    * Set up the OpenGL state machine for drawing, including setting clear colour
    * and depth, and enabling/disabling various options (namely 3D).
    */
-  private GLCanvas()
+  private LWJGLCanvas()
   {
     // background colour and depth
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -202,19 +205,24 @@ public class GLCanvas implements ICanvas
   public void circle(V2 centre, float radius)
   {
     // move based on camera position where applicable
-    radius *= camera.getZoom();
-    tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
+    if(use_camera) 
+    {
+      radius *= camera.getZoom();
+      tmpV2a = camera.getPerspective(centre);
+    }
+    else
+      tmpV2a = centre;
     
     // draw the circle
     int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(tmpV2a.x, tmpV2a.y);
-    for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
-    {
-      double rad = deg * Math.PI / 180;
-      glVertex2f((float) (tmpV2a.x + Math.cos(rad) * radius),
-        (float) (tmpV2a.y + Math.sin(rad) * radius));
-    }
+      glVertex2f(tmpV2a.x, tmpV2a.y);
+      for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
+      {
+        double rad = deg * Math.PI / 180;
+        glVertex2f((float) (tmpV2a.x + Math.cos(rad) * radius),
+          (float) (tmpV2a.y + Math.sin(rad) * radius));
+      }
     glEnd();
   }
 
@@ -269,7 +277,7 @@ public class GLCanvas implements ICanvas
     tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
     
     glEnable(GL_BLEND);
-    font.drawString(tmpV2a.x, tmpV2a.y, string, slickColour);
+      font.drawString(tmpV2a.x, tmpV2a.y, string, slickColour);
     glDisable(GL_BLEND);
   }
   

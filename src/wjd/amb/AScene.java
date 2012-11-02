@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.model;
+package wjd.amb;
 
 import wjd.amb.control.Controller;
 import wjd.amb.control.EUpdateResult;

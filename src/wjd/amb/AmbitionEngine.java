@@ -23,11 +23,9 @@ import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
-import wjd.amb.model.AScene;
 import wjd.amb.view.ICanvas;
-import wjd.amb.window.AWTWindow;
-import wjd.amb.window.IWindow;
-import wjd.amb.window.LWJGLWindow;
+import wjd.amb.awt.AWTWindow;
+import wjd.amb.lwjgl.LWJGLWindow;
 import wjd.math.V2;
 
 /**
@@ -36,26 +34,7 @@ import wjd.math.V2;
  */
 public abstract class AmbitionEngine
 {
-  /* NESTING */
-  public static abstract class TimeManager
-  {
-    // attributes
-    private static long t_previous = -1; // -1 => uninitialised
 
-    /**
-     * Return the amount of time since the method was last called.
-     *
-     * @param t_now the current system time in milliseconds.
-     * @return the current time in milliseconds since this method was last
-     * called, or 0 the first time the method is called.
-     */
-    public static int getDelta(long t_now)
-    {
-      int t_delta = (t_previous < 0) ? 0 : (int) (t_now - t_previous);
-      t_previous = t_now;
-      return t_delta;
-    }
-  }
   /* CLASS NAMESPACE CONSTANTS */
   public static final Logger LOGGER = Logger.getLogger(AmbitionEngine.class.getName());
 
@@ -75,44 +54,6 @@ public abstract class AmbitionEngine
   }
 
   /* FUNCTIONS */
-  public static void mainLoop(IWindow window, String window_name, V2 window_size,
-                         AScene scene) throws Exception
-  {
-    // start up
-    window.create(window_name, window_size);
-    
-    // cache references
-    ICanvas canvas = window.getCanvas();
-    IInput input = window.getInput();
-
-    // run
-    boolean running = true;
-    while (running)
-    {
-      // update -- model
-      int t_delta = TimeManager.getDelta(window.timeNow());
-      if (canvas.processInput(input) == EUpdateResult.STOP
-        || scene.processInput(input) == EUpdateResult.STOP
-        || scene.update(t_delta) == EUpdateResult.STOP)
-      {
-        // change to new Scene if a new one if offered
-        AScene next = scene.getNext();
-        if (next != null)
-          scene = next;
-        // exit otherwise
-        else
-          running = false;
-      }
-      // update -- view
-      window.refreshDisplay(scene);
-      
-      // leave some time for other processes
-      window.sleep();
-    }
-
-    // shut down
-    window.destroy();
-  }
 
   public static void launch(String window_name, V2 window_size,
                             AScene first_scene)
@@ -122,12 +63,12 @@ public abstract class AmbitionEngine
      * must be mainLoop with the following argument: 
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
      */
-    IWindow window = null;
+    AWindow window = null;
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
       LOGGER.log(Level.INFO, "Launching LWJGL Window");
-      mainLoop(window = new LWJGLWindow(), window_name, window_size, first_scene);
+      (window = new LWJGLWindow(window_name, window_size, first_scene)).run();
 
     }
     catch (UnsatisfiedLinkError | LWJGLException lwjgl_ex)
@@ -138,7 +79,7 @@ public abstract class AmbitionEngine
         LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
         // default to AWT if there's a problem with LWJGL
         LOGGER.log(Level.INFO, "Launching AWT Window");
-        mainLoop(window = new AWTWindow(), window_name, window_size, first_scene);
+        (window = new AWTWindow(window_name, window_size, first_scene)).run();
       }
       catch (Exception awt_ex)
       {

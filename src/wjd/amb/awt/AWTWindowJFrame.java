@@ -14,13 +14,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.window;
+package wjd.amb.awt;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-import wjd.amb.control.AWTInput;
-import wjd.amb.view.AWTCanvas;
 import wjd.math.V2;
 
 /**

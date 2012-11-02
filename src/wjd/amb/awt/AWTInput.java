@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.control;
+package wjd.amb.awt;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -24,6 +24,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import wjd.amb.control.IInput;
+import wjd.amb.control.KeyRepeatFix;
 import wjd.math.V2;
 import wjd.util.LimitedQueue;
 

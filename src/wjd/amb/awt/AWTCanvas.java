@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package wjd.amb.view;
+package wjd.amb.awt;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -31,6 +31,9 @@ import java.util.Queue;
 import javax.swing.JPanel;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IInput;
+import wjd.amb.view.Colour;
+import wjd.amb.view.ICamera;
+import wjd.amb.view.ICanvas;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -210,10 +213,16 @@ public class AWTCanvas extends JPanel implements ICanvas
   public void circle(V2 centre, float radius)
   {
     // move based on camera position where applicable
-    tmpV2a = (use_camera) ? camera.getPerspective(centre) : centre;
+    if(use_camera) 
+    {
+      radius *= camera.getZoom();
+      tmpV2a = camera.getPerspective(centre);
+    }
+    else
+      tmpV2a = centre;
     
-    draw_queue.add(new DrawShape(new Ellipse2D.Float(tmpV2a.x, tmpV2a.y, 
-                                                    radius*2, radius*2)));
+    draw_queue.add(new DrawShape(new Ellipse2D.Float(
+                        tmpV2a.x-radius, tmpV2a.y-radius, radius*2, radius*2)));
   }
 
   /**

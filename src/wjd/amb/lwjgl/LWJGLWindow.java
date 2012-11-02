@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.window;
+package wjd.amb.lwjgl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -22,11 +22,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import wjd.amb.control.IInput;
-import wjd.amb.control.LWJGLInput;
-import wjd.amb.model.AScene;
-import wjd.amb.view.GLCanvas;
-import wjd.amb.view.ICanvas;
+import wjd.amb.AScene;
+import wjd.amb.AWindow;
 import wjd.math.V2;
 
 /**
@@ -37,41 +34,17 @@ import wjd.math.V2;
  * @since 16-Feb-2012
  * @see <a href="http://lwjgl.org/">LWJGL Home Page</a>
  */
-public class LWJGLWindow implements IWindow
+public class LWJGLWindow extends AWindow
 {
-  /* ATTRIBUTES */
-  // window
-  private V2 size;
-  // view
-  private GLCanvas glCanvas;
-  // control
-  private LWJGLInput lwjglInput;
+  /* METHODS */
+  
+  public LWJGLWindow(String _name, V2 _size, AScene first_scene)
+  {
+    super(_name, _size, first_scene);
+  }
+  
+  /* IMPLEMENTATION -- AWINDOW */
 
-  /* IMPLEMENTATION -- IWINDOW */
-  
-  /**
-   * How big is the Window?
-   *
-   * @return the vector size of the Window in pixels.
-   */
-  @Override
-  public V2 getSizeV2()
-  {
-    return size;
-  }
-
-  @Override
-  public ICanvas getCanvas()
-  {
-    return glCanvas;
-  }
-  
-  @Override
-  public IInput getInput()
-  {
-    return lwjglInput;
-  }
-  
   /**
    * Return the current time.
    *
@@ -95,10 +68,8 @@ public class LWJGLWindow implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size) throws LWJGLException
+  public void create() throws LWJGLException
   {
-    // window
-    this.size = size.floor();
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x, (int)size.y));
     Display.setTitle(name);
@@ -107,11 +78,11 @@ public class LWJGLWindow implements IWindow
     Display.setResizable(true);
     Display.create();
     // view
-    glCanvas = GLCanvas.getInstance(); // must be after Display initialisation!
-    glCanvas.setSize(size);
+    canvas = LWJGLCanvas.getInstance(); // must be after Display initialisation!
+    canvas.setSize(size);
     // control
-    lwjglInput = LWJGLInput.getInstance();
-    lwjglInput.setWindowHeight((int)size.y);
+    input = LWJGLInput.getInstance();
+    ((LWJGLInput)input).setWindowHeight((int)size.y);
   }
   
   /**
@@ -133,21 +104,21 @@ public class LWJGLWindow implements IWindow
     if (Display.wasResized())
     {
       size.xy(Display.getWidth(), Display.getHeight());
-      glCanvas.setSize(size);
-      lwjglInput.setWindowHeight((int)size.y);
+      canvas.setSize(size);
+      ((LWJGLInput)input).setWindowHeight((int)size.y);
     }
     
     // check if window is in focus
     if (Display.isVisible())
     {
       // render if this window has the focus
-      scene.render(glCanvas);
+      scene.render(canvas);
     }
     else
     {
       // render anyway if the the display has been corrupted somehow
       if (Display.isDirty())
-        scene.render(glCanvas);
+        scene.render(canvas);
       // update less often if out of focus
       try 
       { 
