@@ -246,30 +246,6 @@ public class Rect
 
   // base mutators
   /**
-   * Set the horizontal position of the Rectangle.
-   *
-   * @param x the new value for the horizontal offset.
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect x(float x)
-  {
-    this.x = x;
-    return this;
-  }
-
-  /**
-   * Set the vertical position of the Rectangle.
-   *
-   * @param y the new value for the vertical offset.
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect y(float y)
-  {
-    this.y = y;
-    return this;
-  }
-
-  /**
    * Set the vertical and horizontal positions of the Rectangle.
    *
    * @param x the new value for the horizontal offset.
@@ -351,28 +327,6 @@ public class Rect
     return (ratio > ratio()) ? h(w / ratio) : w(h * ratio);
   }
   // arithmetic mutators
-
-  /**
-   * Shift the Rectangle left or right.
-   *
-   * @param shift_x amount to be added to the horizontal offset
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect xadd(float shift_x)
-  {
-    return x(x + shift_x);
-  }
-
-  /**
-   * Shift the Rectangle up or down.
-   *
-   * @param shift_y amount to be added to the vertical offset
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect yadd(float shift_y)
-  {
-    return y(y + shift_y);
-  }
 
   /**
    * Shift the Rectangle both vertically and horizontally.
