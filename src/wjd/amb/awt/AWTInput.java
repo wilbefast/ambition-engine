@@ -76,7 +76,6 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
       case KeyEvent.VK_DOWN: return EKeyCode.DOWN;
       case KeyEvent.VK_LEFT: return EKeyCode.LEFT;
       case KeyEvent.VK_RIGHT: return EKeyCode.RIGHT;
-
       // keys with location
       case KeyEvent.VK_SHIFT: 
         return (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) 
@@ -91,7 +90,6 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
       case KeyEvent.VK_SPACE: return EKeyCode.SPACE;
       case KeyEvent.VK_ENTER: return EKeyCode.ENTER;
       case KeyEvent.VK_ESCAPE: return EKeyCode.ESC;
-        
       // alphanumeric keys
       case KeyEvent.VK_0:
       case KeyEvent.VK_1:

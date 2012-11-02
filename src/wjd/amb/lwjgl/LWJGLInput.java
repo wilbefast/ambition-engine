@@ -53,6 +53,12 @@ public class LWJGLInput implements IInput
   {
     switch(code)
     {
+      // arrow keys
+      case Keyboard.KEY_LEFT : return EKeyCode.LEFT;
+      case Keyboard.KEY_RIGHT : return EKeyCode.RIGHT;
+      case Keyboard.KEY_UP : return EKeyCode.UP;
+      case Keyboard.KEY_DOWN : return EKeyCode.DOWN;
+      // keys with location
       case Keyboard.KEY_LSHIFT : return EKeyCode.L_SHIFT;
       case Keyboard.KEY_LCONTROL : return EKeyCode.L_CTRL;
       case Keyboard.KEY_LMENU : return EKeyCode.L_ALT;
@@ -60,9 +66,11 @@ public class LWJGLInput implements IInput
       case Keyboard.KEY_RMENU : return EKeyCode.R_ALT;
       case Keyboard.KEY_RCONTROL : return EKeyCode.R_CTRL;
       case Keyboard.KEY_RSHIFT : return EKeyCode.R_SHIFT;
+      // absolute keys
       case Keyboard.KEY_RETURN : return EKeyCode.ENTER;
       case Keyboard.KEY_ESCAPE : return EKeyCode.ESC;
       case Keyboard.KEY_BACK : return EKeyCode.BACKSPACE; 
+      // alphanumeric
       case Keyboard.KEY_0:
       case Keyboard.KEY_1:
       case Keyboard.KEY_2:
