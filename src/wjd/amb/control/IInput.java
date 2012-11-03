@@ -49,24 +49,24 @@ public interface IInput
   public static class KeyPress extends Event
   {
     public EKeyCode key;
-    public boolean state;
-    public KeyPress(long t_stamp, IInput input, EKeyCode key, boolean state)
+    public boolean pressed;
+    public KeyPress(long t_stamp, IInput input, EKeyCode key, boolean pressed)
     {
       super(t_stamp, input);
       this.key = key;
-      this.state = state;
+      this.pressed = pressed;
     }
   }
   public static class MouseClick extends Event
   {
     public EMouseButton button;
-    public boolean state;
+    public boolean pressed;
     public MouseClick(long t_stamp, IInput input, EMouseButton button, 
-                                                  boolean state)
+                                                  boolean pressed)
     {
       super(t_stamp, input);
       this.button = button;
-      this.state = state;
+      this.pressed = pressed;
     }
   }
 

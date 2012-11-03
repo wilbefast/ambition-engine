@@ -1,20 +1,19 @@
 /*
-Copyright (C) 2012 William James Dyce
+ Copyright (C) 2012 William James Dyce
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package wjd.math;
 
 import java.io.Serializable;
@@ -49,7 +48,7 @@ public class Rect implements Serializable
    * The height.
    */
   public float h;
-  
+
   /* METHODS */
   // constructors
   /**
@@ -75,11 +74,11 @@ public class Rect implements Serializable
     this.w = w;
     this.h = h;
   }
-  
+
   /**
    * Create a rectangle of the specified size at the origin.
-   * 
-   * @param size the size vector: (w, h). 
+   *
+   * @param size the size vector: (w, h).
    */
   public Rect(V2 size)
   {
@@ -163,7 +162,7 @@ public class Rect implements Serializable
   {
     return ("(" + x + ',' + y + ',' + w + ',' + h + ')');
   }
-  
+
   @Override
   public Rect clone()
   {
@@ -204,9 +203,9 @@ public class Rect implements Serializable
   public boolean inside(Rect other)
   {
     return (other.contains(x, y)
-      && other.contains(x + w, y)
-      && other.contains(x, y + h)
-      && other.contains(x + w, y + h));
+            && other.contains(x + w, y)
+            && other.contains(x, y + h)
+            && other.contains(x + w, y + h));
   }
 
   /**
@@ -221,7 +220,7 @@ public class Rect implements Serializable
   public boolean collides(Rect other)
   {
     return (V2.dot(new V2(pos(), other.pos().add(other.size())),
-      new V2(other.pos(), pos().add(size()))) > 0);
+                   new V2(other.pos(), pos().add(size()))) > 0);
   }
 
   /**
@@ -235,10 +234,10 @@ public class Rect implements Serializable
   {
     // discard useless states
     if (Math.min(start.x, end.x) > x + w
-      || Math.max(start.x, end.x) < x)
+        || Math.max(start.x, end.x) < x)
       return false;
     if (Math.min(start.y, end.y) > y + h
-      || Math.max(start.y, end.y) < y)
+        || Math.max(start.y, end.y) < y)
       return false;
 
     // otherwise it's all good!
@@ -274,30 +273,6 @@ public class Rect implements Serializable
   }
 
   /**
-   * Set the width of the Rectangle.
-   *
-   * @param w the new width value.
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect w(float w)
-  {
-    this.w = w;
-    return this;
-  }
-
-  /**
-   * Set the height of the Rectangle.
-   *
-   * @param h the new height value.
-   * @return this, so that multiple operations can be queued.
-   */
-  public Rect h(float h)
-  {
-    this.h = h;
-    return this;
-  }
-
-  /**
    * Set the width and the height of the Rectangle.
    *
    * @param w the new width value.
@@ -327,6 +302,56 @@ public class Rect implements Serializable
     this.y = y;
     this.w = w;
     this.h = h;
+    return this;
+  }
+
+  /**
+   * Side the horizontal extent of the rectangle.
+   *
+   * @param endx the new rightmost abscissa of the rectangle.
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect endx(float endx)
+  {
+    if (endx < x)
+      x = endx;
+    else
+      w = endx - x;
+    return this;
+  }
+
+  /**
+   * Set the vertical extent of the rectangle.
+   *
+   * @param endy the new bottommost ordinate of the rectangle.
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect endy(float endy)
+  {
+    if (endy < y)
+      y = endy;
+    else
+      h = endy - h;
+    return this;
+  }
+
+  /**
+   * Set the extent of the rectangle, horizontal and vertical.
+   *
+   * @param endx the new rightmost abscissa of the rectangle.
+   * @param endy the new bottommost ordinate of the rectangle.
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect endxy(float endx, float endy)
+  {
+    if (endx < x)
+      x = endx;
+    else
+      w = endx - x;
+    if (endy < y)
+      y = endy;
+    else
+      y = endy - y;
     return this;
   }
 
@@ -378,6 +403,11 @@ public class Rect implements Serializable
   public Rect pos(V2 position)
   {
     return xy(position.x, position.y);
+  }
+
+  public Rect endpos(V2 endposition)
+  {
+    return endxy(endposition.x, endposition.y);
   }
 
   /**
@@ -451,8 +481,7 @@ public class Rect implements Serializable
    */
   public Rect centreOn(V2 position)
   {
-    this.
-    x = position.x - w * 0.5f;
+    this.x = position.x - w * 0.5f;
     y = position.y - h * 0.5f;
     return this;
   }
@@ -475,7 +504,7 @@ public class Rect implements Serializable
       wh(w * container.h / h, container.h);
 
     return xy(container.x + container.w * 0.5f - w * 0.5f,
-      container.y + container.h * 0.5f - h * 0.5f);
+              container.y + container.h * 0.5f - h * 0.5f);
   }
 
   /**
