@@ -363,7 +363,11 @@ public class Rect implements Serializable
    */
   public Rect ratio(float ratio)
   {
-    return (ratio > ratio()) ? h(w / ratio) : w(h * ratio);
+    if(ratio > ratio)
+      h = w/ratio;
+    else
+      w = h*ratio;
+    return this;
   }
   // arithmetic mutators
 
