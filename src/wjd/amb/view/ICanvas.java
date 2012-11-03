@@ -16,7 +16,6 @@
  */
 package wjd.amb.view;
 
-import wjd.amb.control.IInteractive;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -116,8 +115,9 @@ public interface ICanvas
    *
    * @param centre vector position corresponding to the centre of the circle.
    * @param radius the size of the circle from centre to outskirts.
+   * @param fill true to fill the object, false for an outline.
    */
-  public void circle(V2 centre, float radius);
+  public void circle(V2 centre, float radius, boolean fill);
 
   /**
    * Draw a straight line between the two specified points.
@@ -131,8 +131,9 @@ public interface ICanvas
    * Draw the outline of a Rectangle.
    *
    * @param rect the rectangle object whose outline will be drawn.
+   * @param fill true to fill the object, false for an outline.
    */
-  public void box(Rect rect);
+  public void box(Rect rect, boolean fill);
 
   /**
    * Draw a String of characters at the indicated position in black.

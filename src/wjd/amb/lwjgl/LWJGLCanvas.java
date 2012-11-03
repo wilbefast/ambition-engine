@@ -17,12 +17,9 @@
 package wjd.amb.lwjgl;
 
 import java.awt.Font;
-import org.lwjgl.opengl.Display;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
-import wjd.amb.control.EUpdateResult;
-import wjd.amb.control.IInput;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -186,9 +183,6 @@ public class LWJGLCanvas implements ICanvas
   }
 
   // drawing functions
-  /**
-   * Clear the screen.
-   */
   @Override
   public void clear()
   {
@@ -196,15 +190,8 @@ public class LWJGLCanvas implements ICanvas
     glLoadIdentity();
   }
   
-  /**
-   * Draw a circle outline around the specified position, using the given
-   * radius.
-   *
-   * @param centre vector position corresponding to the centre of the circle.
-   * @param radius the size of the circle from centre to outskirts.
-   */
   @Override
-  public void circle(V2 centre, float radius)
+  public void circle(V2 centre, float radius, boolean fill)
   {
     // move based on camera position where applicable
     if(use_camera) 
@@ -217,8 +204,8 @@ public class LWJGLCanvas implements ICanvas
     
     // draw the circle
     int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
-    glBegin(GL_TRIANGLE_FAN);
-      glVertex2f(tmpV2a.x, tmpV2a.y);
+    glBegin((fill) ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
+      if(fill) glVertex2f(tmpV2a.x, tmpV2a.y);
       for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
       {
         double rad = deg * Math.PI / 180;
@@ -228,12 +215,6 @@ public class LWJGLCanvas implements ICanvas
     glEnd();
   }
 
-  /**
-   * Draw a straight black line between the two specified points.
-   *
-   * @param start vector position corresponding to the start of the line.
-   * @param end vector position corresponding to the end of the line.
-   */
   @Override
   public void line(V2 start, V2 end)
   {
@@ -247,18 +228,13 @@ public class LWJGLCanvas implements ICanvas
     glEnd();
   }
 
-  /**
-   * Draw the outline of a Rectangle.
-   *
-   * @param rect the rectangle object whose outline will be drawn.
-   */
   @Override
-  public void box(Rect rect)
+  public void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     
-    glBegin(GL_QUADS);
+    glBegin((fill) ? GL_QUADS : GL_LINE_LOOP);
       glVertex2f(tmpRect.x, tmpRect.y);
       glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y);
       glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y + tmpRect.h);
@@ -266,12 +242,6 @@ public class LWJGLCanvas implements ICanvas
     glEnd();
   }
 
-  /**
-   * Draw a String of characters at the indicated position.
-   *
-   * @param string the String of characters to be drawn.
-   * @param position the position on the screen to draw the String.
-   */
   @Override
   public void text(String string, V2 position)
   {

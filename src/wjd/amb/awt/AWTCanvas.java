@@ -56,7 +56,9 @@ public class AWTCanvas extends JPanel implements ICanvas
   private static class DrawShape implements DrawCommand
   {
     public Shape shape;
-    public DrawShape(Shape shape) { this.shape = shape; }
+    public boolean fill;
+    public DrawShape(Shape shape, boolean fill) { this.shape = shape; 
+                                                  this.fill = fill; }
   }
   private static class DrawText implements DrawCommand
   {
@@ -210,7 +212,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param radius the size of the circle from centre to outskirts.
    */
   @Override
-  public void circle(V2 centre, float radius)
+  public void circle(V2 centre, float radius, boolean fill)
   {
     // move based on camera position where applicable
     if(use_camera) 
@@ -221,8 +223,9 @@ public class AWTCanvas extends JPanel implements ICanvas
     else
       tmpV2a = centre;
     
-    draw_queue.add(new DrawShape(new Ellipse2D.Float(
-                        tmpV2a.x-radius, tmpV2a.y-radius, radius*2, radius*2)));
+    draw_queue.add(new DrawShape(
+      new Ellipse2D.Float(tmpV2a.x-radius, tmpV2a.y-radius, radius*2, radius*2), 
+      fill));
   }
 
   /**
@@ -239,7 +242,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
     
     draw_queue.add(new DrawShape(new Line2D.Float(tmpV2a.x, tmpV2a.y, 
-                                    tmpV2b.x, tmpV2b.y)));
+                                    tmpV2b.x, tmpV2b.y), false)); 
+                                                          // lines are not fill
   }
 
   /**
@@ -248,13 +252,13 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param rect the rectangle object whose outline will be drawn.
    */
   @Override
-  public void box(Rect rect)
+  public void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
     tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
     
-    draw_queue.add(new DrawShape(new Rectangle2D.Float(tmpRect.x, tmpRect.y, 
-                                                    tmpRect.w, tmpRect.h)));
+    draw_queue.add(new DrawShape(
+      new Rectangle2D.Float(tmpRect.x, tmpRect.y, tmpRect.w, tmpRect.h), fill));
   }
 
   /**
@@ -289,7 +293,13 @@ public class AWTCanvas extends JPanel implements ICanvas
     {
       // draw a shape
       if(command instanceof DrawShape)
-        g2d.fill(((DrawShape)command).shape);
+      {
+        DrawShape shape_cmd = (DrawShape)command; 
+        if(shape_cmd.fill)
+          g2d.fill(shape_cmd.shape);  // fill
+        else
+          g2d.draw(shape_cmd.shape);  // outline
+      }
       // draw text
       else if(command instanceof DrawText)
       {
