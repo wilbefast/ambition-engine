@@ -17,6 +17,7 @@
 
 package wjd.amb.awt;
 
+import java.awt.Dimension;
 import wjd.amb.AScene;
 import wjd.amb.AWindow;
 import wjd.math.V2;
@@ -46,6 +47,13 @@ public class AWTWindow extends AWindow
   public long timeNow()
   {
     return System.currentTimeMillis();
+  }
+  
+  @Override
+  public V2 screenSize()
+  {
+    Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+    return new V2(d.width, d.height);
   }
 
   @Override

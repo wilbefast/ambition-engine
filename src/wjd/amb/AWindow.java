@@ -16,7 +16,6 @@
  */
 package wjd.amb;
 
-import org.lwjgl.opengl.Display;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
@@ -31,6 +30,7 @@ public abstract class AWindow implements IDynamic
 {
   /* CONSTANTS */
   public static final int MAX_FPS = 60;
+
   
   /* NESTING */
   public static abstract class TimeManager
@@ -58,12 +58,45 @@ public abstract class AWindow implements IDynamic
   // concrete
   protected String name;
   protected V2 size;
+  protected boolean fullscreen;
   // abstract
   protected ICanvas canvas;
   protected IInput input;
   protected AScene scene;
   
   /* METHODS */
+  
+  // constructors
+  
+  /**
+   * Pass the required attributes to the window but don't open it yet.
+   * 
+   * @param name Name of the Window, to be displayed at the top.
+   * @param size The vector size of the Window in pixels: (width, height).
+   * @param fullscreen true if the we want the window to be full screen, false
+   * if not.
+   */
+  public AWindow(String name, V2 size, AScene first_scene, boolean fullscreen)
+  {
+    // window name
+    this.name = name;
+    
+    // window size, fullscreen
+    if(size != null)
+    {
+      this.size = size.floor();
+      this.fullscreen = fullscreen;
+    }
+    else
+    {
+      this.size = screenSize();
+      this.fullscreen = true;
+    }
+    
+    // model
+    this.scene = first_scene;
+    this.scene.setWindow(this);
+  }
   
   /**
    * Pass the required attributes to the window but don't open it yet.
@@ -73,10 +106,17 @@ public abstract class AWindow implements IDynamic
    */
   public AWindow(String name, V2 size, AScene first_scene)
   {
-    this.name = name;
-    this.size = size.floor();
-    this.scene = first_scene;
+    this(name, size, first_scene, false);
   }
+  
+  // accessors
+  
+  public V2 getSize()
+  {
+    return size;
+  }
+  
+  // update
   
   /**
    * Run the application until it's time to stop.
@@ -86,7 +126,6 @@ public abstract class AWindow implements IDynamic
     // start up
     create();
    
-
     // run
     boolean running = true;
     while (running)
@@ -100,7 +139,10 @@ public abstract class AWindow implements IDynamic
         // change to new Scene if a new one if offered
         AScene next = scene.getNext();
         if (next != null)
+        {
           scene = next;
+          scene.setWindow(this);
+        }
         // exit otherwise
         else
           running = false;
@@ -133,6 +175,13 @@ public abstract class AWindow implements IDynamic
    * @return the current system time in milliseconds.
    */
   public abstract long timeNow();
+  
+  /**
+   * How big is the screen?
+   * 
+   * @return the current screen width and height in vector form.
+   */
+  public abstract V2 screenSize();
 
   /* LIFE CYCLE */
 

@@ -71,6 +71,18 @@ public interface IInput
   }
 
   /* METHODS */
+  
+  // mutators
+  
+  /**
+   * Show or hide the mouse cursor.
+   * 
+   * @param toggle true to show the cursor in future, false to hide it.
+   */
+  public void showMouse(boolean toggle);
+  
+  // accessors 
+  
   /**
    * Get the current variation of the mouse wheel.
    *

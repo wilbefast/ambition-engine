@@ -38,6 +38,7 @@ import wjd.util.LimitedQueue;
 public class AWTInput implements IInput, KeyListener, MouseListener,
   MouseMotionListener, MouseWheelListener
 { 
+
   /* NESTING */
   
   private static class Mouse
@@ -168,6 +169,12 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   }
   
   /* IMPLEMENTATIONS - IINPUT */
+  
+  @Override
+  public void showMouse(boolean toggle)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
   
   @Override
   public int getMouseWheelDelta()

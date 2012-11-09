@@ -58,17 +58,19 @@ public class LWJGLWindow extends AWindow
   
   /* IMPLEMENTATION -- AWINDOW */
 
-  /**
-   * Return the current time.
-   *
-   * @return the current system time in milliseconds using LWJGL.
-   */
   @Override
   public long timeNow()
   {
     return (Sys.getTime() * 1000) / Sys.getTimerResolution();
   }
-
+  
+  @Override
+  public V2 screenSize()
+  {
+    DisplayMode d = Display.getDesktopDisplayMode();
+    return new V2(d.getWidth(), d.getHeight());
+  }
+  
   /**
    * Create a LWJGL Display of the given size, with a corresponding OpenGL 
    * canvas.
@@ -86,7 +88,7 @@ public class LWJGLWindow extends AWindow
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x, (int)size.y));
     Display.setTitle(name);
-    Display.setFullscreen(false);
+    Display.setFullscreen(fullscreen);
     Display.setVSyncEnabled(true);
     Display.setResizable(true);
     Display.create();

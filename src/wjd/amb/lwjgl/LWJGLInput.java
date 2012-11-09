@@ -170,6 +170,12 @@ public class LWJGLInput implements IInput
   /* IMPLEMENTATIONS -- IINPUT */
   
   @Override
+  public void showMouse(boolean toggle)
+  {
+    Mouse.setGrabbed(!toggle);
+  }
+  
+  @Override
   public int getMouseWheelDelta()
   {
     return Mouse.getDWheel();

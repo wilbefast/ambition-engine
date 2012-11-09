@@ -38,8 +38,11 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
    */
   protected AScene next = null;
   protected Controller controller = null;
+  protected AWindow window = null;
 
   /* METHODS */
+  
+  // constructors
   
   // accessors
   /**
@@ -51,6 +54,14 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
   public AScene getNext()
   {
     return next;
+  }
+  
+  /**
+   * @return the Scene's window.
+   */
+  public AWindow getWindow()
+  {
+    return window;
   }
   
   // mutators
@@ -69,6 +80,11 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
   public void setController(Controller controller)
   {
     this.controller = controller;
+  }
+  
+  public void setWindow(AWindow window)
+  {
+    this.window = window;
   }
 
   /* IMPLEMENTATIONS -- IINTERACTIVE */

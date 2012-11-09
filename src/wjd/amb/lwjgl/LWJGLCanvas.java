@@ -37,6 +37,7 @@ public class LWJGLCanvas implements ICanvas
 {
   /* CONSTANTS */
   private static final int CIRCLE_BASE_SEGMENTS = 6;
+  private static final int CIRCLE_MAX_SEGMENTS = 20;
   
   /* SINGLETON */
   private static LWJGLCanvas instance;
@@ -201,7 +202,8 @@ public class LWJGLCanvas implements ICanvas
       pov_centre = centre;
     
     // draw the circle
-    int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
+    int deg_step = (int) (360 / 
+                (Math.min(CIRCLE_BASE_SEGMENTS * radius, CIRCLE_MAX_SEGMENTS)));
     glBegin((fill) ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
       if(fill) glVertex2f(pov_centre.x, pov_centre.y);
       for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
