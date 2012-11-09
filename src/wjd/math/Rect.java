@@ -313,13 +313,7 @@ public class Rect implements Serializable
    */
   public Rect endx(float endx)
   {
-    if (endx <= x)
-    {
-      w = x - endx;
-      x = endx;
-    }
-    else
-      w = endx - x;
+    w = endx - x;
     return this;
   }
 
@@ -331,11 +325,7 @@ public class Rect implements Serializable
    */
   public Rect endy(float endy)
   {
-    if (endy <= y)
-    {
-      h = y - endy;
-      y = endy;
-    }
+    h = y - endy;
     return this;
   }
 
@@ -348,20 +338,8 @@ public class Rect implements Serializable
    */
   public Rect endxy(float endx, float endy)
   {
-    if (endx <= x)
-    {
-      w += x - endx;
-      x = endx;
-    }
-    else
-      w = endx - x;
-    if (endy <= y)
-    {
-      h += y - endy;
-      y = endy;
-    }
-    else
-      h = endy - y;
+    w = endx - x;
+    h = endy - y;
     return this;
   }
 
