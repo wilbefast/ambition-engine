@@ -33,6 +33,13 @@ public class V2 implements Serializable
    * Vector origin, (0,0).
    */
   public static final V2 ORIGIN = new V2(0.0f, 0.0f);
+  
+  /* GLOBAL */
+  /**
+   * A table of vectors for use in intermediary calculations: not safe to use 
+   * for functions that may be executed in parallel with others.
+   */
+  public static V2 temp[] = { new V2(), new V2(), new V2(), new V2() };
 
   /* FUNCTIONS */
   /**

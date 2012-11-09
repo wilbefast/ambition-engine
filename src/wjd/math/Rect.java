@@ -27,9 +27,12 @@ import java.io.Serializable;
  */
 public class Rect implements Serializable
 {
-  /* CONSTANTS */
-
-  /* FUNCTIONS */
+  /* GLOBAL */
+  /**
+   * A table of rectangles for use in intermediary calculations: not safe to use 
+   * for functions that may be executed in parallel with others.
+   */
+  public static Rect temp[] = { new Rect(), new Rect() };
 
   /* ATTRIBUTES */
   /**

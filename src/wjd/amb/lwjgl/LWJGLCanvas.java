@@ -53,9 +53,6 @@ public class LWJGLCanvas implements ICanvas
   private boolean use_camera;
   private ICamera camera;
   private V2 size = new V2();
-  // temporary objects, to avoid to many calls to 'new'
-  private V2 tmpV2a = new V2(), tmpV2b = new V2();
-  private Rect tmpRect = new Rect();
 
   /* METHODS */
   // creation
@@ -197,20 +194,20 @@ public class LWJGLCanvas implements ICanvas
     if(use_camera) 
     {
       radius *= camera.getZoom();
-      tmpV2a = camera.getPerspective(centre);
+      V2.temp[0] = camera.getPerspective(centre);
     }
     else
-      tmpV2a = centre;
+      V2.temp[0] = centre;
     
     // draw the circle
     int deg_step = (int) (360 / (CIRCLE_BASE_SEGMENTS * radius));
     glBegin((fill) ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
-      if(fill) glVertex2f(tmpV2a.x, tmpV2a.y);
+      if(fill) glVertex2f(V2.temp[0].x, V2.temp[0].y);
       for (int deg = 0; deg < 360 + deg_step; deg += deg_step)
       {
         double rad = deg * Math.PI / 180;
-        glVertex2f((float) (tmpV2a.x + Math.cos(rad) * radius),
-          (float) (tmpV2a.y + Math.sin(rad) * radius));
+        glVertex2f((float) (V2.temp[0].x + Math.cos(rad) * radius),
+          (float) (V2.temp[0].y + Math.sin(rad) * radius));
       }
     glEnd();
   }
@@ -219,12 +216,12 @@ public class LWJGLCanvas implements ICanvas
   public void line(V2 start, V2 end)
   {
     // move based on camera position where applicable
-    tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
-    tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
+    V2.temp[0] = (use_camera) ? camera.getPerspective(start) : start;
+    V2.temp[1] = (use_camera) ? camera.getPerspective(end) : end;
     
     glBegin(GL_LINES);
-      glVertex2d(tmpV2a.x, tmpV2a.y);
-      glVertex2d(tmpV2b.x, tmpV2b.y);
+      glVertex2d(V2.temp[0].x, V2.temp[0].y);
+      glVertex2d(V2.temp[1].x, V2.temp[1].y);
     glEnd();
   }
 
@@ -232,13 +229,13 @@ public class LWJGLCanvas implements ICanvas
   public void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
-    tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
+    Rect.temp[0] = (use_camera) ? camera.getPerspective(rect) : rect;
     
     glBegin((fill) ? GL_QUADS : GL_LINE_LOOP);
-      glVertex2f(tmpRect.x, tmpRect.y);
-      glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y);
-      glVertex2f(tmpRect.x + tmpRect.w, tmpRect.y + tmpRect.h);
-      glVertex2f(tmpRect.x, tmpRect.y + tmpRect.h);
+      glVertex2f(Rect.temp[0].x, Rect.temp[0].y);
+      glVertex2f(Rect.temp[0].x + Rect.temp[0].w, Rect.temp[0].y);
+      glVertex2f(Rect.temp[0].x + Rect.temp[0].w, Rect.temp[0].y + Rect.temp[0].h);
+      glVertex2f(Rect.temp[0].x, Rect.temp[0].y + Rect.temp[0].h);
     glEnd();
   }
 
@@ -246,10 +243,10 @@ public class LWJGLCanvas implements ICanvas
   public void text(String string, V2 position)
   {
     // move based on camera position where applicable
-    tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
+    V2.temp[0].reset((use_camera) ? camera.getPerspective(position) : position);
     
     glEnable(GL_BLEND);
-      font.drawString(tmpV2a.x, tmpV2a.y, string, slickColour);
+      font.drawString(V2.temp[0].x, V2.temp[0].y, string, slickColour);
     glDisable(GL_BLEND);
   }
 }
