@@ -29,8 +29,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
-import wjd.amb.control.EUpdateResult;
-import wjd.amb.control.IInput;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -97,9 +95,6 @@ public class AWTCanvas extends JPanel implements ICanvas
   private ICamera camera = null;
   private V2 size = new V2();
   private boolean use_camera = false;
-  // temporary objects, to avoid to many calls to 'new'
-  private V2 tmpV2a = new V2(), tmpV2b = new V2();
-  private Rect tmpRect = new Rect();
 
   /* METHODS */
     
@@ -215,17 +210,18 @@ public class AWTCanvas extends JPanel implements ICanvas
   public void circle(V2 centre, float radius, boolean fill)
   {
     // move based on camera position where applicable
+    V2 pov_centre;
     if(use_camera) 
     {
       radius *= camera.getZoom();
-      tmpV2a = camera.getPerspective(centre);
+      pov_centre = camera.getPerspective(centre);
     }
     else
-      tmpV2a = centre;
+      pov_centre = centre;
     
     draw_queue.add(new DrawShape(
-      new Ellipse2D.Float(tmpV2a.x-radius, tmpV2a.y-radius, radius*2, radius*2), 
-      fill));
+      new Ellipse2D.Float(pov_centre.x-radius, pov_centre.y-radius, 
+                          radius*2, radius*2), fill));
   }
 
   /**
@@ -238,11 +234,11 @@ public class AWTCanvas extends JPanel implements ICanvas
   public void line(V2 start, V2 end)
   {
     // move based on camera position where applicable
-    tmpV2a = (use_camera) ? camera.getPerspective(start) : start;
-    tmpV2b = (use_camera) ? camera.getPerspective(end) : end;
+    V2 pov_start = (use_camera) ? camera.getPerspective(start) : start;
+    V2 pov_end = (use_camera) ? camera.getPerspective(end) : end;
     
-    draw_queue.add(new DrawShape(new Line2D.Float(tmpV2a.x, tmpV2a.y, 
-                                    tmpV2b.x, tmpV2b.y), false)); 
+    draw_queue.add(new DrawShape(new Line2D.Float(pov_start.x, pov_start.y, 
+                                    pov_end.x, pov_end.y), false)); 
                                                           // lines are not fill
   }
 
@@ -255,10 +251,11 @@ public class AWTCanvas extends JPanel implements ICanvas
   public void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
-    tmpRect = (use_camera) ? camera.getPerspective(rect) : rect;
+    Rect pov_rect = (use_camera) ? camera.getPerspective(rect) : rect;
     
     draw_queue.add(new DrawShape(
-      new Rectangle2D.Float(tmpRect.x, tmpRect.y, tmpRect.w, tmpRect.h), fill));
+      new Rectangle2D.Float(pov_rect.x, pov_rect.y, 
+                            pov_rect.w, pov_rect.h), fill));
   }
 
   /**
@@ -271,9 +268,9 @@ public class AWTCanvas extends JPanel implements ICanvas
   public void text(String string, V2 position)
   {
     // move based on camera position where applicable
-    tmpV2a = (use_camera) ? camera.getPerspective(position) : position;
+    V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
     
-    draw_queue.add(new DrawText(string, tmpV2a));
+    draw_queue.add(new DrawText(string, pov_pos));
   }
   
   @Override

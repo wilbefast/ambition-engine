@@ -27,13 +27,6 @@ import java.io.Serializable;
  */
 public class Rect implements Serializable
 {
-  /* GLOBAL */
-  /**
-   * A table of rectangles for use in intermediary calculations: not safe to use 
-   * for functions that may be executed in parallel with others.
-   */
-  public static Rect temp[] = { new Rect(), new Rect() };
-
   /* ATTRIBUTES */
   /**
    * The horizontal offset.
@@ -415,6 +408,12 @@ public class Rect implements Serializable
   {
     return wh(size.x, size.y);
   }
+  
+  public Rect centreSize(V2 size)
+  {
+    float centre_x = x + w*0.5f, centre_y = y + h*0.5f;
+    return size(size).centrexy(centre_x, centre_y);
+  }
 
   /**
    * Reset the size and the position of the Rectangle.
@@ -468,16 +467,32 @@ public class Rect implements Serializable
   // geometric mutators
 
   /**
-   * Reset the position of the centre of the Rectangle.
+   * Reset the position of the centre of the Rectangle based on a vector.
    *
    * @param position the new position of the centre of the Rectangle.
    * @return this, so that multiple operations can be queued.
    * @see <a href="Rect#pos(V2)">pos</a>
    */
-  public Rect centreOn(V2 position)
+  public Rect centrePos(V2 position)
   {
-    this.x = position.x - w * 0.5f;
+    x = position.x - w * 0.5f;
     y = position.y - h * 0.5f;
+    return this;
+  }
+  
+   /**
+   * Reset the position of the centre of the Rectangle based on a pair of 
+   * coordinates.
+   *
+   * @param cx the desired horizontal centre.
+   * @param cy the desired vertical centre.
+   * @return this, so that multiple operations can be queued.
+   * @see <a href="Rect#xy(float, float)">xy</a>
+   */
+  public Rect centrexy(float cx, float cy)
+  {
+    x = cx - w * 0.5f;
+    y = cy - h * 0.5f;
     return this;
   }
 
