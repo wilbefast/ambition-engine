@@ -14,22 +14,31 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.resources;
+package wjd.amb.lwjgl;
 
-import wjd.math.V2;
+import org.newdawn.slick.openal.Audio;
+import wjd.amb.resources.ISound;
 
 /**
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public abstract class ATexture
+class LWJGLSound implements ISound 
 {
+  /* ATTRIBUTES */
+  private Audio lwjgl_audio;
+  
+  
+  /* METHODS */
 
-  /**
-   * All textures must have a size.
-   *
-   * @return return the vector size of this texture, (width, height) in pixels.
-   */
-  public abstract V2 getSize();
+  // constructors
+  LWJGLSound(Audio lwjgl_audio)
+  {
+    this.lwjgl_audio = lwjgl_audio;
+  }
+  
+  // accessors
+
+  // mutators
 }

@@ -47,14 +47,14 @@ public class Animation extends Graphic
   /* METHODS */
   
   // constructors
-  public Animation(ATexture _texture, Rect _frame, int _n_frames)
+  public Animation(ITexture _texture, Rect _frame, int _n_frames)
   {
     super(_texture, _frame);
     n_frames = _n_frames;
     strip = new Rect(frame.x, frame.y, frame.w * n_frames, frame.h);
   }
 
-  public Animation(ATexture _texture, Rect _frame, int _n_frames, 
+  public Animation(ITexture _texture, Rect _frame, int _n_frames, 
                                                    LoopType _loop_type)
   {
     this(_texture, _frame, _n_frames);

@@ -38,10 +38,10 @@ public class AnimationCanvas extends GraphicCanvas
 
   /// METHODS
   // creation
-  public AnimationCanvas(Animation init_anim, Rect init_dest)
+  public AnimationCanvas(Animation init_anim, Rect init_dest, float frame_speed)
   {
     super(init_anim, init_dest);
-    frame_speed = 0.3f;    // FIXME
+    this.frame_speed = frame_speed;
   }
 
   // update

@@ -44,7 +44,7 @@ public abstract class ATextureManager
   }
   
   /* ATTRIBUTES */
-  private HashMap<String, ATexture> textures;
+  private HashMap<String, ITexture> textures;
   private HashMap<String, Graphic> graphics;
   private HashMap<String, Animation> animations;
 
@@ -52,13 +52,13 @@ public abstract class ATextureManager
   // creation
   public ATextureManager()
   {
-    textures = new HashMap<String, ATexture>();
+    textures = new HashMap<String, ITexture>();
     graphics = new HashMap<String, Graphic>();
     animations = new HashMap<String, Animation>();
   }
 
   // accessors
-  public ATexture getTexture(String image_name)
+  public ITexture getTexture(String image_name)
   {
     return textures.get(image_name);
   }
@@ -77,7 +77,7 @@ public abstract class ATextureManager
   public void addTexture(String name, ImageFileType type)
   {
     
-    ATexture new_texture = loadTexture("res/"+ name + type, type);
+    ITexture new_texture = loadTexture("res/gfx/"+ name + type, type);
     if(new_texture != null)
       textures.put(name, new_texture);
   }
@@ -98,5 +98,5 @@ public abstract class ATextureManager
   
   /* INTERFACE */
   
-  protected abstract ATexture loadTexture(String filename, ImageFileType type);
+  protected abstract ITexture loadTexture(String filename, ImageFileType type);
 }

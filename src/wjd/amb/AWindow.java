@@ -19,6 +19,7 @@ package wjd.amb;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
+import wjd.amb.resources.AAudioManager;
 import wjd.amb.resources.ATextureManager;
 import wjd.amb.resources.IResourceLoader;
 import wjd.amb.view.ICanvas;
@@ -66,6 +67,7 @@ public abstract class AWindow implements IDynamic
   protected IInput input;
   protected AScene scene;
   protected ATextureManager textureManager;
+  protected AAudioManager audioManager;
   
   /* METHODS */
   
@@ -76,12 +78,12 @@ public abstract class AWindow implements IDynamic
    * 
    * @param name Name of the Window, to be displayed at the top.
    * @param size The vector size of the Window in pixels: (width, height).
-   * @param textureManager The object used to load and store textures.
-   * @param fullscreen true if the we want the window to be full screen, false
+   * @param textureManager The object used to load and store graphics.
+   * @param audioManager The object used to load and store audio clips.
    * if not.
    */
   public AWindow(String name, V2 size, AScene first_scene, 
-                ATextureManager textureManager, boolean fullscreen)
+                ATextureManager textureManager, AAudioManager audioManager)
   {
     // window name
     this.name = name;
@@ -104,19 +106,7 @@ public abstract class AWindow implements IDynamic
     
     // resources
     this.textureManager = textureManager;
-  }
-  
-  /**
-   * Pass the required attributes to the window but don't open it yet.
-   * 
-   * @param name Name of the Window, to be displayed at the top.
-   * @param size The vector size of the Window in pixels: (width, height).
-   * @param textureManager The object used to load and store textures.
-   */
-  public AWindow(String name, V2 size, AScene first_scene, 
-                                       ATextureManager _textureManager)
-  {
-    this(name, size, first_scene, _textureManager, false);
+    this.audioManager = audioManager;
   }
   
   // accessors

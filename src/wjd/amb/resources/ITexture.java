@@ -14,41 +14,22 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package wjd.amb.resources;
 
-import java.awt.image.BufferedImage;
-import wjd.math.Rect;
+import wjd.math.V2;
 
 /**
- * 
- * 
- * @author wjd
- * @since jan-2012
+ *
+ * @author wdyce
+ * @since Nov 10, 2012
  */
-public class Graphic
+public interface ITexture
 {
-  /* ATTRIBUTES */
-  protected ITexture image;
-  protected Rect frame;
 
-  /* METHODS */
-  
-  // constructors
-  public Graphic(ITexture texture, Rect frame)
-  {
-    this.image = texture;
-    this.frame = frame;
-  }
-
-  // accessors
-  public ITexture getTexture()
-  {
-    return image;
-  }
-
-  public Rect getFrame()
-  {
-    return frame;
-  }
+  /**
+   * All textures must have a size.
+   *
+   * @return return the vector size of this texture, (width, height) in pixels.
+   */
+  public V2 getSize();
 }

@@ -29,7 +29,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
-import wjd.amb.resources.ATexture;
+import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -275,7 +275,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   @Override
-  public void texture(ATexture texture, Rect source, Rect destination)
+  public void texture(ITexture texture, Rect source, Rect destination)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }

@@ -16,7 +16,7 @@
  */
 package wjd.amb.view;
 
-import wjd.amb.resources.ATexture;
+import wjd.amb.resources.ITexture;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -150,5 +150,5 @@ public interface ICanvas
    * @param source
    * @param destination 
    */
-  public void texture(ATexture texture, Rect source, Rect destination);
+  public void texture(ITexture texture, Rect source, Rect destination);
 }

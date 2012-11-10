@@ -20,7 +20,7 @@ import java.awt.Font;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
-import wjd.amb.resources.ATexture;
+import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -259,7 +259,7 @@ public class LWJGLCanvas implements ICanvas
   }
   
   @Override
-  public void texture(ATexture texture, Rect source, Rect destination)
+  public void texture(ITexture texture, Rect source, Rect destination)
   {
     // fail if wrong kind of texture
     if(!(texture instanceof LWJGLTexture))

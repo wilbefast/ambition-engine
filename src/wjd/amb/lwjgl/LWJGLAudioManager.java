@@ -19,34 +19,32 @@ package wjd.amb.lwjgl;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ResourceLoader;
-import wjd.amb.resources.ATextureManager;
-import wjd.amb.resources.ITexture;
+import wjd.amb.resources.AAudioManager;
+import wjd.amb.resources.ISound;
 
 /**
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLTextureManager extends ATextureManager
+public class LWJGLAudioManager extends AAudioManager
 {
-
-  /* IMPLEMENTS -- ARESOURCEMANAGER */
+  /* IMPLEMENTS -- AAUDIOMANAGER */
   
   @Override
-  protected ITexture loadTexture(String filename, ImageFileType type)
+  protected ISound loadSound(String filename, AudioFileType type)
   {
     try
     {
-      LWJGLTexture result = 
-      new LWJGLTexture(TextureLoader.getTexture(type.name(), 
-                       ResourceLoader.getResourceAsStream(filename)));
-      return result;
+      LWJGLSound new_sound = new LWJGLSound(AudioLoader.getAudio(type.toString(), 
+                                ResourceLoader.getResourceAsStream(filename)));
+      return new_sound;
     }
     catch (IOException ex)
     {
-      Logger.getLogger(LWJGLTextureManager.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(LWJGLAudioManager.class.getName()).log(Level.SEVERE, null, ex);
       return null;
     }
   }

@@ -41,7 +41,7 @@ public class LWJGLWindow extends AWindow
   
   public LWJGLWindow(String _name, V2 _size, AScene first_scene)
   {
-    super(_name, _size, first_scene, new LWJGLTextureManager());
+    super(_name, _size, first_scene, new LWJGLTextureManager(), new LWJGLAudioManager());
   }
   
   /* OVERRIDES -- AWINDOW */

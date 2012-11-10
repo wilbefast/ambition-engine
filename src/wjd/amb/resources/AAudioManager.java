@@ -14,53 +14,58 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.lwjgl;
+package wjd.amb.resources;
 
-import org.newdawn.slick.opengl.Texture;
-import wjd.amb.resources.ITexture;
-import wjd.math.V2;
+import java.util.HashMap;
 
 /**
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLTexture implements ITexture
+public abstract class AAudioManager 
 {
-  /* ATTRIBUTES */
-  private Texture slick_texture;
-  private V2 size, fraction_used;
-
-  /* METHODS */
-  
-  // constructors
-  LWJGLTexture(Texture slick_texture)
+  /* NESTING */
+  public static enum AudioFileType
   {
-    this.slick_texture = slick_texture;
-    // NB - Slick fills textures to the nearest power of 2!
-    size = new V2(slick_texture.getImageWidth(), slick_texture.getImageHeight());
-    fraction_used = new V2(slick_texture.getWidth(), slick_texture.getHeight());
+    // values
+    OGG 
+    {
+      @Override
+      public String toString() { return ".ogg"; } 
+    },
+    WAV 
+    {
+      @Override
+      public String toString() { return ".wav"; } 
+    };
   }
   
-  // accessors
-  public V2 getUsedFraction()
+  /* ATTRIBUTES */
+  private HashMap<String, ISound> sounds;
+  
+  /* METHODS */
+
+  // constructors
+  public AAudioManager()
   {
-    return fraction_used;
+    sounds = new HashMap<String, ISound>();
+  }
+
+  // accessors
+  public ISound getSound(String image_name)
+  {
+    return sounds.get(image_name);
   }
   
   // mutators
-  public void bind()
+  public void addSound(String name, AudioFileType type)
   {
-    slick_texture.bind();
+    
+    ISound new_sound = loadSound("res/sfx/"+ name + type, type);
+    if(new_sound != null)
+      sounds.put(name, new_sound);
   }
   
-  /* IMPLEMENTS -- ATEXTURE */
-  
-  @Override
-  public V2 getSize()
-  {
-    return size;
-  }
-  
-
+  protected abstract ISound loadSound(String string, AudioFileType type);
 }
