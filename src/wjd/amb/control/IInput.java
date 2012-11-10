@@ -98,6 +98,14 @@ public interface IInput
   public V2 getMousePosition();
 
   /**
+   * Get the most recent movement of the mouse.
+   * 
+   * @return the vector movement of the mouse since the last time the function
+   * was called.
+   */
+  public V2 getMouseMove();
+  
+  /**
    * Get the direction that the user is pressing using a combination of arrow
    * keys.
    *

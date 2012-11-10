@@ -51,7 +51,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     {
       false, false, false
     };
-    public V2 position = new V2(0, 0);
+    public V2 position = new V2(0, 0), 
+              movement = new V2(0, 0);
     public double last_scroll = 0.0;
 
   }
@@ -225,6 +226,12 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   }
   
   @Override
+  public V2 getMouseMove()
+  {
+    return mouse.movement;
+  }
+  
+  @Override
   public Event pollEvents()
   {
     return events.poll();
@@ -296,6 +303,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   public void mouseMoved(MouseEvent e)
   {
     Point p = e.getPoint();
+    mouse.movement.xy(p.x, p.y).sub(mouse.position);
     mouse.position.xy(p.x, p.y);
   }
   

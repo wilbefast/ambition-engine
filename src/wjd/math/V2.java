@@ -233,7 +233,7 @@ public class V2 implements Serializable
   {
     return xy(x + dx, y + dy);
   }
-
+  
   /**
    * Multiply the horizontal and vertical components of the vector by a real.
    *
@@ -243,6 +243,28 @@ public class V2 implements Serializable
   public V2 scale(float multiplier)
   {
     return xy(x * multiplier, y * multiplier);
+  }
+  
+  /**
+   * Multiply the horizontal component of the vector by a real.
+   * 
+   * @param multiplier the real value to multiply the abscissa by.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 scaleX(float multiplier)
+  {
+    return xy(x * multiplier, y);
+  }
+  
+  /**
+   * Multiply the vertical component of the vector by a real.
+   * 
+   * @param multiplier the real value to multiply the ordinate by.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 scaleY(float multiplier)
+  {
+    return xy(x, y * multiplier);
   }
 
   /**
@@ -434,5 +456,25 @@ public class V2 implements Serializable
   {
     double cos = Math.cos(angle), sin = Math.sin(angle);
     return xy((float) (x * cos - y * sin), (float) (x * sin + y * cos));
+  }
+  
+  
+  /**
+   * Keep the vector within the bounds of a given rectangle by snapping it to 
+   * the edges if it is outside.
+   * 
+   * @param container the rectangle to keep this vector inside of.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 snapWithin(Rect container)
+  {
+    float endx = container.endx(), endy = container.endy();
+    
+    if(x > endx) x = endx;
+    if(x < container.x) x = container.x;
+    if(y > endy) y = endy;
+    if(y < container.y) y = container.y;
+    
+    return this;
   }
 }

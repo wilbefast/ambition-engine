@@ -142,7 +142,8 @@ public class LWJGLInput implements IInput
   
   /* ATTRIBUTES */
   private V2 key_direction = new V2(),
-             mouse_position = new V2();
+             mouse_position = new V2(),
+             mouse_direction = new V2();
   private Event nextMouseEvent;
   private Event nextKeyEvent;
   private int window_height; // needed to invert mouse coordinates
@@ -187,6 +188,14 @@ public class LWJGLInput implements IInput
     mouse_position.xy(Mouse.getX(), window_height - Mouse.getY());
     return mouse_position;
   }
+  
+  @Override
+  public V2 getMouseMove()
+  {
+    V2 result = mouse_direction.clone();
+    mouse_direction.xy(0.0f, 0.0f);
+    return result;
+  }
 
   @Override
   public V2 getKeyDirection()
@@ -230,9 +239,9 @@ public class LWJGLInput implements IInput
   {
     // get a new event of each type
     if(nextMouseEvent == null)
-      nextMouseEvent = nextMouseClick();
+      nextMouseEvent = nextMouseEvent();
     if(nextKeyEvent == null)
-      nextKeyEvent = nextKeyPress();
+      nextKeyEvent = nextKeyEvent();
     
     // choose whether to return a Mouse or Keyboard event
     Event nextEvent;
@@ -261,7 +270,7 @@ public class LWJGLInput implements IInput
   
   /* SUBROUTINES */
   
-  private KeyPress nextKeyPress()
+  private KeyPress nextKeyEvent()
   {
     return (Keyboard.next())
       ? new KeyPress(Keyboard.getEventNanoseconds()/1000, this,
@@ -270,10 +279,12 @@ public class LWJGLInput implements IInput
       : null;
   }
 
-  private MouseClick nextMouseClick()
+  private MouseClick nextMouseEvent()
   {
     while(Mouse.next())
     {
+      mouse_direction.add(Mouse.getEventDX(), -Mouse.getEventDY());
+      
       if(Mouse.getEventButton() != -1)
         return new MouseClick(Mouse.getEventNanoseconds()/1000, this,
                               bridgeMouseEvent(Mouse.getEventButton()),
