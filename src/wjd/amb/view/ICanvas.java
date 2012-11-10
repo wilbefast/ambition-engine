@@ -16,6 +16,7 @@
  */
 package wjd.amb.view;
 
+import wjd.amb.resources.ATexture;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -142,4 +143,12 @@ public interface ICanvas
    * @param position the position on the screen to draw the String.
    */
   public void text(String string, V2 position);
+  
+  /**
+   * 
+   * @param texture 
+   * @param source
+   * @param destination 
+   */
+  public void texture(ATexture texture, Rect source, Rect destination);
 }

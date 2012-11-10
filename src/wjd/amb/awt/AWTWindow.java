@@ -38,7 +38,7 @@ public class AWTWindow extends AWindow
   
   public AWTWindow(String _name, V2 _size, AScene first_scene)
   {
-    super(_name, _size, first_scene);
+    super(_name, _size, first_scene, null); // FIXME
   }
 
   /* IMPLEMENTATION -- AWINDOW */

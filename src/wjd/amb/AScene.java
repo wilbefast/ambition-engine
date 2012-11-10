@@ -20,6 +20,7 @@ import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IController;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
+import wjd.amb.view.ICanvas;
 import wjd.amb.view.IVisible;
 
 /**
@@ -64,6 +65,13 @@ public abstract class AScene implements IDynamic, IVisible, IController
   }
   
   // mutators
+  
+  public void initialise(AWindow window, IInput input, ICanvas canvas)
+  {
+    this.window = window;
+    
+    // overrides if nessecary
+  }
   
   public void setNext(AScene next)
   {

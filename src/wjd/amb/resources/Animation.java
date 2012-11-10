@@ -17,7 +17,6 @@
 
 package wjd.amb.resources;
 
-import java.awt.image.BufferedImage;
 import wjd.math.Rect;
 
 /**
@@ -27,41 +26,42 @@ import wjd.math.Rect;
  */
 public class Animation extends Graphic
 {
-  /// NESTED TYPES
-
+  /* NESTING */
   public static enum LoopType
   {
-
     STOP_AT_END,
     STOP_AT_START,
     WRAP_AROUND,
     ALTERNATE_DIRECTION;
   };
-  /// ATTRIBUTES -- INHERITED
+  
+  /* ATTRIBUTES -- INHERITED */
   // private BufferedImage image;
   // private iRect frame;
-  /// ATTRIBUTES
+  
+  /* ATTRIBUTES */
   private Rect strip;
-  private int numFrames;
-  private LoopType loopType;
+  private int n_frames;
+  private LoopType loop_type;
 
-  /// METHODS
-  // creation
-  public Animation(BufferedImage init_image, Rect init_frame,
-                   int init_numFrames)
+  /* METHODS */
+  
+  // constructors
+  public Animation(ATexture _texture, Rect _frame, int _n_frames)
   {
-    super(init_image, init_frame);
-    numFrames = init_numFrames;
-    strip = new Rect(frame.x, frame.y, frame.w * numFrames, frame.h);
+    super(_texture, _frame);
+    n_frames = _n_frames;
+    strip = new Rect(frame.x, frame.y, frame.w * n_frames, frame.h);
   }
 
-  public Animation(BufferedImage init_image, Rect init_frame,
-                   int init_numFrames, LoopType init_loopType)
+  public Animation(ATexture _texture, Rect _frame, int _n_frames, 
+                                                   LoopType _loop_type)
   {
-    this(init_image, init_frame, init_numFrames);
-    loopType = init_loopType;
+    this(_texture, _frame, _n_frames);
+    loop_type = _loop_type;
   }
 
+  // query
   public Rect getFrame(double frame_number)
   {
     if (frame_number == 0)
@@ -80,11 +80,11 @@ public class Animation extends Graphic
 
   public int getNumFrames()
   {
-    return numFrames;
+    return n_frames;
   }
 
   public LoopType getLoopType()
   {
-    return loopType;
+    return loop_type;
   }
 }

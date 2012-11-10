@@ -19,6 +19,8 @@ package wjd.amb;
 import wjd.amb.control.EUpdateResult;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
+import wjd.amb.resources.ATextureManager;
+import wjd.amb.resources.IResourceLoader;
 import wjd.amb.view.ICanvas;
 import wjd.math.V2;
 
@@ -63,6 +65,7 @@ public abstract class AWindow implements IDynamic
   protected ICanvas canvas;
   protected IInput input;
   protected AScene scene;
+  protected ATextureManager textureManager;
   
   /* METHODS */
   
@@ -73,10 +76,12 @@ public abstract class AWindow implements IDynamic
    * 
    * @param name Name of the Window, to be displayed at the top.
    * @param size The vector size of the Window in pixels: (width, height).
+   * @param textureManager The object used to load and store textures.
    * @param fullscreen true if the we want the window to be full screen, false
    * if not.
    */
-  public AWindow(String name, V2 size, AScene first_scene, boolean fullscreen)
+  public AWindow(String name, V2 size, AScene first_scene, 
+                ATextureManager textureManager, boolean fullscreen)
   {
     // window name
     this.name = name;
@@ -94,8 +99,11 @@ public abstract class AWindow implements IDynamic
     }
     
     // model
-    this.scene = first_scene;
-    this.scene.setWindow(this);
+    scene = first_scene;
+    scene.initialise(this, input, canvas);
+    
+    // resources
+    this.textureManager = textureManager;
   }
   
   /**
@@ -103,10 +111,12 @@ public abstract class AWindow implements IDynamic
    * 
    * @param name Name of the Window, to be displayed at the top.
    * @param size The vector size of the Window in pixels: (width, height).
+   * @param textureManager The object used to load and store textures.
    */
-  public AWindow(String name, V2 size, AScene first_scene)
+  public AWindow(String name, V2 size, AScene first_scene, 
+                                       ATextureManager _textureManager)
   {
-    this(name, size, first_scene, false);
+    this(name, size, first_scene, _textureManager, false);
   }
   
   // accessors
@@ -116,15 +126,25 @@ public abstract class AWindow implements IDynamic
     return size;
   }
   
+  public ATextureManager getTextureManager()
+  {
+    return textureManager;
+  }
+  
   // update
   
   /**
    * Run the application until it's time to stop.
+   * @param loader the resource-loading script to be run during the 
+   * initialisation.
    */
-  public void run() throws Exception
+  public void run(IResourceLoader loader) throws Exception
   {
     // start up
     create();
+    
+    // load resources *after* startup
+    loader.load(textureManager);
    
     // run
     boolean running = true;
@@ -141,7 +161,7 @@ public abstract class AWindow implements IDynamic
         if (next != null)
         {
           scene = next;
-          scene.setWindow(this);
+          scene.initialise(this, input, canvas);
         }
         // exit otherwise
         else

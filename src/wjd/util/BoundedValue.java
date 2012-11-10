@@ -123,6 +123,20 @@ public class BoundedValue
     return amount;
   }
   
+  public float empty()
+  {
+    float temp = balance;
+    balance = 0;
+    return temp;
+  }
+  
+  public float fill()
+  {
+    float temp = max-balance;
+    balance = max;
+    return temp;
+  }
+  
   /* OVERRIDES -- OBJECT */
   
   @Override

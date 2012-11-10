@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import wjd.amb.awt.AWTWindow;
 import wjd.amb.lwjgl.LWJGLWindow;
+import wjd.amb.resources.IResourceLoader;
 import wjd.math.V2;
 
 /**
@@ -53,7 +54,7 @@ public abstract class AmbitionEngine
   /* FUNCTIONS */
 
   public static void launch(String window_name, V2 window_size,
-                            AScene first_scene)
+                            AScene first_scene, IResourceLoader loader)
   {
     /* NB - LWJGL uses native libraries, so this program will crash at mainLoop-time
      * unless you indicate to the JVM where to find them! As such the program
@@ -65,8 +66,9 @@ public abstract class AmbitionEngine
     {
       // by default try to create a window using LWJGL's native OpenGL
       LOGGER.log(Level.INFO, "Launching LWJGL Window");
-      (window = new LWJGLWindow(window_name, window_size, first_scene)).run();
-
+      
+      // create window
+      (window = new LWJGLWindow(window_name, window_size, first_scene)).run(loader);
     }
     catch (UnsatisfiedLinkError | LWJGLException lwjgl_ex)
     {
@@ -76,7 +78,9 @@ public abstract class AmbitionEngine
         LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
         // default to AWT if there's a problem with LWJGL
         LOGGER.log(Level.INFO, "Launching AWT Window");
-        (window = new AWTWindow(window_name, window_size, first_scene)).run();
+        
+        // create window
+        (window = new AWTWindow(window_name, window_size, first_scene)).run(loader);
       }
       catch (Exception awt_ex)
       {

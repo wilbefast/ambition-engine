@@ -147,6 +147,15 @@ public class Rect implements Serializable
   {
     return w / h;
   }
+  
+  /**
+   * 
+   * @return the position of the bottom-right corner of the Rectangle.
+   */
+  public V2 endpos()
+  {
+    return new V2(x + w, y + h);
+  }
 
   /**
    * Convert to String, for debugging.

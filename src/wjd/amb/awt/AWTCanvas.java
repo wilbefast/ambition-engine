@@ -29,6 +29,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
+import wjd.amb.resources.ATexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -47,7 +48,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     return new Color(c.r, c.g, c.b, c.a);
   }
-  
+
   /* POSSIBLE DRAW COMMANDS TO BE QUEUED */
   private static interface DrawCommand { }
   
@@ -272,6 +273,15 @@ public class AWTCanvas extends JPanel implements ICanvas
     
     draw_queue.add(new DrawText(string, pov_pos));
   }
+  
+  @Override
+  public void texture(ATexture texture, Rect source, Rect destination)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+  
+  
+  /* OVERRIDES -- JCOMPONENT */
   
   @Override
   public void paintComponent(Graphics g)

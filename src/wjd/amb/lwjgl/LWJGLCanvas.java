@@ -20,6 +20,7 @@ import java.awt.Font;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
+import wjd.amb.resources.ATexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
 import wjd.amb.view.ICanvas;
@@ -251,5 +252,29 @@ public class LWJGLCanvas implements ICanvas
     glEnable(GL_BLEND);
       font.drawString(pov_pos.x, pov_pos.y, string, slickColour);
     glDisable(GL_BLEND);
+  }
+  
+  @Override
+  public void texture(ATexture texture, Rect source, Rect destination)
+  {
+    // fail if wrong kind of texture
+    if(!(texture instanceof LWJGLTexture))
+      return;
+    
+    LWJGLTexture lwjgl_texture = (LWJGLTexture)texture;
+    
+    Color.white.bind(); // clear binding
+    lwjgl_texture.bind();
+
+    glBegin(GL_QUADS);    
+      glTexCoord2f(0, 0);
+      glVertex2f(destination.x, destination.y);
+      glTexCoord2f(1,0);
+      glVertex2f(destination.endx(), destination.y);
+      glTexCoord2f(1,1);
+      glVertex2f(destination.endx(), destination.endy());
+      glTexCoord2f(0,1);
+      glVertex2f(destination.x, destination.endy());
+    glEnd();
   }
 }

@@ -14,41 +14,33 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package wjd.amb.lwjgl;
 
-package wjd.amb.resources;
-
-import java.awt.image.BufferedImage;
-import wjd.math.Rect;
+import org.newdawn.slick.opengl.Texture;
+import wjd.amb.resources.ATexture;
 
 /**
- * 
- * 
- * @author wjd
- * @since jan-2012
+ *
+ * @author wdyce
+ * @since Nov 10, 2012
  */
-public class Graphic
+public class LWJGLTexture extends ATexture
 {
   /* ATTRIBUTES */
-  protected ATexture image;
-  protected Rect frame;
+  Texture slick_texture;
 
   /* METHODS */
   
   // constructors
-  public Graphic(ATexture texture, Rect frame)
+  LWJGLTexture(Texture slick_texture)
   {
-    this.image = texture;
-    this.frame = frame;
+    this.slick_texture = slick_texture;
+  }
+  
+  // mutators
+  public void bind()
+  {
+    slick_texture.bind();
   }
 
-  // accessors
-  public ATexture getTexture()
-  {
-    return image;
-  }
-
-  public Rect getFrame()
-  {
-    return frame;
-  }
 }
