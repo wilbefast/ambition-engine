@@ -473,6 +473,19 @@ public class Rect implements Serializable
   {
     return wh(w * multiplier.x, h * multiplier.y);
   }
+  
+  /**
+   * Divide the size of the Rectangle element-wise by a vector
+   *
+   * @param divisor a pair of real values by which the height and width of
+   * the Rectangle will be divided respectively.
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect shrink(V2 divisor)
+  {
+    return wh(w / divisor.x, h / divisor.y);
+  }
+  
   // geometric mutators
 
   /**
@@ -554,7 +567,7 @@ public class Rect implements Serializable
    * Multiply the abscissa and width by the first element of the vector, the
    * ordinate and height by the second.
    * 
-   * @param multiplier
+   * @param multiplier the vector pair to element-wise multiply by.
    * @return 
    */
   public Rect mult(V2 multiplier)
@@ -563,6 +576,22 @@ public class Rect implements Serializable
     y *= multiplier.y;
     w *= multiplier.x;
     h *= multiplier.y;
+    return this;
+  }
+  
+  /**
+   * Divide the abscissa and width by the first element of the vector, the
+   * ordinate and height by the second.
+   * 
+   * @param divisor the vector pair to element-wise divide by.
+   * @return 
+   */
+  public Rect div(V2 divisor)
+  {
+    x /= divisor.x;
+    y /= divisor.y;
+    w /= divisor.x;
+    h /= divisor.y;
     return this;
   }
 }

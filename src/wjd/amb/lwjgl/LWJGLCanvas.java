@@ -50,11 +50,15 @@ public class LWJGLCanvas implements ICanvas
   }
   
   /* ATTRIBUTES */
+  
   private org.newdawn.slick.Color slickColour = Color.black;
   private org.newdawn.slick.Font font;
   private boolean use_camera;
   private ICamera camera;
   private V2 size = new V2();
+  
+  // intermediary calculations
+  private Rect relative_source = new Rect();
 
   /* METHODS */
   // creation
@@ -260,21 +264,26 @@ public class LWJGLCanvas implements ICanvas
     // fail if wrong kind of texture
     if(!(texture instanceof LWJGLTexture))
       return;
-    
     LWJGLTexture lwjgl_texture = (LWJGLTexture)texture;
     
+    // source may be null to use full image
+    if(source != null)
+      relative_source.reset(source).div(lwjgl_texture.getSize());
+    else
+      relative_source.size(lwjgl_texture.getUsedFraction());
+   
     Color.white.bind(); // clear binding
     lwjgl_texture.bind();
-
     glBegin(GL_QUADS);    
-      glTexCoord2f(0, 0);
+      glTexCoord2f(relative_source.x, relative_source.y);
       glVertex2f(destination.x, destination.y);
-      glTexCoord2f(1,0);
+      glTexCoord2f(relative_source.endx(), relative_source.y);
       glVertex2f(destination.endx(), destination.y);
-      glTexCoord2f(1,1);
+      glTexCoord2f(relative_source.endx(), relative_source.endy());
       glVertex2f(destination.endx(), destination.endy());
-      glTexCoord2f(0,1);
+      glTexCoord2f(relative_source.x, relative_source.endy());
       glVertex2f(destination.x, destination.endy());
     glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
   }
 }

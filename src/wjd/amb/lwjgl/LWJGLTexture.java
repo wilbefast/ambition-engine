@@ -18,6 +18,7 @@ package wjd.amb.lwjgl;
 
 import org.newdawn.slick.opengl.Texture;
 import wjd.amb.resources.ATexture;
+import wjd.math.V2;
 
 /**
  *
@@ -27,7 +28,8 @@ import wjd.amb.resources.ATexture;
 public class LWJGLTexture extends ATexture
 {
   /* ATTRIBUTES */
-  Texture slick_texture;
+  private Texture slick_texture;
+  private V2 size, fraction_used;
 
   /* METHODS */
   
@@ -35,6 +37,15 @@ public class LWJGLTexture extends ATexture
   LWJGLTexture(Texture slick_texture)
   {
     this.slick_texture = slick_texture;
+    // NB - Slick fills textures to the nearest power of 2!
+    size = new V2(slick_texture.getImageWidth(), slick_texture.getImageHeight());
+    fraction_used = new V2(slick_texture.getWidth(), slick_texture.getHeight());
+  }
+  
+  // accessors
+  public V2 getUsedFraction()
+  {
+    return fraction_used;
   }
   
   // mutators
@@ -42,5 +53,14 @@ public class LWJGLTexture extends ATexture
   {
     slick_texture.bind();
   }
+  
+  /* IMPLEMENTS -- ATEXTURE */
+  
+  @Override
+  public V2 getSize()
+  {
+    return size;
+  }
+  
 
 }

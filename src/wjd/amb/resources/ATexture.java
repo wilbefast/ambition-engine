@@ -16,11 +16,20 @@
  */
 package wjd.amb.resources;
 
+import wjd.math.V2;
+
 /**
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public abstract class ATexture 
+public abstract class ATexture
 {
+
+  /**
+   * All textures must have a size.
+   *
+   * @return return the vector size of this texture, (width, height) in pixels.
+   */
+  public abstract V2 getSize();
 }
