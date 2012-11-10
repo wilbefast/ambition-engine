@@ -144,6 +144,7 @@ public class LWJGLInput implements IInput
   private V2 key_direction = new V2(),
              mouse_position = new V2(),
              mouse_direction = new V2();
+  private int mouse_scroll = 0;
   private Event nextMouseEvent;
   private Event nextKeyEvent;
   private int window_height; // needed to invert mouse coordinates
@@ -179,7 +180,9 @@ public class LWJGLInput implements IInput
   @Override
   public int getMouseWheelDelta()
   {
-    return Mouse.getDWheel();
+    int temp = mouse_scroll;
+    mouse_scroll = 0;
+    return temp;
   }
 
   @Override
@@ -284,6 +287,8 @@ public class LWJGLInput implements IInput
     while(Mouse.next())
     {
       mouse_direction.add(Mouse.getEventDX(), -Mouse.getEventDY());
+      
+      mouse_scroll += Mouse.getEventDWheel();
       
       if(Mouse.getEventButton() != -1)
         return new MouseClick(Mouse.getEventNanoseconds()/1000, this,
