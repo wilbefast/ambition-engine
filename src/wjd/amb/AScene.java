@@ -16,11 +16,10 @@
  */
 package wjd.amb;
 
-import wjd.amb.control.Controller;
 import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IController;
 import wjd.amb.control.IDynamic;
 import wjd.amb.control.IInput;
-import wjd.amb.control.IInteractive;
 import wjd.amb.view.IVisible;
 
 /**
@@ -30,14 +29,14 @@ import wjd.amb.view.IVisible;
  * @author wdyce
  * @since 06-Oct-2012
  */
-public abstract class AScene implements IDynamic, IVisible, IInteractive
+public abstract class AScene implements IDynamic, IVisible, IController
 {
   /* ATTRIBUTES */
   /**
    * The Scene to switch to after this one.
    */
   protected AScene next = null;
-  protected Controller controller = null;
+  protected IController controller = this;
   protected AWindow window = null;
 
   /* METHODS */
@@ -77,7 +76,7 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
    * 
    * @param controller the new IController to be used to manipulate this Scene.
    */
-  public void setController(Controller controller)
+  public void setController(IController controller)
   {
     this.controller = controller;
   }
@@ -86,32 +85,47 @@ public abstract class AScene implements IDynamic, IVisible, IInteractive
   {
     this.window = window;
   }
-
-  /* IMPLEMENTATIONS -- IINTERACTIVE */
+  
+  /* IMPLEMENTS -- ICONTROLLER */
+  
   @Override
-  public final EUpdateResult processInput(IInput input)
+  public EUpdateResult processKeyPress(IInput.KeyPress event)
+  {
+    // override if needed
+    return EUpdateResult.CONTINUE;
+  }
+
+  @Override
+  public EUpdateResult processMouseClick(IInput.MouseClick event)
+  {
+    // override if needed
+    return EUpdateResult.CONTINUE;
+  }
+
+  /* IMPLEMENTATS -- IINTERACTIVE */
+  @Override
+  public EUpdateResult processInput(IInput input)
   {
     IInput.Event e;
     while ((e = input.pollEvents()) != null)
     {
       // event is a keypress
-      if (e instanceof IInput.KeyPress && controller != null)
+      if (e instanceof IInput.KeyPress)
       {
         EUpdateResult result = controller.processKeyPress((IInput.KeyPress) e);
         if (result != EUpdateResult.CONTINUE)
           return result;
       }
       // event is a mouse-click
-      else if (e instanceof IInput.MouseClick && controller != null)
+      else if (e instanceof IInput.MouseClick)
       {
-        EUpdateResult result 
-                        = controller.processMouseClick((IInput.MouseClick) e);
+        EUpdateResult result = controller.processMouseClick((IInput.MouseClick) e);
         if (result != EUpdateResult.CONTINUE)
           return result;
       }
     }
     // all the events are dealt with, now there's just the static state
-    return (controller != null 
+    return (controller != this 
             ? controller.processInput(input) 
             : EUpdateResult.CONTINUE);
   }

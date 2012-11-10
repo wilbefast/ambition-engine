@@ -19,23 +19,19 @@ package wjd.amb.control;
 /**
  *
  * @author wdyce
- * @since Nov 1, 2012
+ * @since Nov 10, 2012
  */
-public class Controller implements IInteractive
+public interface IController extends IInteractive
 {
-  /* METHODS */
-
+  /* INTERFACE */
+  
   /**
    * Treat a single KeyPress event.
    *
    * @param event a KeyPress event that has occurred.
    * @return the result of the update, normally CONTINUE.
    */
-  public EUpdateResult processKeyPress(IInput.KeyPress event)
-  {
-    // override if need be
-    return EUpdateResult.CONTINUE;
-  }
+  public EUpdateResult processKeyPress(IInput.KeyPress event);
 
   /**
    * Treat a single MouseClick event.
@@ -43,18 +39,5 @@ public class Controller implements IInteractive
    * @param event a MouseClick event that has occurred.
    * @return the result of the update, normally CONTINUE.
    */
-  public EUpdateResult processMouseClick(IInput.MouseClick event)
-  {
-    // override if need be
-    return EUpdateResult.CONTINUE;
-  }
-
-  /* IMPLEMENTS -- IDYNAMIC */
-  
-  @Override
-  public EUpdateResult processInput(IInput input)
-  {
-    // override if need be
-    return EUpdateResult.CONTINUE;
-  }
+  public EUpdateResult processMouseClick(IInput.MouseClick event);
 }

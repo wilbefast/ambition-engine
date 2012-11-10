@@ -531,4 +531,29 @@ public class Rect implements Serializable
     return shift(size().scale(1.0f - multiplier).scale(0.5f)).
       stretch(multiplier);
   }
+
+  public Rect reset(Rect r)
+  {
+    x = r.x;
+    y = r.y;
+    w = r.w;
+    h = r.h;
+    return this;
+  }
+  
+  /**
+   * Multiply the abscissa and width by the first element of the vector, the
+   * ordinate and height by the second.
+   * 
+   * @param multiplier
+   * @return 
+   */
+  public Rect mult(V2 multiplier)
+  {
+    x *= multiplier.x;
+    y *= multiplier.y;
+    w *= multiplier.x;
+    h *= multiplier.y;
+    return this;
+  }
 }
