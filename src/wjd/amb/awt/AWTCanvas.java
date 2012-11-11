@@ -91,7 +91,10 @@ public class AWTCanvas extends JPanel implements ICanvas
     public V2 pos;
     
     // methods
-    public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
+    public DrawText(String text, V2 pos) 
+    { 
+      this.text = text; this.pos = pos.clone(); 
+    }
     @Override
     public boolean equals(Object obj)
     {

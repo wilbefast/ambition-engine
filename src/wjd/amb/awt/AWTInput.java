@@ -17,11 +17,8 @@
 package wjd.amb.awt;
 
 import java.awt.AWTException;
-import java.awt.Cursor;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -29,10 +26,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.MemoryImageSource;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import wjd.amb.control.IInput;
 import wjd.amb.control.KeyRepeatFix;
 import wjd.math.V2;
@@ -48,12 +43,25 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   MouseMotionListener, MouseWheelListener
 { 
 
+  /* FUNCTIONS */
+  
+  private static EMouseButton bridgeMouseEvent(int code)
+  {
+    switch(code)
+    {
+      case 0: return EMouseButton.LEFT;
+      case 1: return EMouseButton.RIGHT;
+      case 2: return EMouseButton.MIDDLE;
+      default: return null;
+    }
+  }
+  
   /* NESTING */
   
   private static class Mouse
   {
     // constants
-    public static final int WHEEL_DELTA_MULTIPLIER = -180;
+    public static final int WHEEL_DELTA_MULTIPLIER = -225;
     
     // mouse buttons are set out: left, middle, right
     public boolean clicking[] =
@@ -316,13 +324,19 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void mousePressed(MouseEvent e)
   {
-    mouse.clicking[e.getButton() - 1] = true;
+    int button_i = e.getButton() - 1;
+    events.add(new MouseClick(System.currentTimeMillis(), this, 
+                bridgeMouseEvent(button_i), true));
+    mouse.clicking[button_i] = true;
   }
 
   @Override
   public void mouseReleased(MouseEvent e)
   {
-    mouse.clicking[e.getButton() - 1] = false;
+    int button_i = e.getButton() - 1;
+    events.add(new MouseClick(System.currentTimeMillis(), this, 
+                bridgeMouseEvent(button_i), false));
+    mouse.clicking[button_i] = false;
   }
 
   
