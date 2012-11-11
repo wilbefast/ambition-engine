@@ -134,7 +134,7 @@ public abstract class AWindow implements IDynamic
     create();
     
     // load resources *after* startup
-    loader.load(textureManager);
+    loader.load(textureManager, audioManager);
    
     // run
     boolean running = true;

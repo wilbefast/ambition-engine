@@ -14,37 +14,41 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.lwjgl;
+package wjd.amb.awt;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.newdawn.slick.openal.AudioLoader;
+import javax.imageio.ImageIO;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
-import wjd.amb.resources.AAudioManager;
-import wjd.amb.resources.ISound;
+import wjd.amb.resources.ATextureManager;
+import wjd.amb.resources.ITexture;
 
 /**
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLAudioManager extends AAudioManager
+public class AWTTextureManager extends ATextureManager
 {
-  /* IMPLEMENTS -- AAUDIOMANAGER */
+
+  /* IMPLEMENTS -- ARESOURCEMANAGER */
   
   @Override
-  protected ISound loadSound(String filename, AudioFileType type)
+  protected ITexture loadTexture(String filename, ImageFileType type)
   {
     try
     {
-      LWJGLSound new_sound = new LWJGLSound(AudioLoader.getAudio(type.name(), 
-                                ResourceLoader.getResourceAsStream(filename)));
-      return new_sound;
+      AWTTexture result 
+        = new AWTTexture(ImageIO.read(new File(filename)));
+      return result;
     }
     catch (IOException ex)
     {
-      Logger.getLogger(LWJGLAudioManager.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(AWTTextureManager.class.getName()).log(Level.SEVERE, null, ex);
       return null;
     }
   }

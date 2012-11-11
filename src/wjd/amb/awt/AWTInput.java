@@ -174,7 +174,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void showMouse(boolean toggle)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    // TODO
   }
   
   @Override

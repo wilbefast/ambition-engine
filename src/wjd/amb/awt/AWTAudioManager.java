@@ -14,13 +14,17 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.lwjgl;
+package wjd.amb.awt;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.util.ResourceLoader;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import wjd.amb.resources.AAudioManager;
 import wjd.amb.resources.ISound;
 
@@ -29,7 +33,7 @@ import wjd.amb.resources.ISound;
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLAudioManager extends AAudioManager
+public class AWTAudioManager extends AAudioManager
 {
   /* IMPLEMENTS -- AAUDIOMANAGER */
   
@@ -38,13 +42,26 @@ public class LWJGLAudioManager extends AAudioManager
   {
     try
     {
-      LWJGLSound new_sound = new LWJGLSound(AudioLoader.getAudio(type.name(), 
-                                ResourceLoader.getResourceAsStream(filename)));
+      Clip clip = AudioSystem.getClip();
+      //AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(filename));
+      //clip.open(inputStream);
+      AWTSound new_sound = new AWTSound(clip);
       return new_sound;
     }
-    catch (IOException ex)
+    /*catch (IOException ex)
     {
-      Logger.getLogger(LWJGLAudioManager.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(AWTAudioManager.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    catch (LineUnavailableException ex)
+    {
+      Logger.getLogger(AWTAudioManager.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    /*catch (UnsupportedAudioFileException ex)
+    {
+      Logger.getLogger(AWTAudioManager.class.getName()).log(Level.SEVERE, null, ex);
+    }*/
+    finally
+    {
       return null;
     }
   }

@@ -23,5 +23,5 @@ package wjd.amb.resources;
  */
 public interface IResourceLoader 
 {
-  public void load(ATextureManager textureManager);
+  public void load(ATextureManager textureManager, AAudioManager audioManager);
 }

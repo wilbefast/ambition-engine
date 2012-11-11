@@ -14,9 +14,9 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.lwjgl;
+package wjd.amb.awt;
 
-import org.newdawn.slick.opengl.Texture;
+import java.awt.image.BufferedImage;
 import wjd.amb.resources.ITexture;
 import wjd.math.V2;
 
@@ -25,41 +25,32 @@ import wjd.math.V2;
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLTexture implements ITexture
+public class AWTTexture implements ITexture
 {
   /* ATTRIBUTES */
-  private Texture slick_texture;
-  private V2 size, fraction_used;
+  private BufferedImage awt_texture;
+  private V2 size;
 
   /* METHODS */
   
   // constructors
-  LWJGLTexture(Texture slick_texture)
+  AWTTexture(BufferedImage awt_texture)
   {
-    this.slick_texture = slick_texture;
-    // NB - Slick fills textures to the nearest power of 2!
-    size = new V2(slick_texture.getImageWidth(), slick_texture.getImageHeight());
-    fraction_used = new V2(slick_texture.getWidth(), slick_texture.getHeight());
+    this.awt_texture = awt_texture;
+    size = new V2(awt_texture.getWidth(), awt_texture.getHeight());
   }
-  
-  // accessors
-  public V2 getUsedFraction()
-  {
-    return fraction_used;
-  }
-  
-  // mutators
-  public void bind()
-  {
-    slick_texture.bind();
-  }
-  
+
   /* IMPLEMENTS -- ITEXTURE */
   
   @Override
   public V2 getSize()
   {
     return size;
+  }
+
+  BufferedImage getImage()
+  {
+    return awt_texture;
   }
   
 

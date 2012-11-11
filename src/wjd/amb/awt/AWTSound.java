@@ -14,14 +14,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb.lwjgl;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.util.ResourceLoader;
-import wjd.amb.resources.AAudioManager;
+package wjd.amb.awt;
+import javax.sound.sampled.Clip;
 import wjd.amb.resources.ISound;
 
 /**
@@ -29,23 +23,42 @@ import wjd.amb.resources.ISound;
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class LWJGLAudioManager extends AAudioManager
+class AWTSound implements ISound 
 {
-  /* IMPLEMENTS -- AAUDIOMANAGER */
-  
-  @Override
-  protected ISound loadSound(String filename, AudioFileType type)
+  /* NESTING */
+  private static class AWTSoundInstance implements Runnable
   {
-    try
+    // attributes
+    private Clip clip;
+    
+    // constructors
+    public AWTSoundInstance(Clip clip)
     {
-      LWJGLSound new_sound = new LWJGLSound(AudioLoader.getAudio(type.name(), 
-                                ResourceLoader.getResourceAsStream(filename)));
-      return new_sound;
+      this.clip = clip;
     }
-    catch (IOException ex)
+    
+    // implements -- runnable
+    
+    @Override
+    public void run()
     {
-      Logger.getLogger(LWJGLAudioManager.class.getName()).log(Level.SEVERE, null, ex);
-      return null;
+      clip.start(); 
     }
+    
   }
+  
+  /* ATTRIBUTES */
+  private Clip awt_audio;
+  
+  /* METHODS */
+
+  // constructors
+  AWTSound(Clip awt_audio)
+  {
+    this.awt_audio = awt_audio;
+  }
+  
+  // accessors
+
+  // mutators
 }

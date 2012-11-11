@@ -19,7 +19,7 @@ package wjd.amb.lwjgl;
 import java.awt.Font;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
 import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
@@ -52,7 +52,7 @@ public class LWJGLCanvas implements ICanvas
   /* ATTRIBUTES */
   
   private org.newdawn.slick.Color slickColour = Color.black;
-  private org.newdawn.slick.Font font;
+  private org.newdawn.slick.UnicodeFont font;
   private boolean use_camera;
   private ICamera camera;
   private V2 size = new V2();
@@ -69,20 +69,21 @@ public class LWJGLCanvas implements ICanvas
   private LWJGLCanvas()
   {
     // background colour and depth
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClearDepth(1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     // 2d initialisation
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-
+    
     // we need blending (alpha) for drawing text
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // load a default font
-    font = new TrueTypeFont(new java.awt.Font("Arial", Font.PLAIN, 12), false);
+    font = new UnicodeFont(new java.awt.Font("Arial", Font.PLAIN, 12));
   }
   
   /* IMPLEMENTATION -- ICANVAS */
@@ -164,14 +165,14 @@ public class LWJGLCanvas implements ICanvas
   @Override
   public ICanvas setCanvasFont(java.awt.Font awt_font)
   {
-    font = new TrueTypeFont(awt_font, false); // not anti-aliasing
+    font = new UnicodeFont(awt_font);
     return this;
   }
   
   @Override
   public ICanvas setFontSize(int new_size)
   {
-    font = new TrueTypeFont(new Font("Arial", Font.PLAIN, new_size), false);
+    font = new UnicodeFont(new Font("Arial", Font.PLAIN, new_size));
     return this;
   }
   
@@ -189,7 +190,7 @@ public class LWJGLCanvas implements ICanvas
   @Override
   public void clear()
   {
-    glClear( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
+    glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
   }
   
@@ -253,9 +254,8 @@ public class LWJGLCanvas implements ICanvas
     // move based on camera position where applicable
     V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
     
-    glEnable(GL_BLEND);
-      font.drawString(pov_pos.x, pov_pos.y, string, slickColour);
-    glDisable(GL_BLEND);
+    font.drawString(pov_pos.x, pov_pos.y, string, slickColour);
+    //glBindTexture(GL_TEXTURE_2D, 0); // Slick forgot to unbind texture!
   }
   
   @Override
@@ -272,7 +272,7 @@ public class LWJGLCanvas implements ICanvas
     else
       relative_source.size(lwjgl_texture.getUsedFraction());
    
-    Color.white.bind(); // clear binding
+    glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
     lwjgl_texture.bind();
     glBegin(GL_QUADS);    
       glTexCoord2f(relative_source.x, relative_source.y);

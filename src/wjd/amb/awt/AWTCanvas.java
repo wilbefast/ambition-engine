@@ -26,6 +26,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
@@ -64,6 +65,15 @@ public class AWTCanvas extends JPanel implements ICanvas
     public String text;
     public V2 pos;
     public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
+  }
+  private static class DrawImage implements DrawCommand
+  {
+    public Rect source, dest;
+    public BufferedImage image;
+    public DrawImage(Rect source, Rect dest, BufferedImage image)
+    {
+      this.source = source; this.dest = dest; this.image = image;
+    }
   }
   private static class ColourChange implements DrawCommand
   {
@@ -277,7 +287,12 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void texture(ITexture texture, Rect source, Rect destination)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    // fail if wrong kind of texture
+    if(!(texture instanceof AWTTexture))
+      return;
+    AWTTexture awt_texture = (AWTTexture)texture;
+    
+    draw_queue.add(new DrawImage(source, destination, awt_texture.getImage()));
   }
   
   
@@ -312,6 +327,27 @@ public class AWTCanvas extends JPanel implements ICanvas
       {
         DrawText text_cmd = (DrawText)command;
         g2d.drawString(text_cmd.text, text_cmd.pos.x, text_cmd.pos.y);
+      }
+      // draw image
+      else if(command instanceof DrawImage)
+      {
+        DrawImage img_cmd = (DrawImage)command;
+        try
+        {
+          BufferedImage subimage = (img_cmd.source != null)
+                          ? img_cmd.image.getSubimage(
+                                  (int)img_cmd.source.x, (int)img_cmd.source.y, 
+                                  (int)img_cmd.source.w, (int)img_cmd.source.h)
+                          : img_cmd.image;
+          // Draw it on the screen
+          g2d.drawImage(subimage, (int)img_cmd.dest.x, (int)img_cmd.dest.y, 
+                                  (int)img_cmd.dest.w, (int)img_cmd.dest.h, 
+                                  null);
+        }
+        catch (java.awt.image.RasterFormatException e)
+        {
+          System.out.println("Invalid sub-rect " + img_cmd.source);
+        }
       }
       // change colour
       else if(command instanceof ColourChange)
