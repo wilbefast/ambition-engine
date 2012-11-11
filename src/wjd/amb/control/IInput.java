@@ -75,11 +75,12 @@ public interface IInput
   // mutators
   
   /**
-   * Show or hide the mouse cursor.
+   * Does this application claim the mouse?
    * 
-   * @param toggle true to show the cursor in future, false to hide it.
+   * @param toggle true to hide the mouse and to keep it within the window,
+   * false to release and start redrawing the mouse.
    */
-  public void showMouse(boolean toggle);
+  public void captureMouse(boolean toggle);
   
   // accessors 
   

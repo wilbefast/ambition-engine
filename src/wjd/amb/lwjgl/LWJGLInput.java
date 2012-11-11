@@ -172,9 +172,9 @@ public class LWJGLInput implements IInput
   /* IMPLEMENTATIONS -- IINPUT */
   
   @Override
-  public void showMouse(boolean toggle)
+  public void captureMouse(boolean toggle)
   {
-    Mouse.setGrabbed(!toggle);
+    Mouse.setGrabbed(toggle);
   }
   
   @Override

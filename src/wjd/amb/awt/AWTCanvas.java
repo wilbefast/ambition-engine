@@ -27,8 +27,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 import javax.swing.JPanel;
 import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
@@ -57,22 +58,99 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     public Shape shape;
     public boolean fill;
+    
+    // methods
     public DrawShape(Shape shape, boolean fill) { this.shape = shape; 
                                                   this.fill = fill; }
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      final DrawShape other = (DrawShape) obj;
+      if (!Objects.equals(this.shape, other.shape))
+        return false;
+      if (this.fill != other.fill)
+        return false;
+      return true;
+    }
+    @Override
+    public int hashCode()
+    {
+      int hash = 5;
+      hash = 71 * hash + Objects.hashCode(this.shape);
+      hash = 71 * hash + (this.fill ? 1 : 0);
+      return hash;
+    }
   }
   private static class DrawText implements DrawCommand
   {
     public String text;
     public V2 pos;
+    
+    // methods
     public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      final DrawText other = (DrawText) obj;
+      if (!Objects.equals(this.text, other.text))
+        return false;
+      if (!Objects.equals(this.pos, other.pos))
+        return false;
+      return true;
+    }
+    @Override
+    public int hashCode()
+    {
+      int hash = 7;
+      hash = 29 * hash + Objects.hashCode(this.text);
+      hash = 29 * hash + Objects.hashCode(this.pos);
+      return hash;
+    }
   }
   private static class DrawImage implements DrawCommand
   {
     public Rect source, dest;
     public BufferedImage image;
+    
+    // methods
     public DrawImage(Rect source, Rect dest, BufferedImage image)
     {
       this.source = source; this.dest = dest; this.image = image;
+    }
+
+    @Override
+    public int hashCode()
+    {
+      int hash = 5;
+      hash = 89 * hash + Objects.hashCode(this.source);
+      hash = 89 * hash + Objects.hashCode(this.dest);
+      hash = 89 * hash + Objects.hashCode(this.image);
+      return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      final DrawImage other = (DrawImage) obj;
+      if (!Objects.equals(this.source, other.source))
+        return false;
+      if (!Objects.equals(this.dest, other.dest))
+        return false;
+      if (!Objects.equals(this.image, other.image))
+        return false;
+      return true;
     }
   }
   private static class ColourChange implements DrawCommand
@@ -102,7 +180,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   /* ATTRIBUTES */
-  private Queue<DrawCommand> draw_queue;
+  private Set<DrawCommand> draw_queue;
   private ICamera camera = null;
   private V2 size = new V2();
   private boolean use_camera = false;
@@ -115,7 +193,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    */
   public AWTCanvas()
   {
-    draw_queue = new LinkedList<DrawCommand>();
+    draw_queue = new LinkedHashSet<DrawCommand>();
   }
   
   /* IMPLEMENTATIONS -- ICANVAS */
@@ -165,28 +243,28 @@ public class AWTCanvas extends JPanel implements ICanvas
 
   // modify the paintbrush state
   @Override
-  public ICanvas setColour(Colour colour)
+  public synchronized ICanvas setColour(Colour colour)
   {
     draw_queue.add(new ColourChange(colour));
     return this;
   }
 
   @Override
-  public ICanvas setLineWidth(float lineWidth)
+  public synchronized ICanvas setLineWidth(float lineWidth)
   {
     draw_queue.add(new LineWidthChange(lineWidth));
     return this;
   }
 
   @Override
-  public ICanvas setCanvasFont(Font new_font)
+  public synchronized ICanvas setCanvasFont(Font new_font)
   {
     draw_queue.add(new FontChange(new_font));
     return this;
   }
   
   @Override
-  public ICanvas setFontSize(int size)
+  public synchronized ICanvas setFontSize(int size)
   {
     draw_queue.add(new FontSizeChange(size));
     return this;
@@ -204,7 +282,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * Clear the screen.
    */
   @Override
-  public void clear()
+  public synchronized void clear()
   {
     // empty the list of draw_queue
     draw_queue.clear();
@@ -218,7 +296,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param radius the size of the circle from centre to outskirts.
    */
   @Override
-  public void circle(V2 centre, float radius, boolean fill)
+  public synchronized void circle(V2 centre, float radius, boolean fill)
   {
     // move based on camera position where applicable
     V2 pov_centre;
@@ -242,7 +320,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param end vector position corresponding to the end of the line.
    */
   @Override
-  public void line(V2 start, V2 end)
+  public synchronized void line(V2 start, V2 end)
   {
     // move based on camera position where applicable
     V2 pov_start = (use_camera) ? camera.getPerspective(start) : start;
@@ -259,7 +337,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param rect the rectangle object whose outline will be drawn.
    */
   @Override
-  public void box(Rect rect, boolean fill)
+  public synchronized void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
     Rect pov_rect = (use_camera) ? camera.getPerspective(rect) : rect;
@@ -276,7 +354,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    * @param position the position on the screen to draw the String.
    */
   @Override
-  public void text(String string, V2 position)
+  public synchronized void text(String string, V2 position)
   {
     // move based on camera position where applicable
     V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
@@ -285,7 +363,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   @Override
-  public void texture(ITexture texture, Rect source, Rect destination)
+  public synchronized void texture(ITexture texture, Rect source, Rect destination)
   {
     // fail if wrong kind of texture
     if(!(texture instanceof AWTTexture))
@@ -301,17 +379,19 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void paintComponent(Graphics g)
   {
+    int i = 0;
+    
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     
     // Clear the screen in white
+    // FIXME no clear
     g2d.setColor(Color.WHITE);
     g2d.fillRect(0, 0, getWidth(), getHeight());
     
     // Draw each shape in black by default
     g2d.setColor(Color.BLACK);
-    Object command;
-    while((command = draw_queue.poll()) != null)
+    for(Object command : draw_queue)
     {
       // draw a shape
       if(command instanceof DrawShape)

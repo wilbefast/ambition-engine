@@ -16,7 +16,9 @@
  */
 package wjd.amb.awt;
 
+import java.awt.AWTException;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -24,6 +26,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import wjd.amb.control.IInput;
 import wjd.amb.control.KeyRepeatFix;
 import wjd.math.V2;
@@ -54,7 +58,21 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     public V2 position = new V2(0, 0), 
               movement = new V2(0, 0);
     public double last_scroll = 0.0;
-
+    private Robot robot;
+    
+    // methods
+    public Mouse()
+    {
+      try
+      {
+        robot = new Robot();
+      }
+      catch (AWTException ex)
+      {
+        Logger.getLogger(AWTInput.class.getName()).log(Level.SEVERE, null, ex);
+        robot = null;
+      }
+    }
   }
 
   private static class Keyboard
@@ -172,7 +190,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   /* IMPLEMENTATIONS - IINPUT */
   
   @Override
-  public void showMouse(boolean toggle)
+  public void captureMouse(boolean toggle)
   {
     // TODO
   }

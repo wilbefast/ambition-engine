@@ -32,7 +32,7 @@ import wjd.math.V2;
 public abstract class AWindow implements IDynamic
 {
   /* CONSTANTS */
-  public static final int MAX_FPS = 60;
+  public static final int MAX_FPS = 30;
 
   
   /* NESTING */
