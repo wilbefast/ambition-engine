@@ -89,16 +89,12 @@ public abstract class AWindow implements IDynamic
     this.name = name;
     
     // window size, fullscreen
-    if(size != null)
-    {
-      this.size = size.floor();
-      this.fullscreen = fullscreen;
-    }
+    this.size = size;
+    fullscreen = (size == null);
+    if(fullscreen)
+      size = desktopResolution();
     else
-    {
-      this.size = screenSize();
-      this.fullscreen = true;
-    }
+      size.floor();
     
     // model
     scene = first_scene;
@@ -180,6 +176,14 @@ public abstract class AWindow implements IDynamic
   /* INTERFACE */
   
   /**
+   * Does this application claim the mouse?
+   * 
+   * @param toggle true to hide the mouse and to keep it within the window,
+   * false to release and start redrawing the mouse.
+   */
+  public abstract void grabCursor(boolean toggle);
+  
+  /**
    * Return the current time.
    *
    * @return the current system time in milliseconds.
@@ -187,11 +191,11 @@ public abstract class AWindow implements IDynamic
   public abstract long timeNow();
   
   /**
-   * How big is the screen?
+   * What is the resolution of the user's desktop?
    * 
    * @return the current screen width and height in vector form.
    */
-  public abstract V2 screenSize();
+  public abstract V2 desktopResolution();
 
   /* LIFE CYCLE */
 

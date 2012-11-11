@@ -72,16 +72,6 @@ public interface IInput
 
   /* METHODS */
   
-  // mutators
-  
-  /**
-   * Does this application claim the mouse?
-   * 
-   * @param toggle true to hide the mouse and to keep it within the window,
-   * false to release and start redrawing the mouse.
-   */
-  public void captureMouse(boolean toggle);
-  
   // accessors 
   
   /**

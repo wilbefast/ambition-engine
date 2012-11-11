@@ -17,8 +17,11 @@
 package wjd.amb.awt;
 
 import java.awt.AWTException;
+import java.awt.Cursor;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -26,8 +29,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.MemoryImageSource;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import wjd.amb.control.IInput;
 import wjd.amb.control.KeyRepeatFix;
 import wjd.math.V2;
@@ -58,21 +63,9 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     public V2 position = new V2(0, 0), 
               movement = new V2(0, 0);
     public double last_scroll = 0.0;
-    private Robot robot;
-    
-    // methods
-    public Mouse()
-    {
-      try
-      {
-        robot = new Robot();
-      }
-      catch (AWTException ex)
-      {
-        Logger.getLogger(AWTInput.class.getName()).log(Level.SEVERE, null, ex);
-        robot = null;
-      }
-    }
+    public Robot robot;
+    public boolean capture;
+    private boolean robot_controlled = false;
   }
 
   private static class Keyboard
@@ -171,29 +164,49 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   
   /* ATTRIBUTES */
   
-  Mouse mouse;
-  Keyboard keyboard;
-  LimitedQueue<IInput.Event> events 
+  private Mouse mouse;
+  private Keyboard keyboard;
+  private LimitedQueue<IInput.Event> events 
     = new LimitedQueue<IInput.Event>(MAX_EVENTS);
+  private V2 win_centre_abs = new V2(), win_centre_rel = new V2();
   
   /* METHODS */
   
   // creation
   private AWTInput()
   {
+    // Mouse
     mouse = new Mouse();
+    try
+    {
+      mouse.robot = new Robot();
+    }
+    catch (AWTException ex)
+    {
+      Logger.getLogger(AWTInput.class.getName()).log(Level.SEVERE, null, ex);
+      mouse.robot = null;
+    }
+    
+    // Keyboard
     keyboard = new Keyboard();
     // No phantom KeyReleased Events on Linux please!
     KeyRepeatFix.install();
   }
   
-  /* IMPLEMENTATIONS - IINPUT */
+  // mutators
   
-  @Override
-  public void captureMouse(boolean toggle)
+  public void grabCursor(boolean toggle)
   {
-    // TODO
+    mouse.capture = toggle;
   }
+  
+  public void setWindowCentre(V2 absolute, V2 offset)
+  {
+    win_centre_abs.reset(absolute);
+    win_centre_rel.reset(absolute).sub(offset);
+  }
+  
+  /* IMPLEMENTATIONS - IINPUT */
   
   @Override
   public int getMouseWheelDelta()
@@ -246,7 +259,9 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public V2 getMouseMove()
   {
-    return mouse.movement;
+    V2 result = mouse.movement.clone();
+    mouse.movement.xy(0.0f, 0.0f);
+    return result;
   }
   
   @Override
@@ -320,9 +335,26 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void mouseMoved(MouseEvent e)
   {
+    // get new position
     Point p = e.getPoint();
-    mouse.movement.xy(p.x, p.y).sub(mouse.position);
+    
+    // ignore robot events
+    if(mouse.robot_controlled 
+       || (p.x == mouse.position.x && p.y == mouse.position.y))
+    {
+      mouse.robot_controlled = false;
+      return;
+    }
+    
+    mouse.movement.xy(p.x, p.y).sub((mouse.capture) ? win_centre_rel : mouse.position);
     mouse.position.xy(p.x, p.y);
+    
+    if(mouse.capture)
+    {
+      mouse.robot.mouseMove((int)win_centre_abs.x, (int)win_centre_abs.y);
+      mouse.position.reset(win_centre_rel);
+      mouse.robot_controlled = true;
+    }
   }
   
   /* IMPLEMENTATIONS - MOUSEWHEELLISTENER */

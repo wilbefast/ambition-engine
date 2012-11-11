@@ -163,6 +163,13 @@ public class LWJGLInput implements IInput
     Mouse.create();
   }
   
+  // mutators
+  
+  public void grabCursor(boolean toggle)
+  {
+    Mouse.setGrabbed(toggle);
+  }
+  
   // accessors
   public void setWindowHeight(int window_height)
   {
@@ -170,12 +177,6 @@ public class LWJGLInput implements IInput
   }
   
   /* IMPLEMENTATIONS -- IINPUT */
-  
-  @Override
-  public void captureMouse(boolean toggle)
-  {
-    Mouse.setGrabbed(toggle);
-  }
   
   @Override
   public int getMouseWheelDelta()

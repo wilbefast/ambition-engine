@@ -16,6 +16,8 @@
  */
 package wjd.amb.awt;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -29,6 +31,7 @@ import wjd.math.V2;
 public class AWTWindowJFrame  extends JFrame
 {
   /* ATTRIBUTES */
+  private V2 centre = new V2(), offset = new V2();
   
   /* METHODS */
 
@@ -52,6 +55,23 @@ public class AWTWindowJFrame  extends JFrame
     // This should always be last
     setVisible(true);
   }
+  
+  // accessors
+  
+  public V2 getCentre()
+  {
+    Point corner = getLocationOnScreen();
+    Dimension size = getSize();
+    return (centre.xy(corner.x + size.width/2, corner.y + size.height/2));
+  }
+  
+  public V2 getOffset()
+  {
+    Point corner = getLocationOnScreen();
+    return (offset.xy(corner.x, corner.y));
+  }
+  
+  // mutators
   
   public void destroy()
   {

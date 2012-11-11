@@ -57,6 +57,12 @@ public class LWJGLWindow extends AWindow
   }
   
   /* IMPLEMENTATION -- AWINDOW */
+  
+  @Override
+  public void grabCursor(boolean toggle)
+  {
+    ((LWJGLInput)input).grabCursor(toggle);
+  }
 
   @Override
   public long timeNow()
@@ -65,7 +71,7 @@ public class LWJGLWindow extends AWindow
   }
   
   @Override
-  public V2 screenSize()
+  public V2 desktopResolution()
   {
     DisplayMode d = Display.getDesktopDisplayMode();
     return new V2(d.getWidth(), d.getHeight());
@@ -85,6 +91,8 @@ public class LWJGLWindow extends AWindow
   @Override
   public void create() throws LWJGLException
   {
+    System.out.println("size=" + size);
+    
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x, (int)size.y));
     Display.setTitle(name);

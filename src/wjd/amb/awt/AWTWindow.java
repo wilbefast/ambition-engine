@@ -17,7 +17,14 @@
 
 package wjd.amb.awt;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.image.MemoryImageSource;
 import wjd.amb.AScene;
 import wjd.amb.AWindow;
 import wjd.math.V2;
@@ -29,7 +36,7 @@ import wjd.math.V2;
  * @author wdyce 
  * @since 25 Jan, 2012
  */
-public class AWTWindow extends AWindow
+public class AWTWindow extends AWindow implements ComponentListener
 {
   /* ATTRIBUTES */
   private AWTWindowJFrame jframe;
@@ -44,13 +51,32 @@ public class AWTWindow extends AWindow
   /* IMPLEMENTATION -- AWINDOW */
   
   @Override
+  public void grabCursor(boolean toggle)
+  {
+    // grab or release the cursor
+    ((AWTInput)input).grabCursor(toggle);
+    
+    // hide the cursor
+    if(toggle)
+    {
+      int[] pixels = new int[16 * 16];
+      Image image = Toolkit.getDefaultToolkit().createImage(
+              new MemoryImageSource(16, 16, pixels, 0, 16));
+      Cursor transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor
+                                    (image, new Point(0, 0), "invisibleCursor");
+      
+      jframe.getContentPane().setCursor(transparentCursor);
+    }
+  }
+  
+  @Override
   public long timeNow()
   {
     return System.currentTimeMillis();
   }
   
   @Override
-  public V2 screenSize()
+  public V2 desktopResolution()
   {
     Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
     return new V2(d.width, d.height);
@@ -66,6 +92,7 @@ public class AWTWindow extends AWindow
     input = AWTInput.getInstance();
     // finally create AWT window
     jframe = new AWTWindowJFrame(name, size, (AWTCanvas)canvas, (AWTInput)input);
+    jframe.addComponentListener(this);
   }
   
   @Override
@@ -94,5 +121,32 @@ public class AWTWindow extends AWindow
     {
       // do nothing
     }
+  }
+
+  /* IMPLEMENTS -- COMPONENTLISTENER */
+  
+  @Override
+  public void componentResized(ComponentEvent ce)
+  {
+    resetWindowSize();
+  }
+
+  @Override
+  public void componentMoved(ComponentEvent ce)
+  {
+    resetWindowSize();
+  }
+
+  @Override
+  public void componentShown(ComponentEvent ce) { }
+
+  @Override
+  public void componentHidden(ComponentEvent ce) { }
+  
+  /* SUBROUTINES */
+  
+  public void resetWindowSize()
+  {
+    ((AWTInput)input).setWindowCentre(jframe.getCentre(), jframe.getOffset());
   }
 }
