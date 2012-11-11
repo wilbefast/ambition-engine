@@ -17,7 +17,6 @@
 
 package wjd.amb.resources;
 
-import java.awt.image.BufferedImage;
 import wjd.math.Rect;
 
 /**

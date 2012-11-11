@@ -216,7 +216,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   
   // modify the canvas itself
   @Override
-  public ICanvas setSize(V2 size)
+  public synchronized ICanvas setSize(V2 size)
   {
     // reset size
     this.size = size;
@@ -229,7 +229,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   @Override
-  public ICanvas setCamera(ICamera camera)
+  public synchronized ICanvas setCamera(ICamera camera)
   {
     // attach camera and reset its field size
     this.camera = camera;
@@ -274,7 +274,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   @Override
-  public ICanvas toggleCamera(boolean use_camera)
+  public synchronized ICanvas toggleCamera(boolean use_camera)
   {
     draw_queue.add(new ToggleCamera(use_camera));
     return this;
@@ -380,7 +380,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   /* OVERRIDES -- JCOMPONENT */
   
   @Override
-  public void paintComponent(Graphics g)
+  public synchronized void paintComponent(Graphics g)
   {
     int i = 0;
     

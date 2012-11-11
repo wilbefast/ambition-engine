@@ -66,20 +66,7 @@ public class GraphicCanvas implements IVisible
   @Override
   public void render(ICanvas canvas)
   {
-    
-    // Grab the appropriate subimage
-    /*Rect src = getSubrect();
-    try
-    {
-      BufferedImage subimage = graphic.getImage().getSubimage(src.x, src.y,
-                                                              src.width, src.height);
-      // Draw it on the screen
-      g2d.drawImage(subimage, dest.x, dest.y, dest.width, dest.height, null);
-    }
-    catch (java.awt.image.RasterFormatException e)
-    {
-      System.out.println("Problem with " + getSubrect());
-    }*/
+    canvas.texture(graphic.getTexture(), getSubrect(), dest);
   }
 
   

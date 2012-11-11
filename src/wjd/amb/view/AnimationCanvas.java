@@ -17,6 +17,8 @@
 
 package wjd.amb.view;
 
+import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IDynamic;
 import wjd.amb.resources.Animation;
 import wjd.math.Rect;
 
@@ -25,18 +27,18 @@ import wjd.math.Rect;
  * @author wjd
  * @since jan-2012
  */
-public class AnimationCanvas extends GraphicCanvas
+public class AnimationCanvas extends GraphicCanvas implements IDynamic
 // implements IVisible via GraphicCanvas
 {
-  /// ATTRIBUTES -- inherited
+  /* ATTRIBUTES -- inherited */
   // private Graphic graphic;
   // private iRect dest;
 
-  // ATTRIBUTES
+  /* ATTRIBUTES */
   private float current_frame = 0;
   private float frame_speed;
 
-  /// METHODS
+  /* METHODS */
   // creation
   public AnimationCanvas(Animation init_anim, Rect init_dest, float frame_speed)
   {
@@ -45,10 +47,11 @@ public class AnimationCanvas extends GraphicCanvas
   }
 
   // update
-  public void animate()
+  @Override
+  public EUpdateResult update(int t_delta)
   {
     // Increment frame
-    current_frame += frame_speed;
+    current_frame += frame_speed*t_delta;
 
     // Detect if we're over the maximum number of frames
     Animation animation = ((Animation) graphic);
@@ -79,9 +82,12 @@ public class AnimationCanvas extends GraphicCanvas
 
       }
     }
+    
+    // all clear
+    return EUpdateResult.CONTINUE;
   }
-
-  /// SUBROUTINES
+  
+  /* SUBROUTINES */
   @Override
   protected Rect getSubrect()
   {
