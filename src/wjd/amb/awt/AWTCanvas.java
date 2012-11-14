@@ -387,9 +387,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     
-    // Clear the screen in white
-    // FIXME no clear
-    g2d.setColor(Color.WHITE);
+    // Clear the screen in white/black
+    g2d.setColor(Color.BLACK);
     g2d.fillRect(0, 0, getWidth(), getHeight());
     
     // Draw each shape in black by default

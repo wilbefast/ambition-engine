@@ -45,6 +45,15 @@ public class AnimationCanvas extends GraphicCanvas implements IDynamic
     super(init_anim, init_dest);
     this.frame_speed = frame_speed;
   }
+  
+  // mutators
+  
+  public void setAnimation(Animation new_anim, float frame_speed)
+  {
+    this.graphic = new_anim;
+    this.frame_speed = frame_speed;
+    current_frame = (frame_speed >= 0) ? 0.0f : new_anim.getNumFrames();
+  }
 
   // update
   @Override
@@ -81,9 +90,11 @@ public class AnimationCanvas extends GraphicCanvas implements IDynamic
           break;
 
       }
+      // return animation end result
+      return EUpdateResult.STOP;
     }
     
-    // all clear
+    // all clear -- no animation end
     return EUpdateResult.CONTINUE;
   }
   

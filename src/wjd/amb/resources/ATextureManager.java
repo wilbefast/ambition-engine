@@ -58,9 +58,9 @@ public abstract class ATextureManager
   }
 
   // accessors
-  public ITexture getTexture(String image_name)
+  public ITexture getTexture(String texture_name)
   {
-    return textures.get(image_name);
+    return textures.get(texture_name);
   }
 
   public Graphic getGraphic(String graphic_name)
@@ -91,7 +91,7 @@ public abstract class ATextureManager
   public void addAnimation(String anim_name, String texture_name,
                               Rect frame, int n_frames, Animation.LoopType loopType)
   {
-    Animation new_anim = new Animation(textures.get(texture_name), frame,
+    Animation new_anim = new Animation(getTexture(texture_name), frame,
                                        n_frames, loopType);
     animations.put(anim_name, new_anim);
   }

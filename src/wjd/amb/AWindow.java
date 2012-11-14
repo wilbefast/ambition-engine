@@ -98,7 +98,6 @@ public abstract class AWindow implements IDynamic
     
     // model
     scene = first_scene;
-    scene.initialise(this, input, canvas);
     
     // resources
     this.textureManager = textureManager;
@@ -130,7 +129,9 @@ public abstract class AWindow implements IDynamic
     create();
     
     // load resources *after* startup
-    loader.load(textureManager, audioManager);
+    if(loader != null)
+      loader.load(textureManager, audioManager);
+    scene.initialise(this, input, canvas);
    
     // run
     boolean running = true;

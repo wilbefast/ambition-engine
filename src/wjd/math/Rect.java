@@ -173,6 +173,11 @@ public class Rect implements Serializable
   {
     return new Rect(x, y, w, h);
   }
+  
+  public V2 getCentre()
+  {
+    return new V2(x+w/2, y+h/2);
+  }
 
   // query
   /**

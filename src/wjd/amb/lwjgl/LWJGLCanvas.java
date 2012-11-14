@@ -19,7 +19,7 @@ package wjd.amb.lwjgl;
 import java.awt.Font;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.TrueTypeFont;
 import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
 import wjd.amb.view.ICamera;
@@ -52,7 +52,7 @@ public class LWJGLCanvas implements ICanvas
   /* ATTRIBUTES */
   
   private org.newdawn.slick.Color slickColour = Color.black;
-  private org.newdawn.slick.UnicodeFont font;
+  private org.newdawn.slick.Font font;
   private boolean use_camera;
   private ICamera camera;
   private V2 size = new V2();
@@ -69,7 +69,7 @@ public class LWJGLCanvas implements ICanvas
   private LWJGLCanvas()
   {
     // background colour and depth
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -83,7 +83,7 @@ public class LWJGLCanvas implements ICanvas
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // load a default font
-    font = new UnicodeFont(new java.awt.Font("Arial", Font.PLAIN, 12));
+    font = new TrueTypeFont(new java.awt.Font("Arial", Font.PLAIN, 12), false);
   }
   
   /* IMPLEMENTATION -- ICANVAS */
@@ -165,14 +165,14 @@ public class LWJGLCanvas implements ICanvas
   @Override
   public ICanvas setCanvasFont(java.awt.Font awt_font)
   {
-    font = new UnicodeFont(awt_font);
+    font = new TrueTypeFont(awt_font, false);
     return this;
   }
   
   @Override
   public ICanvas setFontSize(int new_size)
   {
-    font = new UnicodeFont(new Font("Arial", Font.PLAIN, new_size));
+    font = new TrueTypeFont(new Font("Arial", Font.PLAIN, new_size), false);
     return this;
   }
   
@@ -255,7 +255,7 @@ public class LWJGLCanvas implements ICanvas
     V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
     
     font.drawString(pov_pos.x, pov_pos.y, string, slickColour);
-    //glBindTexture(GL_TEXTURE_2D, 0); // Slick forgot to unbind texture!
+    //glBindTexture(GL_TEXTURE_2D, 0);
   }
   
   @Override
@@ -272,7 +272,6 @@ public class LWJGLCanvas implements ICanvas
     else
       relative_source.size(lwjgl_texture.getUsedFraction());
    
-    glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
     lwjgl_texture.bind();
     glBegin(GL_QUADS);    
       glTexCoord2f(relative_source.x, relative_source.y);
@@ -284,6 +283,8 @@ public class LWJGLCanvas implements ICanvas
       glTexCoord2f(relative_source.x, relative_source.endy());
       glVertex2f(destination.x, destination.endy());
     glEnd();
+    
+    // be sure to unbind the texture afterwards
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 }

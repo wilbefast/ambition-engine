@@ -98,7 +98,7 @@ public class Colour
    */
   public Colour(byte r, byte g, byte b)
   {
-    this(r, g, b, 1.0f);
+    this(r, g, b, 255);
   }
 
   /**
@@ -147,5 +147,14 @@ public class Colour
     b -= other.b;
     return this;
   }
+  
   // accessors
+
+  /* OVERRIDES -- OBJECTS */
+  
+  @Override
+  public String toString()
+  {
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")"; 
+  }
 }

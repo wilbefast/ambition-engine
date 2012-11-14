@@ -16,14 +16,11 @@
  */
 package wjd.amb.awt;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
 import wjd.amb.resources.ATextureManager;
 import wjd.amb.resources.ITexture;
 

@@ -91,8 +91,6 @@ public class LWJGLWindow extends AWindow
   @Override
   public void create() throws LWJGLException
   {
-    System.out.println("size=" + size);
-    
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x, (int)size.y));
     Display.setTitle(name);
