@@ -78,8 +78,7 @@ public class LWJGLCanvas implements ICanvas
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     
-    // we need blending (alpha) for drawing text
-    glEnable(GL_BLEND);
+    // we need blending (alpha) for drawing text - but only for text!
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // load a default font
@@ -177,7 +176,7 @@ public class LWJGLCanvas implements ICanvas
   }
   
   @Override
-  public ICanvas toggleCamera(boolean use_camera)
+  public ICanvas setCameraActive(boolean use_camera)
   {
     // maintain invariant: (camera == null) => use_camera = false
     if(!use_camera || camera != null)
@@ -254,8 +253,9 @@ public class LWJGLCanvas implements ICanvas
     // move based on camera position where applicable
     V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
     
+    glEnable(GL_BLEND);
     font.drawString(pov_pos.x, pov_pos.y, string, slickColour);
-    //glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
   }
   
   @Override

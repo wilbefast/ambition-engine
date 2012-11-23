@@ -44,6 +44,14 @@ public interface ICanvas
    */
   public boolean isCameraActive();
 
+  /**
+   * We'll want to turn off the ICamera for GUI elements.
+   *
+   * @param use_camera true to use the camera, false to not use it.
+   * @return a reference to this, so multiple operations can be queued.
+   */
+  public ICanvas setCameraActive(boolean use_camera);
+
   // modify the canvas itself
   /**
    * The size of the canvas container has changed: update the size of the canvas
@@ -95,14 +103,6 @@ public interface ICanvas
    * @return a reference to this, so multiple operations can be queued.
    */
   public ICanvas setFontSize(int size);
-
-  /**
-   * We'll want to turn off the ICamera for GUI elements.
-   *
-   * @param use_camera true to use the camera, false to not use it.
-   * @return a reference to this, so multiple operations can be queued.
-   */
-  public ICanvas toggleCamera(boolean use_camera);
 
   // drawing functions
   /**

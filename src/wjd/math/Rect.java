@@ -423,6 +423,13 @@ public class Rect implements Serializable
     return wh(size.x, size.y);
   }
   
+  /**
+   * Reset the size of the Rectangle in such a way that it keeps the same centre
+   * as before.
+   * 
+   * @param size the new size of the Rectangle.
+   * @return this, so that multiple operations can be queued.
+   */
   public Rect centreSize(V2 size)
   {
     float centre_x = x + w*0.5f, centre_y = y + h*0.5f;
@@ -573,7 +580,7 @@ public class Rect implements Serializable
    * ordinate and height by the second.
    * 
    * @param multiplier the vector pair to element-wise multiply by.
-   * @return 
+   * @return this, so that multiple operations can be queued.
    */
   public Rect mult(V2 multiplier)
   {
@@ -589,7 +596,7 @@ public class Rect implements Serializable
    * ordinate and height by the second.
    * 
    * @param divisor the vector pair to element-wise divide by.
-   * @return 
+   * @return this, so that multiple operations can be queued.
    */
   public Rect div(V2 divisor)
   {
@@ -597,6 +604,60 @@ public class Rect implements Serializable
     y /= divisor.y;
     w /= divisor.x;
     h /= divisor.y;
+    return this;
+  }
+  
+  /**
+   * Find the intersection between this Rectangle and another one.
+   * 
+   * @param other the other Rectangle to find an intersection with.
+   * @return the intersection Rectangle or (0,0,0,0) if there is no 
+   * intersection.
+   */
+  public Rect getIntersection(Rect other)
+  {
+    // Calculate the boundaries of the intersection
+    float left = Math.max(x, other.x);
+    float top = Math.max(y, other.y);
+    float right = Math.min(x + w,  other.x + other.w);
+    float bottom = Math.min(y + h,  other.y + other.h);
+
+    // If the intersection is invalid (negative lengths) return false
+    if((left >= right ) || (top >= bottom))
+      return new Rect(0.0f, 0.0f, 0.0f, 0.0f); // null rectangle: (0,0,0,0)
+    else //non-negative lengths
+      return new Rect(left, top, right - left, bottom - top);
+  }
+  
+  /**
+   * Floor the size and position values of the Rectangle.
+   * 
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect floor()
+  {
+    x = (int)x;
+    y = (int)y;
+    w = (int)w;
+    h = (int)h;
+    return this;
+  }
+  
+  /**
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect makePositive()
+  {
+    if(w < 0)
+    {
+      w *= -1;
+      x -= w;
+    }
+    if(h < 0)
+    {
+      h *= -1;
+      y -= h;
+    }
     return this;
   }
 }

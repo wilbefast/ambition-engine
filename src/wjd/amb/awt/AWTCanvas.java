@@ -274,7 +274,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
   
   @Override
-  public synchronized ICanvas toggleCamera(boolean use_camera)
+  public synchronized ICanvas setCameraActive(boolean use_camera)
   {
     draw_queue.add(new ToggleCamera(use_camera));
     return this;
