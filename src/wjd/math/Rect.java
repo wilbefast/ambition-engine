@@ -630,7 +630,7 @@ public class Rect implements Serializable
   }
   
   /**
-   * Floor the size and position values of the Rectangle.
+   * Floor the size and position values of the Rectangle to the integer below.
    * 
    * @return this, so that multiple operations can be queued.
    */
@@ -640,6 +640,20 @@ public class Rect implements Serializable
     y = (int)y;
     w = (int)w;
     h = (int)h;
+    return this;
+  }
+  
+  /**
+   * Ceil the size and position values of the Rectangle to the integer above.
+   * 
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect ceil()
+  {
+    x = (int)x + 1;
+    y = (int)y + 1;
+    w = (int)w + 1;
+    h = (int)h + 1;
     return this;
   }
   
