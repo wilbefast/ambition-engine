@@ -139,9 +139,9 @@ public abstract class AWindow implements IDynamic
     {
       // update -- model
       int t_delta = TimeManager.getDelta(timeNow());
-      if (this.update(t_delta) == EUpdateResult.STOP
-      || scene.processInput(input) == EUpdateResult.STOP
-      || scene.update(t_delta) == EUpdateResult.STOP)
+      if (this.update(t_delta) != EUpdateResult.CONTINUE
+      || scene.processInput(input) != EUpdateResult.CONTINUE
+      || scene.update(t_delta) != EUpdateResult.CONTINUE)
       {
         // change to new Scene if a new one if offered
         AScene next = scene.getNext();

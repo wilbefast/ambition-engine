@@ -623,8 +623,8 @@ public class Rect implements Serializable
     float bottom = Math.min(y + h,  other.y + other.h);
 
     // If the intersection is invalid (negative lengths) return false
-    if((left >= right ) || (top >= bottom))
-      return new Rect(0.0f, 0.0f, 0.0f, 0.0f); // null rectangle: (0,0,0,0)
+    if((left > right ) || (top > bottom))
+      return null;
     else //non-negative lengths
       return new Rect(left, top, right - left, bottom - top);
   }

@@ -29,12 +29,25 @@ public enum EUpdateResult
    */
   CONTINUE,
   /**
-   * The object calling the update should stop doing so and either switch it for
-   * another one or exit.
+   * Command to quit the program or return from the current loop.
    */
-  STOP,
+  EXIT,
   /**
-   * The updated object should be deleted.
+   * Switch to a new IDynamic object which should be specified in an 
+   * "IDynamic getNext()" type method.
    */
-  DELETE_ME
+  REPLACE_ME,
+  /**
+   * The updated object should be deleted from the container.
+   */
+  DELETE_ME,
+  /**
+   * The updated object should be moved to a different container specified in an
+   * "Object getNewContainer()" method.
+   */
+  MOVE_ME,
+  /**
+   * The updated object has finished its appointed task.
+   */
+  FINISHED
 };

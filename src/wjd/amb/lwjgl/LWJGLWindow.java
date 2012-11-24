@@ -51,7 +51,7 @@ public class LWJGLWindow extends AWindow
   {
     // check whether we should stop running
     if(Display.isCloseRequested())
-      return EUpdateResult.STOP;
+      return EUpdateResult.EXIT;
     
     return EUpdateResult.CONTINUE;
   }

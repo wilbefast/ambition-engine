@@ -91,7 +91,7 @@ public class AnimationCanvas extends GraphicCanvas implements IDynamic
 
       }
       // return animation end result
-      return EUpdateResult.STOP;
+      return EUpdateResult.FINISHED;
     }
     
     // all clear -- no animation end
