@@ -50,8 +50,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     switch(code)
     {
       case 0: return EMouseButton.LEFT;
-      case 1: return EMouseButton.RIGHT;
-      case 2: return EMouseButton.MIDDLE;
+      case 1: return EMouseButton.MIDDLE;
+      case 2: return EMouseButton.RIGHT;
       default: return null;
     }
   }
@@ -344,7 +344,9 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
 
   @Override
   public void mouseDragged(MouseEvent e)
-  { /* unused */ }
+  { 
+    mouseMoved(e);
+  }
 
   @Override
   public void mouseMoved(MouseEvent e)

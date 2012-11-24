@@ -176,11 +176,6 @@ public class AWTCanvas extends JPanel implements ICanvas
     public int size;
     public FontSizeChange(int size) { this.size = size; }
   } 
-  private static class ToggleCamera implements DrawCommand
-  {
-    public boolean active;
-    public ToggleCamera(boolean active) { this.active = active; }
-  }
   
   /* ATTRIBUTES */
   private Set<DrawCommand> draw_queue;
@@ -276,7 +271,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public synchronized ICanvas setCameraActive(boolean use_camera)
   {
-    draw_queue.add(new ToggleCamera(use_camera));
+    this.use_camera = use_camera;
     return this;
   }
 
@@ -361,7 +356,6 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     // move based on camera position where applicable
     V2 pov_pos = (use_camera) ? camera.getPerspective(position) : position;
-    
     draw_queue.add(new DrawText(string, pov_pos));
   }
   
@@ -387,8 +381,8 @@ public class AWTCanvas extends JPanel implements ICanvas
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     
-    // Clear the screen in white/black
-    g2d.setColor(Color.BLACK);
+    // Clear the screen in white
+    g2d.setColor(Color.WHITE);
     g2d.fillRect(0, 0, getWidth(), getHeight());
     
     // Draw each shape in black by default
@@ -440,13 +434,6 @@ public class AWTCanvas extends JPanel implements ICanvas
       // change new_font
       else if(command instanceof FontChange)
         g2d.setFont((Font)(((FontChange)command).font));
-      // activate or deactivate camera
-      else if(command instanceof ToggleCamera)
-      {
-      // maintain invariant: (camera == null) => use_camera = false
-      if(!use_camera || camera != null)
-        this.use_camera = ((ToggleCamera)command).active;
-      }
       // unknown or unsupported command
       else
         System.out.println("Unrecognized command type " + command);
