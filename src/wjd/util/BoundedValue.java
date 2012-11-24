@@ -16,13 +16,15 @@
  */
 package wjd.util;
 
+import java.io.Serializable;
+
 /**
  * Value with a minimum and a maximum.
  *
  * @author wdyce
  * @since Nov 10, 2012
  */
-public class BoundedValue 
+public class BoundedValue implements Serializable
 {
   /* FUNCTIONS */
   

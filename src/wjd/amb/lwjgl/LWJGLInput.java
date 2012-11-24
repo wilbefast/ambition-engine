@@ -115,7 +115,13 @@ public class LWJGLInput implements IInput
   
   private static int bridgeMouseEvent(EMouseButton code)
   {
-    return code.ordinal();
+    switch(code)
+    {
+      case LEFT: return 0;
+      case RIGHT: return 1;
+      case MIDDLE: return 2;
+      default: return 3;
+    }
   }
   
   private static EMouseButton bridgeMouseEvent(int code)
@@ -235,7 +241,7 @@ public class LWJGLInput implements IInput
   {
     return (button == EMouseButton.ANY) 
       ? (Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || Mouse.isButtonDown(2))
-      : Mouse.isButtonDown(button.ordinal());
+      : Mouse.isButtonDown(bridgeMouseEvent(button));
   }
 
   @Override
