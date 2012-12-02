@@ -66,9 +66,14 @@ public class BoundedValue implements Serializable
 
   // accessors
   
-  public float value()
+  public float balance()
   {
     return balance;
+  }
+  
+  public float remainingSpace()
+  {
+    return max-balance;
   }
   
   public boolean isEmpty()
@@ -83,9 +88,9 @@ public class BoundedValue implements Serializable
 
   // mutators
   
-  public BoundedValue value(float _value)
+  public BoundedValue balance(float _balance)
   {
-    balance = bound(_value, min, max);
+    balance = bound(_balance, min, max);
     return this;
   }
   
@@ -107,6 +112,11 @@ public class BoundedValue implements Serializable
     return amount;
   }
   
+  public float tryWithdrawPercent(float percent)
+  {
+    return tryWithdraw(balance * percent);
+  }
+  
   /**
    * 
    * @param amount how much we're trying to deposit.
@@ -123,6 +133,11 @@ public class BoundedValue implements Serializable
     }
     // return the amount that was deposited
     return amount;
+  }
+  
+  public float tryDepositPercent(float percent)
+  {
+    return tryDeposit(balance * percent);
   }
   
   public float empty()
