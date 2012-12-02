@@ -76,9 +76,13 @@ public class V2 implements Serializable
    */
   public static V2 inter(V2 a, V2 b, float frac)
   {
-    return (frac < 0)
-      ? a : ((frac > 1)
-      ? b : (new V2(a, b).scale(frac).add(b)));
+    V2 result = new V2();
+    if(frac < 0)
+      return result.reset(a);
+    else if(frac > 1)
+      return result.reset(b);
+    else
+      return result.xy((1-frac)*a.x + frac*b.x, (1-frac)*a.y + frac*b.y);
   }
 
   /**
