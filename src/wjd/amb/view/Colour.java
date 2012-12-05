@@ -96,7 +96,7 @@ public class Colour
    * @param g green channel, between 0 and 255.
    * @param b blue channel, between 0 and 255.
    */
-  public Colour(byte r, byte g, byte b)
+  public Colour(int r, int g, int b)
   {
     this(r, g, b, 255);
   }
@@ -109,12 +109,12 @@ public class Colour
    * @param b blue channel, between 0 and 255.
    * @param a alpha channel (transparency), between 0 and 255.
    */
-  public Colour(byte r, byte g, byte b, byte a)
+  public Colour(int r, int g, int b, int a)
   {
-    this.r = r / 255.0f;
-    this.g = g / 255.0f;
-    this.b = b / 255.0f;
-    this.a = a / 255.0f;
+    this.r = ((r > 255) ? 255 : r) / 255.0f;
+    this.g = ((g > 255) ? 255 : g) / 255.0f;
+    this.b = ((b > 255) ? 255 : b) / 255.0f;
+    this.a = ((a > 255) ? 255 : a) / 255.0f;
   }
 
   // mutators

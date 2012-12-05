@@ -370,6 +370,13 @@ public class AWTCanvas extends JPanel implements ICanvas
     draw_queue.add(new DrawImage(source, destination, awt_texture.getImage()));
   }
   
+  @Override
+  public synchronized void fill()
+  {
+    draw_queue.add(new DrawShape(
+      new Rectangle2D.Float(0, 0, size.x, size.y), true));
+  }
+  
   
   /* OVERRIDES -- JCOMPONENT */
   

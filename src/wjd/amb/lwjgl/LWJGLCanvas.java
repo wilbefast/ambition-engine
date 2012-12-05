@@ -287,4 +287,15 @@ public class LWJGLCanvas implements ICanvas
     // be sure to unbind the texture afterwards
     glBindTexture(GL_TEXTURE_2D, 0);
   }
+  
+  @Override
+  public void fill()
+  {
+    glBegin(GL_QUADS);
+      glVertex2f(0, 0);
+      glVertex2f(size.x, 0);
+      glVertex2f(size.x, size.y);
+      glVertex2f(0, size.y);
+    glEnd();
+  }
 }

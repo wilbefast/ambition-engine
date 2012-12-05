@@ -145,10 +145,19 @@ public interface ICanvas
   public void text(String string, V2 position);
   
   /**
+   * Draw a the specified part of the texture to the specified area of the 
+   * screen: I would advise using the Graphic and Animation classes instead of
+   * blitting directly in this manner (except for prototyping/debugging).
    * 
-   * @param texture 
-   * @param source
-   * @param destination 
+   * @param texture the abstract texture to be drawn.
+   * @param source the sub-area of the texture to be used.
+   * @param destination the sub-area of the canvas to blit the texture to.
    */
   public void texture(ITexture texture, Rect source, Rect destination);
+  
+  
+  /**
+   * Fill the canvas with the previously-selected colour.
+   */
+  public void fill();
 }
