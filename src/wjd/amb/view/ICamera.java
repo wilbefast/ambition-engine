@@ -83,10 +83,19 @@ public interface ICamera extends IInteractive
    * Return true if the specified position is in view, false if not.
    *
    * @param position the vector point to check, relative to the world origin not
-   * the Window.
-   * @return true if the position is inside the view Rectangle.
+   * the camera.
+   * @return true if the position is visible to the camera.
    */
   public boolean canSee(V2 position);
+  
+  /**
+   * 
+   * 
+   * @param area the area to check, relative to the world origin and not the 
+   * camera.
+   * @return true if any part of the area is visible to the camera.
+   */
+  public boolean canSee(Rect area);
   
 
   /* MUTATORS */

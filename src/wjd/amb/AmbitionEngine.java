@@ -75,7 +75,8 @@ public abstract class AmbitionEngine
       try
       {
         // You probably forgot to use -Djava.library.path=...
-        LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
+        LOGGER.log(Level.WARNING, 
+          "Failed to launch LWJGL (did you forget -Djava.libary.path ?)");
         // default to AWT if there's a problem with LWJGL
         LOGGER.log(Level.INFO, "Launching AWT Window");
         

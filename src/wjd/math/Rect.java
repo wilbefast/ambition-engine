@@ -229,8 +229,15 @@ public class Rect implements Serializable
    */
   public boolean collides(Rect other)
   {
-    return (V2.dot(new V2(pos(), other.pos().add(other.size())),
-                   new V2(other.pos(), pos().add(size()))) > 0);
+    float v1x = other.endx() - x, v2x = endx() - other.x;
+    if(v1x < 0 && v2x >= 0 || v1x > 0 && v2x <= 0)
+      return false;
+    
+    float v1y = other.endy() - y, v2y = endy() - other.y;
+    if(v1y < 0 && v2y >= 0 || v1y > 0 && v2y <= 0)
+      return false;   
+    
+    return true;
   }
 
   /**
@@ -252,6 +259,28 @@ public class Rect implements Serializable
 
     // otherwise it's all good!
     return true;
+  }
+  
+  /**
+   * Find the intersection between this Rectangle and another one.
+   * 
+   * @param other the other Rectangle to find an intersection with.
+   * @return the intersection Rectangle or (0,0,0,0) if there is no 
+   * intersection.
+   */
+  public Rect getIntersection(Rect other)
+  {
+    // Calculate the boundaries of the intersection
+    float left = Math.max(x, other.x);
+    float top = Math.max(y, other.y);
+    float right = Math.min(x + w,  other.x + other.w);
+    float bottom = Math.min(y + h,  other.y + other.h);
+
+    // If the intersection is invalid (negative lengths) return false
+    if((left > right ) || (top > bottom))
+      return null;
+    else //non-negative lengths
+      return new Rect(left, top, right - left, bottom - top);
   }
 
   /**
@@ -605,28 +634,6 @@ public class Rect implements Serializable
     w /= divisor.x;
     h /= divisor.y;
     return this;
-  }
-  
-  /**
-   * Find the intersection between this Rectangle and another one.
-   * 
-   * @param other the other Rectangle to find an intersection with.
-   * @return the intersection Rectangle or (0,0,0,0) if there is no 
-   * intersection.
-   */
-  public Rect getIntersection(Rect other)
-  {
-    // Calculate the boundaries of the intersection
-    float left = Math.max(x, other.x);
-    float top = Math.max(y, other.y);
-    float right = Math.min(x + w,  other.x + other.w);
-    float bottom = Math.min(y + h,  other.y + other.h);
-
-    // If the intersection is invalid (negative lengths) return false
-    if((left > right ) || (top > bottom))
-      return null;
-    else //non-negative lengths
-      return new Rect(left, top, right - left, bottom - top);
   }
   
   /**
