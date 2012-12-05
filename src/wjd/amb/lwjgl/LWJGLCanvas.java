@@ -298,4 +298,10 @@ public class LWJGLCanvas implements ICanvas
       glVertex2f(0, size.y);
     glEnd();
   }
+
+  @Override
+  public void angleBox(V2 position, V2 direction, float size, boolean fill)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 }

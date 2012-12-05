@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -340,6 +341,14 @@ public class AWTCanvas extends JPanel implements ICanvas
     // move based on camera position where applicable
     Rect pov_rect = (use_camera) ? camera.getPerspective(rect) : rect;
     
+    
+    /*
+    int xpts[] = {(int)(pov_rect.x), (int)(pov_rect.x), 
+                  (int)(pov_rect.x + pov_rect.w), (int)(pov_rect.x + pov_rect.w)},
+        ypts[] = {(int)(pov_rect.y), (int)(pov_rect.y + pov_rect.h), 
+                  (int)(pov_rect.y + pov_rect.h), (int)(pov_rect.y)};
+    draw_queue.add(new DrawShape(new Polygon(xpts, ypts, 4), fill));*/
+    
     draw_queue.add(new DrawShape(
       new Rectangle2D.Float(pov_rect.x, pov_rect.y, 
                             pov_rect.w, pov_rect.h), fill));
@@ -376,6 +385,23 @@ public class AWTCanvas extends JPanel implements ICanvas
     draw_queue.add(new DrawShape(
       new Rectangle2D.Float(0, 0, size.x, size.y), true));
   }
+  
+  @Override
+  public void angleBox(V2 o, V2 d, float size, boolean fill)
+  {
+    // move based on camera position where applicable
+    V2 po = (use_camera) ? camera.getPerspective(o) : o;
+    // scale direction-vector based on zoom
+    V2 pd = (use_camera) ? d.clone().scale(camera.getZoom()*size) 
+                          : d.clone().scale(size);
+
+    int xpts[] = {(int)(po.x + pd.x+pd.y), (int)(po.x + pd.x-pd.y), 
+                  (int)(po.x + -pd.x-pd.y), (int)(po.x + -pd.x+pd.y)},
+        ypts[] = {(int)(po.y + -pd.x+pd.y), (int)(po.y + pd.x+pd.y), 
+                  (int)(po.y + pd.x-pd.y), (int)(po.y + -pd.x-pd.y)};
+    draw_queue.add(new DrawShape(new Polygon(xpts, ypts, 4), fill));
+  }
+
   
   
   /* OVERRIDES -- JCOMPONENT */

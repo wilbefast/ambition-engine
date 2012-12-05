@@ -160,4 +160,21 @@ public interface ICanvas
    * Fill the canvas with the previously-selected colour.
    */
   public void fill();
+  
+  /**
+   * Draw a box at a certain angle based on a given direction vector (x,y):
+   * <ol>
+   * <li>(x-y, x+y)</li>
+   * <li>(-x-y, x-y)</li>
+   * <li>(-x+y, -x,-y)</li>
+   * <li>(x+y, -x+y)</li>
+   * </ol>
+   * these for offsets are multiplied by the size and added to the origin.
+   * 
+   * @param origin the centre of rotation for the box.
+   * @param direction the vector (x,y) used to determine the box points.
+   * @param size radius of the inscribed circle of the box.
+   * @param fill true to fill the object, false for an outline.
+   */
+  public void angleBox(V2 origin, V2 direction, float size, boolean fill);
 }
