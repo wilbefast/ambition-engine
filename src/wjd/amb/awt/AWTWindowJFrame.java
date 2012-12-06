@@ -43,7 +43,7 @@ public class AWTWindowJFrame  extends JFrame
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize((int)size.x, (int)size.y);
-    setResizable(false);
+    setResizable(true);
     setLocationRelativeTo(null);    // move to center of screen
     // set content
     setContentPane(awtCanvas);

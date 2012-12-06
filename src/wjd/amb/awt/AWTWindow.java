@@ -150,6 +150,7 @@ public class AWTWindow extends AWindow implements ComponentListener
   
   public void resetWindowSize()
   {
+    canvas.setSize(new V2(jframe.getWidth(), jframe.getHeight()));
     ((AWTInput)input).setWindowCentre(jframe.getCentre(), jframe.getOffset());
   }
 }
