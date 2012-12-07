@@ -304,4 +304,10 @@ public class LWJGLCanvas implements ICanvas
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
+
+  @Override
+  public void triangle(V2 a, V2 b, V2 c, boolean fill)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 }

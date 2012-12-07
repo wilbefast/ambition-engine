@@ -277,9 +277,6 @@ public class AWTCanvas extends JPanel implements ICanvas
   }
 
   // drawing functions
-  /**
-   * Clear the screen.
-   */
   @Override
   public synchronized void clear()
   {
@@ -287,13 +284,6 @@ public class AWTCanvas extends JPanel implements ICanvas
     draw_queue.clear();
   }
   
-  /**
-   * Draw a circle outline around the specified position, using the given
-   * radius.
-   *
-   * @param centre vector position corresponding to the centre of the circle.
-   * @param radius the size of the circle from centre to outskirts.
-   */
   @Override
   public synchronized void circle(V2 centre, float radius, boolean fill)
   {
@@ -312,12 +302,6 @@ public class AWTCanvas extends JPanel implements ICanvas
                           radius*2, radius*2), fill));
   }
 
-  /**
-   * Draw a straight black line between the two specified points.
-   *
-   * @param start vector position corresponding to the start of the line.
-   * @param end vector position corresponding to the end of the line.
-   */
   @Override
   public synchronized void line(V2 start, V2 end)
   {
@@ -327,39 +311,20 @@ public class AWTCanvas extends JPanel implements ICanvas
     
     draw_queue.add(new DrawShape(new Line2D.Float(pov_start.x, pov_start.y, 
                                     pov_end.x, pov_end.y), false)); 
-                                                          // lines are not fill
+                                                          // lines are not filled
   }
 
-  /**
-   * Draw the outline of a Rectangle.
-   *
-   * @param rect the rectangle object whose outline will be drawn.
-   */
   @Override
   public synchronized void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
     Rect pov_rect = (use_camera) ? camera.getPerspective(rect) : rect;
     
-    
-    /*
-    int xpts[] = {(int)(pov_rect.x), (int)(pov_rect.x), 
-                  (int)(pov_rect.x + pov_rect.w), (int)(pov_rect.x + pov_rect.w)},
-        ypts[] = {(int)(pov_rect.y), (int)(pov_rect.y + pov_rect.h), 
-                  (int)(pov_rect.y + pov_rect.h), (int)(pov_rect.y)};
-    draw_queue.add(new DrawShape(new Polygon(xpts, ypts, 4), fill));*/
-    
     draw_queue.add(new DrawShape(
       new Rectangle2D.Float(pov_rect.x, pov_rect.y, 
                             pov_rect.w, pov_rect.h), fill));
   }
 
-  /**
-   * Draw a String of characters at the indicated position.
-   *
-   * @param string the String of characters to be drawn.
-   * @param position the position on the screen to draw the String.
-   */
   @Override
   public synchronized void text(String string, V2 position)
   {
@@ -400,6 +365,18 @@ public class AWTCanvas extends JPanel implements ICanvas
         ypts[] = {(int)(po.y + -pd.x+pd.y), (int)(po.y + pd.x+pd.y), 
                   (int)(po.y + pd.x-pd.y), (int)(po.y + -pd.x-pd.y)};
     draw_queue.add(new DrawShape(new Polygon(xpts, ypts, 4), fill));
+  }
+    
+  @Override
+  public void triangle(V2 a, V2 b, V2 c, boolean fill)
+  {
+    V2 pa = (use_camera) ? camera.getPerspective(a) : a,
+      pb = (use_camera) ? camera.getPerspective(b) : b,
+      pc = (use_camera) ? camera.getPerspective(c) : c;
+    
+    int xpts[] = {(int)pa.x, (int)pb.x,(int)pc.x},
+        ypts[] = {(int)pa.y, (int)pb.y,(int)pc.y};
+    draw_queue.add(new DrawShape(new Polygon(xpts, ypts, 3), fill));
   }
 
   

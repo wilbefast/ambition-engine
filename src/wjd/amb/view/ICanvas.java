@@ -177,4 +177,6 @@ public interface ICanvas
    * @param fill true to fill the object, false for an outline.
    */
   public void angleBox(V2 origin, V2 direction, float size, boolean fill);
+
+  public void triangle(V2 a, V2 b, V2 c, boolean fill);
 }

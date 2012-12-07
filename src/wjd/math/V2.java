@@ -29,6 +29,7 @@ import java.io.Serializable;
 public class V2 implements Serializable
 {
   /* CONSTANTS */
+
   /**
    * Vector origin, (0,0).
    */
@@ -77,12 +78,12 @@ public class V2 implements Serializable
   public static V2 inter(V2 a, V2 b, float frac)
   {
     V2 result = new V2();
-    if(frac < 0)
+    if (frac < 0)
       return result.reset(a);
-    else if(frac > 1)
+    else if (frac > 1)
       return result.reset(b);
     else
-      return result.xy((1-frac)*a.x + frac*b.x, (1-frac)*a.y + frac*b.y);
+      return result.xy((1 - frac) * a.x + frac * b.x, (1 - frac) * a.y + frac * b.y);
   }
 
   /**
@@ -105,7 +106,7 @@ public class V2 implements Serializable
    * ordinate value: vertical component.
    */
   public float y;
- 
+
   /* METHODS */
   // constructors
   /**
@@ -142,7 +143,6 @@ public class V2 implements Serializable
   }
 
   // accessors
-
   /**
    * Check if this is a null vector.
    *
@@ -164,7 +164,7 @@ public class V2 implements Serializable
   public float norm2()
   {
     // recalculate norm2 only if nessecary
-    return (x*x + y*y);
+    return (x * x + y * y);
   }
 
   /**
@@ -173,11 +173,40 @@ public class V2 implements Serializable
    * square norm is less than v squared).
    *
    * @return the norm of the vector.
-   * @see <a href="V2#norm2()>norm2</a>
+   * @see <a href="V2#norm()>norm</a>
    */
   public float norm()
   {
-    return (float)Math.sqrt(x*x + y*y);
+    return (float) Math.sqrt(x * x + y * y);
+  }
+
+  /**
+   * Check the square distance from this point-position to another: this is
+   * faster to calculate than the norm itself, so this methods should be used
+   * where possible (ie: the norm is less than a value v if the square norm is
+   * less than v squared).
+   *
+   * @param other the other vector-position to consider.
+   * @return the squared distance between this and other.
+   */
+  public float distance2(V2 other)
+  {
+    float dx = x - other.x, dy = y - other.y;
+    return (dx * dx + dy * dy);
+  }
+  
+  /**
+   * Return the distance between this vector-position and another: it is 
+   * preferable to use the square norm where possible (ie: the norm is less than 
+   * a value v if the square norm is less than v squared).
+   * 
+   * @param other the other vector-position to consider.
+   * @return the distance between this and other.
+   */
+  public float distance(V2 other)
+  {
+    float dx = x - other.x, dy = y - other.y;
+    return (float)Math.sqrt(dx * dx + dy * dy);
   }
 
   /**
@@ -209,7 +238,6 @@ public class V2 implements Serializable
   }
 
   // base mutators
-
   /**
    * Reset the horizontal and vertical components of the vector.
    *
@@ -225,7 +253,6 @@ public class V2 implements Serializable
   }
 
   // arithmetic mutators
-
   /**
    * Add a real value to the abscissa (x) and the ordinate (y).
    *
@@ -237,7 +264,7 @@ public class V2 implements Serializable
   {
     return xy(x + dx, y + dy);
   }
-  
+
   /**
    * Multiply the horizontal and vertical components of the vector by a real.
    *
@@ -248,10 +275,10 @@ public class V2 implements Serializable
   {
     return xy(x * multiplier, y * multiplier);
   }
-  
+
   /**
    * Multiply the horizontal component of the vector by a real.
-   * 
+   *
    * @param multiplier the real value to multiply the abscissa by.
    * @return this, so that multiple operations can be queued.
    */
@@ -259,10 +286,10 @@ public class V2 implements Serializable
   {
     return xy(x * multiplier, y);
   }
-  
+
   /**
    * Multiply the vertical component of the vector by a real.
-   * 
+   *
    * @param multiplier the real value to multiply the ordinate by.
    * @return this, so that multiple operations can be queued.
    */
@@ -290,15 +317,15 @@ public class V2 implements Serializable
   {
     return xy(x - 1, y - 1);
   }
-  
+
   /**
    * Invert the vector, setting its components to 1/x and 1/y.
-   * 
+   *
    * @return this, so that multiple operations can be queued.
    */
   public V2 inv()
   {
-    return xy (1 / x, 1 / y);
+    return xy(1 / x, 1 / y);
   }
 
   /**
@@ -354,12 +381,12 @@ public class V2 implements Serializable
   {
     return xy(x - amount.x, y - amount.y);
   }
-  
+
   /**
    * Copy the contents other another vector into this one.
-   * 
+   *
    * @param new_value vector to copy new values of abscissa and ordinate from.
-   * @return this, so that multiple operations can be queued. 
+   * @return this, so that multiple operations can be queued.
    */
   public V2 reset(V2 new_value)
   {
@@ -377,21 +404,20 @@ public class V2 implements Serializable
   {
     return xy(x * multiplier.x, y * multiplier.y);
   }
-  
+
   /**
    * Divide a vector element-wise by another.
-   * 
+   *
    * @param divisor a vector containing the values that the abscissa (x) and
    * ordinate (y) of this vector will be divided by.
-   * @return this, so that multiple operations can be queued. 
+   * @return this, so that multiple operations can be queued.
    */
   public V2 shrink(V2 divisor)
   {
     return xy(x / divisor.x, y / divisor.y);
   }
-  
-  // geometric mutators
 
+  // geometric mutators
   /**
    * Rotate the vector 90 degrees to the left (a right-angle): this is a very
    * cheap operation, while custom rotations are expensive.
@@ -424,7 +450,8 @@ public class V2 implements Serializable
    */
   public V2 norm(float amount)
   {
-    return xy(x / norm() * amount, y / norm() * amount);
+    float inv_norm = 1/norm();
+    return xy(x * inv_norm * amount, y * inv_norm * amount);
   }
 
   /**
@@ -445,7 +472,7 @@ public class V2 implements Serializable
    */
   public V2 normalise()
   {
-    return (norm(1 / norm()));
+    return (norm(1));
   }
 
   /**
@@ -461,24 +488,27 @@ public class V2 implements Serializable
     double cos = Math.cos(angle), sin = Math.sin(angle);
     return xy((float) (x * cos - y * sin), (float) (x * sin + y * cos));
   }
-  
-  
+
   /**
-   * Keep the vector within the bounds of a given rectangle by snapping it to 
+   * Keep the vector within the bounds of a given rectangle by snapping it to
    * the edges if it is outside.
-   * 
+   *
    * @param container the rectangle to keep this vector inside of.
    * @return this, so that multiple operations can be queued.
    */
   public V2 snapWithin(Rect container)
   {
     float endx = container.endx(), endy = container.endy();
-    
-    if(x > endx) x = endx;
-    if(x < container.x) x = container.x;
-    if(y > endy) y = endy;
-    if(y < container.y) y = container.y;
-    
+
+    if (x > endx)
+      x = endx;
+    if (x < container.x)
+      x = container.x;
+    if (y > endy)
+      y = endy;
+    if (y < container.y)
+      y = container.y;
+
     return this;
   }
 }

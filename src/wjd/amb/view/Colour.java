@@ -148,7 +148,21 @@ public class Colour
     return this;
   }
   
+  public Colour mult(float multiplier)
+  {
+    r *= multiplier;
+    g *= multiplier;
+    b *= multiplier;
+    return this;
+  }
+  
   // accessors
+  
+  @Override
+  public Colour clone()
+  {
+    return new Colour(r, g, b, a);
+  }
 
   /* OVERRIDES -- OBJECTS */
   

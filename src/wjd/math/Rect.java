@@ -70,6 +70,19 @@ public class Rect implements Serializable
     this.w = w;
     this.h = h;
   }
+  
+  /**
+   * Create a rectangle of the specified size at the origin.
+   * 
+   * @param w the width.
+   * @param h the height.
+   */
+  public Rect(float w, float h)
+  {
+    this.x = this.y = 0;
+    this.w = w;
+    this.h = h;
+  }
 
   /**
    * Create a rectangle of the specified size at the origin.
@@ -665,6 +678,10 @@ public class Rect implements Serializable
   }
   
   /**
+   * If the Rectangle has been turned inside-out, turn it the right way around 
+   * again: the area covered should be the same, but the origin is placed in the
+   * top-left not the bottom-right.
+   * 
    * @return this, so that multiple operations can be queued.
    */
   public Rect makePositive()
@@ -679,6 +696,18 @@ public class Rect implements Serializable
       h *= -1;
       y -= h;
     }
+    return this;
+  }
+  
+  /**
+   * Generate a random point within this area.
+   * 
+   * @param destination the vector object to write the result to.
+   * @return this, so that multiple operations can be queued.
+   */
+  public Rect randomPoint(V2 destination)
+  {
+    destination.xy(x + (float)Math.random()*w, y + (float)Math.random()*h);
     return this;
   }
 }
