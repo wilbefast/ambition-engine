@@ -24,6 +24,13 @@ package wjd.math;
  */
 public abstract class M 
 {
+  /* CONSTANTS */
+  
+  /**
+   * Phi, the "golden ratio".
+   */
+  public static final double PHI = 1.61803398875;
+  
   /* FUNCTIONS */
   
   /**
@@ -46,11 +53,32 @@ public abstract class M
    */
   public static int isqrt(double x)
   {
-    if(x < 0)
+    if(x < 1)
       return 0;
     
     int i = 0;
     while(i*i <= x) i++;
+    return (i-1);
+  }
+  
+  /**
+   * Calculate the integral binary (base-2) logarithm of a value, that is the 
+   * highest integer value 'i' such that 2^i is less than or equal to the 
+   * value in question. 
+   * @param x the value to get the integral binary logarithm of.
+   * @return return integeral binary logarithm of x.
+   */
+  public static int ilog2(double x)
+  {
+    if(x < 1)
+      return 0;
+    
+    int i = 0;
+    while(x >= 1)
+    {
+      i++;
+      x *= 0.5f;
+    }
     return (i-1);
   }
 }

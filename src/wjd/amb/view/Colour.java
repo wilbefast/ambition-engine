@@ -148,6 +148,20 @@ public class Colour
     return this;
   }
   
+  /**
+   * Mix two Colours together to get a third.
+   * 
+   * @param other the Colour to be mixed in.
+   * @return this, the resulting Colour, so more operations can be queued on it.
+   */
+  public Colour avg(Colour other)
+  {
+    r = (r+other.r)*0.5f;
+    g = (g+other.g)*0.5f;
+    b = (b+other.b)*0.5f;
+    return this;
+  }
+  
   public Colour mult(float multiplier)
   {
     r *= multiplier;

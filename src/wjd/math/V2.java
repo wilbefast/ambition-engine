@@ -327,6 +327,16 @@ public class V2 implements Serializable
   {
     return xy(1 / x, 1 / y);
   }
+  
+  /**
+   * Multiply both components by -1 to get the opposite vector. 
+   * 
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 opp()
+  {
+    return xy(-x, -y);
+  }
 
   /**
    * Set the horizontal and vertical components of the vector to their
