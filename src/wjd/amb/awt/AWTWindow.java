@@ -46,9 +46,6 @@ public class AWTWindow extends AWindow implements ComponentListener
   public AWTWindow(String _name, V2 _size, AScene first_scene)
   {
     super(_name, _size, first_scene, new AWTTextureManager(), new AWTAudioManager()); 
-    
-    if(size == null)
-      size = desktopResolution();
   }
 
   /* IMPLEMENTATION -- AWINDOW */

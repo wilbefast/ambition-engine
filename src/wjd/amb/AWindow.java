@@ -60,7 +60,7 @@ public abstract class AWindow implements IDynamic
   /* ATTRIBUTES */
   // concrete
   protected String name;
-  protected V2 size;
+  protected final V2 size;
   protected boolean fullscreen;
   // abstract
   protected ICanvas canvas;
@@ -89,13 +89,9 @@ public abstract class AWindow implements IDynamic
     this.name = name;
     
     // window size, fullscreen
-    this.size = size;
     fullscreen = (size == null);
-    if(fullscreen)
-      size = desktopResolution();
-    else
-      size.floor();
-    
+    this.size = (fullscreen) ? desktopResolution() : size.floor();
+
     // model
     scene = first_scene;
     

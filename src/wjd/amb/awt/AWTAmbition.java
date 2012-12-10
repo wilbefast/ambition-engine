@@ -14,15 +14,14 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.amb;
+package wjd.amb.awt;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import wjd.amb.awt.AWTWindow;
-import wjd.amb.lwjgl.LWJGLWindow;
+import wjd.amb.AScene;
+import wjd.amb.AWindow;
 import wjd.amb.resources.IResourceLoader;
 import wjd.math.V2;
 
@@ -30,11 +29,11 @@ import wjd.math.V2;
  * @author wdyce
  * @since 07-Oct-2012
  */
-public abstract class AmbitionEngine
+public abstract class AWTAmbition
 {
 
   /* CLASS NAMESPACE CONSTANTS */
-  public static final Logger LOGGER = Logger.getLogger(AmbitionEngine.class.getName());
+  public static final Logger LOGGER = Logger.getLogger(AWTAmbition.class.getName());
 
   /* CLASS INITIALISATION */
   static
@@ -50,7 +49,7 @@ public abstract class AmbitionEngine
       LOGGER.log(Level.WARNING, ex.toString(), ex);
     }
   }
-
+  
   /* FUNCTIONS */
 
   public static void launch(String window_name, V2 window_size,
@@ -64,35 +63,13 @@ public abstract class AmbitionEngine
     AWindow window = null;
     try
     {
-      // by default try to create a window using LWJGL's native OpenGL
-      LOGGER.log(Level.INFO, "Launching LWJGL Window");
-      
       // create window
-      (window = new LWJGLWindow(window_name, window_size, first_scene)).run(loader);
+      (window = new AWTWindow(window_name, window_size, first_scene)).run(loader);
     }
-    catch (UnsatisfiedLinkError | LWJGLException lwjgl_ex)
-    {
-      try
-      {
-        // You probably forgot to use -Djava.library.path=...
-        LOGGER.log(Level.WARNING, 
-          "Failed to launch LWJGL (did you forget -Djava.libary.path ?)");
-        // default to AWT if there's a problem with LWJGL
-        LOGGER.log(Level.INFO, "Launching AWT Window");
-        
-        // create window
-        (window = new AWTWindow(window_name, window_size, first_scene)).run(loader);
-      }
-      catch (Exception awt_ex)
-      {
-        // A generic error caused by the code, not the library
-        LOGGER.log(Level.SEVERE, awt_ex.toString(), awt_ex);
-      }
-    }
-    catch (Exception ex)
+    catch (Exception awt_ex)
     {
       // A generic error caused by the code, not the library
-      LOGGER.log(Level.SEVERE, ex.toString(), ex);
+      LOGGER.log(Level.SEVERE, awt_ex.toString(), awt_ex);
     }
     finally
     {

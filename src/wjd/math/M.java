@@ -33,6 +33,11 @@ public abstract class M
   
   /* FUNCTIONS */
   
+  public static int ipow2(int n)
+  {
+    return (1 << n);
+  }
+  
   /**
    * Calculate the square of a value.
    * 
