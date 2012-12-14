@@ -65,28 +65,6 @@ public class V2 implements Serializable
   }
 
   /**
-   * Calculate the linear interpolation of two vector positions based on a given
-   * real value between 0 and 1.
-   *
-   * @param a the first vector.
-   * @param b the other vector.
-   * @param frac real value representing the percent distance between a (0) and
-   * b (1).
-   * @return <li>= a if frac is less than or equal to 0. <li>= b if frac is
-   * greater than or equal to 1. <li>= a + (b-a)*frac otherwise.
-   */
-  public static V2 inter(V2 a, V2 b, float frac)
-  {
-    V2 result = new V2();
-    if (frac < 0)
-      return result.reset(a);
-    else if (frac > 1)
-      return result.reset(b);
-    else
-      return result.xy((1 - frac) * a.x + frac * b.x, (1 - frac) * a.y + frac * b.y);
-  }
-
-  /**
    * Check if two vectors and collinear, in other words parallel.
    *
    * @param a the first vector.
@@ -520,5 +498,27 @@ public class V2 implements Serializable
       y = container.y;
 
     return this;
+  }
+  
+  /**
+   * Set the vector to the linear interpolation of two vector positions based on 
+   * a given real value between 0 and 1.
+   *
+   * @param a the first vector.
+   * @param b the other vector.
+   * @param frac real value representing the percent distance between a (0) and
+   * b (1).
+   * @return this, this is equal: 
+   * <li>= a if frac is less than or equal to 0. <li>= b if frac is
+   * greater than or equal to 1. <li>= a + (b-a)*frac otherwise.
+   */
+  public V2 inter(V2 a, V2 b, float frac)
+  {
+    if (frac < 0)
+      return reset(a);
+    else if (frac > 1)
+      return reset(b);
+    else
+      return xy((1 - frac) * a.x + frac * b.x, (1 - frac) * a.y + frac * b.y);
   }
 }
