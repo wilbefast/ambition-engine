@@ -17,6 +17,7 @@
 package wjd.amb.view;
 
 import wjd.amb.control.IInteractive;
+import wjd.math.Circle;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -96,6 +97,15 @@ public interface ICamera extends IInteractive
    * @return true if any part of the area is visible to the camera.
    */
   public boolean canSee(Rect area);
+  
+  /**
+   * 
+   * 
+   * @param area the circle to check, relative to the world origin and not the 
+   * camera.
+   * @return true if any part of the circle is visible to the camera.
+   */
+  public boolean canSee(Circle circle);
   
 
   /* MUTATORS */

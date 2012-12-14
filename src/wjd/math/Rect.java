@@ -19,8 +19,8 @@ package wjd.math;
 import java.io.Serializable;
 
 /**
- * A 2D Rectangle class, mostly useful for views and collision-testing between
- * box-shaped objects (this Rectangle does not rotate though).
+ * An axis-aligned 2D rectangle, used for view testing and basic collision 
+ * checking.
  *
  * @author wdyce
  * @since 24 Aug, 2012

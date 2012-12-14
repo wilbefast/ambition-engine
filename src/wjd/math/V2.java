@@ -75,6 +75,7 @@ public class V2 implements Serializable
   {
     return dot(a, b) == a.norm() * b.norm();
   }
+  
   /* ATTRIBUTES */
   /**
    * abscissa value: horizontal component.
