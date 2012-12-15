@@ -63,6 +63,12 @@ public class V2 implements Serializable
   {
     return a.x * b.x + a.y * b.y;
   }
+  
+  public static float angleBetween(V2 a, V2 b)
+  {
+    V2 na = a.clone().normalise(), nb = b.clone().normalise();
+    return (float)(Math.acos(V2.dot(na, nb)));
+  }
 
   /**
    * Check if two vectors and collinear, in other words parallel.
