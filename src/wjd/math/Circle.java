@@ -68,6 +68,17 @@ public class Circle
     return this;
   }
   
+  public boolean contains(V2 point)
+  {
+    return(centre.distance2(point) <= M.sqr(radius));
+  }
+  
+  public float getCloseness(V2 point)
+  {
+    double closeness = 1.0 - (centre.distance2(point) / M.sqr(radius));
+    return(closeness < 0.0 ? 0.0f : (float)closeness);
+  }
+  
   public boolean collides(Circle other)
   {
     return (centre.distance2(other.centre) <= M.sqr(other.radius+radius));

@@ -16,6 +16,8 @@
  */
 package wjd.math;
 
+import java.util.Random;
+
 /**
  * Static mathematical functions missing form Java's Math class.
  *
@@ -85,5 +87,18 @@ public abstract class M
       x *= 0.5f;
     }
     return (i-1);
+  }
+  
+  /**
+   * Generate a value with a random sign and a capped abosolute value.
+   * 
+   * @param value the maximum/minimum value to generate.
+   * @param r the Random object to use to generate the pseudo-random number.
+   * @return a double between -value and +value
+   */
+  public static double signedRand(double value, Random r)
+  {
+    double x = (r != null) ? r.nextDouble() : Math.random();
+    return (x < 0.5f) ? value*2*x : value*2*(x-0.5f);
   }
 }
