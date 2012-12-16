@@ -47,7 +47,7 @@ public class V2 implements Serializable
    */
   public static float det(V2 a, V2 b)
   {
-    return a.x * b.y - b.y * a.x;
+    return a.x * b.y - a.y * b.x;
   }
 
   /**
@@ -67,7 +67,8 @@ public class V2 implements Serializable
   public static float angleBetween(V2 a, V2 b)
   {
     V2 na = a.clone().normalise(), nb = b.clone().normalise();
-    return (float)(Math.acos(V2.dot(na, nb)));
+    float theta = (float)(Math.acos(V2.dot(na, nb)));
+    return (Float.isNaN(theta) ? 0.0f : theta);
   }
 
   /**
