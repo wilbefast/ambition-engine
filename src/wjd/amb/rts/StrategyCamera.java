@@ -148,6 +148,17 @@ public class StrategyCamera implements ICamera
     if (boundary != null)
       keepInsideBounds();
   }
+  
+  @Override
+  public void setPosition(V2 new_position)
+  {
+    // move the view
+    view.centrePos(new_position);
+    
+    // don't stray out of bounds
+    if (boundary != null)
+      keepInsideBounds();
+  }
 
   @Override
   public void zoom(float delta, V2 target)

@@ -85,6 +85,16 @@ public class BoundedValue implements Serializable
   {
     return (balance == max);
   }
+  
+  public float getMin()
+  {
+    return min;
+  }
+  
+  public float getMax()
+  {
+    return max;
+  }
 
   // mutators
   

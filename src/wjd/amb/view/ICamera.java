@@ -138,6 +138,13 @@ public interface ICamera extends IInteractive
    * @param translation a vector direction to move the view in.
    */
   public void pan(V2 translation);
+  
+  /**
+   * Centre the camera over a new position.
+   * 
+   * @param new_position the vector to use to reset the camera's position.
+   */
+  public void setPosition(V2 new_position);
 
   /**
    * Zoom towards or away from the specified target.
