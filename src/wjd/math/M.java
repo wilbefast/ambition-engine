@@ -73,7 +73,7 @@ public abstract class M
    * highest integer value 'i' such that 2^i is less than or equal to the 
    * value in question. 
    * @param x the value to get the integral binary logarithm of.
-   * @return return integeral binary logarithm of x.
+   * @return return integral binary logarithm of x.
    */
   public static int ilog2(double x)
   {
