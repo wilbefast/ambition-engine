@@ -35,6 +35,12 @@ public abstract class M
   
   /* FUNCTIONS */
   
+  /**
+   * Calculate 2 to the power of n.
+   * 
+   * @param n the exponent.
+   * @return  2^n.
+   */
   public static int ipow2(int n)
   {
     return (1 << n);

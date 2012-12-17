@@ -104,6 +104,20 @@ public class BoundedValue implements Serializable
     return this;
   }
   
+  public BoundedValue setMax(float max_)
+  {
+    max = (max_ < min) ? min : max_;
+    balance = bound(balance, min, max);
+    return this;
+  }
+  
+  public BoundedValue setMin(float min_)
+  {
+    min = (min_ > max) ? max : min_;
+    balance = bound(balance, min, max);
+    return this;
+  }
+  
   /**
    * 
    * @param amount how much we're trying to withdraw.
