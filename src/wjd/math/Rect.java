@@ -710,4 +710,14 @@ public class Rect implements Serializable
     destination.xy(x + (float)Math.random()*w, y + (float)Math.random()*h);
     return this;
   }
+  
+  public Rect turn90()
+  {
+    float old_w = w, 
+          old_cx = x + 0.5f*w, 
+          old_cy = y + 0.5f*h;
+    w = h;
+    h = old_w;
+    return centrexy(old_cx, old_cy);
+  }
 }
