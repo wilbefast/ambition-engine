@@ -101,6 +101,11 @@ public class Circle
     result.reset(centre.x-radius, centre.y-radius, 2*radius, 2*radius);
     return this;
   }
+  
+  public float getOverlap(Circle other)
+  {
+    return (other.radius + radius - centre.distance(other.centre));
+  }
 
   // mutators
   
