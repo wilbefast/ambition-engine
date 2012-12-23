@@ -16,8 +16,6 @@
  */
 package wjd.amb.rts;
 
-import wjd.amb.rts.Tile;
-
 /**
  *
  * @author wdyce

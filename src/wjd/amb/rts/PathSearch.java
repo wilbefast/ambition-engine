@@ -22,8 +22,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import wjd.amb.rts.Tile;
-import wjd.amb.rts.TileGrid;
 
 /**
  *
@@ -109,7 +107,7 @@ public class PathSearch
         return true;
 
       // try to expand each neighbour
-      for (Tile t : grid.getNeighbours(x.tile, false))
+      for (Tile t : (Iterable<Tile>)grid.getNeighbours(x.tile, false))
         if(t.isPathable())
           expand(x, t);
 

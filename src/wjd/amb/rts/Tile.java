@@ -16,9 +16,8 @@
  */
 package wjd.amb.rts;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import wjd.amb.control.IDynamic;
+import wjd.amb.view.IVisible;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -27,47 +26,28 @@ import wjd.math.V2;
  * @author wdyce
  * @since Nov 1, 2012
  */
-public abstract class Tile
+public abstract class Tile implements IVisible, IDynamic
 {
   /* CONSTANTS */
-  public static final V2 SIZE = new V2(32, 32);
+  /*public static final V2 SIZE = new V2(32, 32);
   public static final V2 HSIZE = SIZE.clone().scale(0.5f);
-  public static final V2 ISIZE = SIZE.clone().inv();
+  public static final V2 ISIZE = SIZE.clone().inv();*/
 
   /* ATTRIBUTES */
   public final TileGrid grid;
   public final V2 grid_position, pixel_position;
   protected final Rect pixel_area;
-  
+
   /* METHODS */
   
   // constructors
-  public Tile(int row, int col, TileGrid grid)
+  public Tile(int row, int col, V2 size, TileGrid grid)
   {
     grid_position = new V2(col, row);
-    pixel_position = grid_position.clone().scale(SIZE);
-    pixel_area = new Rect(pixel_position, SIZE);
+    pixel_position = grid_position.clone().scale(size);
+    pixel_area = new Rect(pixel_position, size);
     this.grid = grid;
-  }
-  
-  public Tile(ObjectInputStream in, TileGrid grid) throws IOException, ClassNotFoundException
-  {
-    // retrieve grid position and deduce pixel position and area
-    grid_position = (V2)in.readObject();
-    pixel_position = grid_position.clone().scale(SIZE);
-    pixel_area = new Rect(pixel_position, SIZE);
-    this.grid = grid;
-  }
-
-  // mutators
-  
-  public void save(ObjectOutputStream out) throws IOException 
-  {
-    // don't write pixel position or area, as these can be deduced
-    out.writeObject(grid_position);
-   
-    // don't write the grid, or we'll end up with a recursion loop!
-  }
+  } 
   
   /* INTERFACE */
   

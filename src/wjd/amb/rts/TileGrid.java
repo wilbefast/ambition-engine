@@ -16,18 +16,9 @@
  */
 package wjd.amb.rts;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -36,46 +27,31 @@ import wjd.math.V2;
  * @author wdyce
  * @since Nov 9, 2012
  */
-public abstract class TileGrid implements Iterable<Tile>
+public class TileGrid<T extends Tile> implements Iterable<T>
 {
   /* ATTRIBUTES */
 
-  public final Tile[][] tiles;
+  public final T[][] tiles;
+  private final ITileFactory tile_factory;
   private final Rect grid_area;
   private final Rect pixel_area;
 
   /* METHODS */
   
   // constructors
-  protected TileGrid(Tile[][] tiles, Rect grid_area)
+  private TileGrid(T[][] tiles, Rect grid_area, ITileFactory factory)
   {
     this.tiles = tiles;
     this.grid_area = grid_area;
+    this.tile_factory = factory;
     this.pixel_area 
-      = new Rect(grid_area.pos(), grid_area.size().add(1,1)).mult(Tile.SIZE);
+      = new Rect(grid_area.pos(), grid_area.size().add(1,1)).mult(tile_factory.getTileSize());
   }
   
-  public TileGrid(V2 size)
+  public TileGrid(V2 size, ITileFactory factory)
   {
-    this(new Tile[(int)size.y][(int)size.x], 
-         new Rect(V2.ORIGIN, size.clone().dinc()).floor());
-  }
-  
-  public TileGrid(File file) throws IOException, ClassNotFoundException
-  {
-    // open file
-    ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-    
-    // recover size and reallocate matrix
-    grid_area = (Rect)in.readObject();
-    this.pixel_area 
-      = new Rect(grid_area.pos(), grid_area.size().add(1,1)).mult(Tile.SIZE);
-    tiles = new Tile[(int)grid_area.h + 1][(int)grid_area.w + 1];
-    
-    // fill matrix with values
-    for (int row = (int) grid_area.y; row <= (int)(grid_area.endy()); row++)
-      for (int col = (int) grid_area.x; col <= (int) (grid_area.endx()); col++)
-        tiles[row][col] = createTile(in);
+    this((T[][])new Object[(int)size.y][(int)size.x], 
+         new Rect(V2.ORIGIN, size.clone().dinc()).floor(), factory);
   }
 
   // mutators
@@ -87,7 +63,7 @@ public abstract class TileGrid implements Iterable<Tile>
     // set all tiles as free
     for (int row = (int) grid_area.y; row <= (int)(grid_area.endy()); row++)
       for (int col = (int) grid_area.x; col <= (int) (grid_area.endx()); col++)
-        tiles[row][col] = createTile(row, col); 
+        tiles[row][col] = (T)tile_factory.create(row, col, this);
     return this;
   }
 
@@ -106,9 +82,9 @@ public abstract class TileGrid implements Iterable<Tile>
    * @return the Tile at the specified position or null if there position is
    * invalid (outside of the grid).
    */
-  public Tile pixelToTile(V2 pixel_pos)
+  public T pixelToTile(V2 pixel_pos)
   {
-    V2 grid_pos = pixel_pos.clone().scale(Tile.ISIZE).floor();
+    V2 grid_pos = pixel_pos.clone().scale(tile_factory.getTileISize()).floor();
     return (validGridPos(grid_pos) 
             ? tiles[(int)grid_pos.y][(int)grid_pos.x] 
             : null);
@@ -122,7 +98,7 @@ public abstract class TileGrid implements Iterable<Tile>
    * @return the Tile at the specified position or null if there position is
    * invalid (outside of the grid).
    */
-  public Tile gridToTile(V2 grid_pos)
+  public T gridToTile(V2 grid_pos)
   {
     return (validGridPos(grid_pos) 
             ? tiles[(int)grid_pos.y][(int)grid_pos.x] 
@@ -139,24 +115,26 @@ public abstract class TileGrid implements Iterable<Tile>
   public TileGrid createSubGrid(Rect sub_area)
   {
     // build the sub-field
-    int min_col = (int)(sub_area.x * Tile.ISIZE.x),
-        min_row = (int)(sub_area.y * Tile.ISIZE.y),
-        max_col = (int)(sub_area.endx() * Tile.ISIZE.x),
-        max_row = (int)(sub_area.endy() * Tile.ISIZE.y);
+    int min_col = (int)(sub_area.x * tile_factory.getTileISize().x),
+        min_row = (int)(sub_area.y * tile_factory.getTileISize().y),
+        max_col = (int)(sub_area.endx() * tile_factory.getTileISize().x),
+        max_row = (int)(sub_area.endy() * tile_factory.getTileISize().y);
     Rect sub_grid_area 
       = new Rect(min_col, min_row, max_col-min_col, max_row-min_row);
     
     // constrain
     sub_grid_area = sub_grid_area.getIntersection(grid_area);
-    return (sub_grid_area == null) ? null : createTileGrid(sub_area);
+    return (sub_grid_area == null) 
+           ? null 
+           : new TileGrid(tiles, sub_grid_area, tile_factory);
   }
 
-  public List<Tile> getNeighbours(Tile tile, boolean diagonals)
+  public List<T> getNeighbours(T tile, boolean diagonals)
   {
     // local variables
     V2 pos = new V2();
-    Tile neighbour;
-    LinkedList<Tile> neighbour_list = new LinkedList<Tile>();
+    T neighbour;
+    LinkedList<T> neighbour_list = new LinkedList<T>();
     
     // add applicable neighbours
     for(int row = -1; row < 2; row++)
@@ -184,33 +162,7 @@ public abstract class TileGrid implements Iterable<Tile>
     return (grid_pos.x >= 0 && grid_pos.y >= 0
             && grid_pos.y < tiles.length && grid_pos.x < tiles[0].length);
   }
-
-  // externalise
-
-  public TileGrid save(File file)
-  {
-    try
-    {
-      // open specified file and write the object
-      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-      out.writeObject(grid_area);
-      for(Tile t : this)
-        t.save(out);
-    }
-    catch (FileNotFoundException ex)
-    {
-      Logger.getLogger(TileGrid.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (IOException ex)
-    {
-      Logger.getLogger(TileGrid.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    finally
-    {
-      return this;
-    }
-  }
-
+  
   /* OVERRIDES -- OBJECT */
   @Override
   public String toString()
@@ -219,7 +171,7 @@ public abstract class TileGrid implements Iterable<Tile>
   }
 
   /* IMPLEMENTS -- ITERABLE */
-  public static class RowByRow implements Iterator<Tile>
+  private class RowByRow implements Iterator<T>
   {
     // attributes
 
@@ -240,9 +192,9 @@ public abstract class TileGrid implements Iterable<Tile>
     }
 
     @Override
-    public Tile next()
+    public T next()
     {
-      Tile previous = tilegrid.gridToTile(current_pos);
+      T previous = (T)tilegrid.gridToTile(current_pos);
       
       // overlap collumns
       current_pos.x++;
@@ -267,15 +219,8 @@ public abstract class TileGrid implements Iterable<Tile>
   }
 
   @Override
-  public Iterator<Tile> iterator()
+  public Iterator<T> iterator()
   {
     return new RowByRow(this);
   }
-  
-  
-    
-  /* INTERFACE */
-  public abstract Tile createTile(int row, int col);
-  public abstract Tile createTile(ObjectInputStream in) throws IOException, ClassNotFoundException;
-  public abstract TileGrid createTileGrid(Rect sub_area);
 }
