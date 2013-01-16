@@ -63,6 +63,11 @@ public class BoundedValue implements Serializable
   {
     this(0, 0, max);
   }
+  
+  public BoundedValue()
+  {
+    this(0, 0, 1);
+  }
 
   // accessors
   

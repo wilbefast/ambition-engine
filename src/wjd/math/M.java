@@ -96,7 +96,7 @@ public abstract class M
   }
   
   /**
-   * Generate a value with a random sign and a capped abosolute value.
+   * Generate a value with a random sign and a capped absolute value.
    * 
    * @param value the maximum/minimum value to generate.
    * @param r the Random object to use to generate the pseudo-random number.
@@ -106,5 +106,29 @@ public abstract class M
   {
     double x = (r != null) ? r.nextDouble() : Math.random();
     return (x < 0.5f) ? value*2*x : value*2*(x-0.5f);
+  }
+  
+  /**
+   * Return whichever of two numbers has the highest absolute value.
+   * 
+   * @param a a double-precision real number.
+   * @param b another double-precision real number.
+   * @return a if abs(a) > abs(b), b otherwise
+   */
+  public static double maxAbs(double a, double b)
+  {
+    return (Math.abs(a) > Math.abs(b)) ? a : b;
+  }
+  
+  /**
+   * Return whichever of two numbers has the lowest absolute value.
+   * 
+   * @param a a double-precision real number.
+   * @param b another double-precision real number.
+   * @return a if abs(a) < abs(b), b otherwise
+   */
+  public static double minAbs(double a, double b)
+  {
+    return (Math.abs(a) < Math.abs(b)) ? a : b;
   }
 }

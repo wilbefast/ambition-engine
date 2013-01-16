@@ -54,5 +54,10 @@ public enum EUpdateResult
    * The updated object is waiting for something so that it can complete its 
    * task.
    */
-  BLOCKED
+  BLOCKED,
+  /**
+   * The updated object wishes to cancel its appointed task.
+   * 
+   */
+  CANCEL
 };

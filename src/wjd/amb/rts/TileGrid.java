@@ -32,23 +32,23 @@ public class TileGrid<T extends Tile> implements Iterable<T>
   /* ATTRIBUTES */
 
   public final T[][] tiles;
-  private final ITileFactory tile_factory;
+  private final ITileType factory;
   private final Rect grid_area;
   private final Rect pixel_area;
 
   /* METHODS */
   
   // constructors
-  private TileGrid(T[][] tiles, Rect grid_area, ITileFactory factory)
+  private TileGrid(T[][] tiles, Rect grid_area, ITileType factory)
   {
     this.tiles = tiles;
     this.grid_area = grid_area;
-    this.tile_factory = factory;
+    this.factory = factory;
     this.pixel_area 
-      = new Rect(grid_area.pos(), grid_area.size().add(1,1)).mult(tile_factory.getTileSize());
+      = new Rect(grid_area.pos(), grid_area.size().add(1,1)).mult(factory.getSize());
   }
   
-  public TileGrid(V2 size, ITileFactory factory)
+  public TileGrid(V2 size, ITileType factory)
   {
     this((T[][])new Object[(int)size.y][(int)size.x], 
          new Rect(V2.ORIGIN, size.clone().dinc()).floor(), factory);
@@ -63,7 +63,7 @@ public class TileGrid<T extends Tile> implements Iterable<T>
     // set all tiles as free
     for (int row = (int) grid_area.y; row <= (int)(grid_area.endy()); row++)
       for (int col = (int) grid_area.x; col <= (int) (grid_area.endx()); col++)
-        tiles[row][col] = (T)tile_factory.create(row, col, this);
+        tiles[row][col] = (T)factory.create(row, col, this);
     return this;
   }
 
@@ -84,7 +84,7 @@ public class TileGrid<T extends Tile> implements Iterable<T>
    */
   public T pixelToTile(V2 pixel_pos)
   {
-    V2 grid_pos = pixel_pos.clone().scale(tile_factory.getTileISize()).floor();
+    V2 grid_pos = pixel_pos.clone().scale(factory.getISize()).floor();
     return (validGridPos(grid_pos) 
             ? tiles[(int)grid_pos.y][(int)grid_pos.x] 
             : null);
@@ -115,10 +115,10 @@ public class TileGrid<T extends Tile> implements Iterable<T>
   public TileGrid createSubGrid(Rect sub_area)
   {
     // build the sub-field
-    int min_col = (int)(sub_area.x * tile_factory.getTileISize().x),
-        min_row = (int)(sub_area.y * tile_factory.getTileISize().y),
-        max_col = (int)(sub_area.endx() * tile_factory.getTileISize().x),
-        max_row = (int)(sub_area.endy() * tile_factory.getTileISize().y);
+    int min_col = (int)(sub_area.x * factory.getISize().x),
+        min_row = (int)(sub_area.y * factory.getISize().y),
+        max_col = (int)(sub_area.endx() * factory.getISize().x),
+        max_row = (int)(sub_area.endy() * factory.getISize().y);
     Rect sub_grid_area 
       = new Rect(min_col, min_row, max_col-min_col, max_row-min_row);
     
@@ -126,7 +126,7 @@ public class TileGrid<T extends Tile> implements Iterable<T>
     sub_grid_area = sub_grid_area.getIntersection(grid_area);
     return (sub_grid_area == null) 
            ? null 
-           : new TileGrid(tiles, sub_grid_area, tile_factory);
+           : new TileGrid(tiles, sub_grid_area, factory);
   }
 
   public List<T> getNeighbours(T tile, boolean diagonals)

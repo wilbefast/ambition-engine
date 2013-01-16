@@ -23,19 +23,24 @@ import wjd.math.V2;
  * @author wdyce
  * @since Dec 23, 2012
  */
-public interface ITileFactory
+public interface ITileType
 {
   /* INTERFACE */
   
   public Tile create(int row, int col, TileGrid grid);
   
-  public Tile[] createArray(int n_rows);
+  /**
+   * @return the size of the tiles of this type.
+   */
+  public V2 getSize();
   
-  public Tile[][] createMatrix(int n_rows, int n_cols);
+  /**
+   * @return half the size of the tiles of this type.
+   */
+  public V2 getHSize();
   
-  public V2 getTileSize();
-  
-  public V2 getTileHSize();
-  
-  public V2 getTileISize();
+  /**
+   * @return inverse of the size of the tiles of this type.
+   */
+  public V2 getISize();
 }

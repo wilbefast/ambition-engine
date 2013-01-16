@@ -122,5 +122,20 @@ public class Circle
     return this;
   }
   
+  public Circle reset(Circle source)
+  {
+    centre.x = source.centre.x;
+    centre.y = source.centre.y;
+    radius = source.radius;
+    return this;
+  }
+  
+  public Circle mult(V2 v)
+  {
+    centre.x *= v.x;
+    centre.y *= v.y;
+    radius *= (v.x + v.y)*0.5;
+    return this;
+  }
   
 }
