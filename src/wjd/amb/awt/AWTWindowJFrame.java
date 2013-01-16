@@ -49,11 +49,27 @@ public class AWTWindowJFrame  extends JFrame
     setContentPane(awtCanvas);
     // set input
     addKeyListener(awtInput);
-    addMouseListener(awtInput);
-    addMouseMotionListener(awtInput);
-    addMouseWheelListener(awtInput);
-    // This should always be last
+    awtCanvas.addMouseListener(awtInput);
+    awtCanvas.addMouseMotionListener(awtInput);
+    awtCanvas.addMouseWheelListener(awtInput);
+    
+    // This should always be last of all the AWT commands
     setVisible(true);
+    
+    //awtInput.setOffset();
+    
+    /*int w = getWidth(), inner_w = getContentPane().getWidth();
+    System.out.println("location: " + this.getLocation());
+    System.out.println("content pane location: " + this.getContentPane().getLocation());
+    
+    System.out.println("frame width : "+getWidth());
+    System.out.println("frame height: "+getHeight());
+    System.out.println("content pane width : "+getContentPane().getWidth());
+    System.out.println("content pane height: "+getContentPane().getHeight());
+    System.out.println("width  of left + right  borders: "+(getWidth()-getContentPane ().getWidth()));
+    System.out.println("height of top  + bottom borders: "+(getHeight()-getContentPane().getHeight()));*/
+
+
   }
   
   // accessors
