@@ -29,7 +29,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 import javax.swing.JPanel;
 import wjd.amb.resources.ITexture;
@@ -179,7 +181,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   } 
   
   /* ATTRIBUTES */
-  private Set<DrawCommand> draw_queue;
+  private /*Set*/Queue<DrawCommand> draw_queue;
   private ICamera camera = null;
   private V2 size = new V2();
   private boolean use_camera = false;
@@ -192,7 +194,7 @@ public class AWTCanvas extends JPanel implements ICanvas
    */
   public AWTCanvas()
   {
-    draw_queue = new LinkedHashSet<DrawCommand>();
+    draw_queue = new LinkedList<DrawCommand>();//new LinkedHashSet<DrawCommand>();
   }
   
   /* IMPLEMENTATIONS -- ICANVAS */
@@ -432,6 +434,25 @@ public class AWTCanvas extends JPanel implements ICanvas
           g2d.drawImage(subimage, (int)p_dest.x, (int)p_dest.y, 
                                   (int)p_dest.w, (int)p_dest.h, 
                                   null);
+          
+          /*          
+          // Draw it on the screen
+          if(img_cmd.source == null) 
+            img_cmd.source = new Rect(0, 0, img_cmd.image.getWidth(), 
+                                            img_cmd.image.getHeight());
+          Rect p_dest = (use_camera) ? camera.getPerspective(img_cmd.dest).ceil() 
+                                    : img_cmd.dest;
+          g2d.drawImage(img_cmd.image, 
+            (int)p_dest.x, 
+            (int)p_dest.y, 
+            (int)(p_dest.x + p_dest.w), 
+            (int)(p_dest.y + p_dest.h), 
+            (int)img_cmd.source.x, 
+            (int)img_cmd.source.y, 
+            (int)(img_cmd.source.x + img_cmd.source.w), 
+            (int)(img_cmd.source.y + img_cmd.source.h),
+                                  null);
+           */
         }
         catch (java.awt.image.RasterFormatException e)
         {
