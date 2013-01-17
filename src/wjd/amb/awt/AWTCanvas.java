@@ -28,11 +28,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Set;
 import javax.swing.JPanel;
 import wjd.amb.resources.ITexture;
 import wjd.amb.view.Colour;
@@ -127,9 +125,11 @@ public class AWTCanvas extends JPanel implements ICanvas
     public BufferedImage image;
     
     // methods
-    public DrawImage(Rect source, Rect dest, BufferedImage image)
+    public DrawImage(Rect source, Rect dest, BufferedImage image, ICamera c)
     {
-      this.source = source; this.dest = dest; this.image = image;
+      this.source = source; 
+      this.dest = (c != null) ? c.getPerspective(dest).ceil() : dest; 
+      this.image = image;
     }
 
     @Override
@@ -274,7 +274,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public synchronized ICanvas setCameraActive(boolean use_camera)
   {
-    this.use_camera = use_camera;
+    this.use_camera = use_camera; // FIXME
     return this;
   }
 
@@ -343,7 +343,8 @@ public class AWTCanvas extends JPanel implements ICanvas
       return;
     AWTTexture awt_texture = (AWTTexture)texture;
     
-    draw_queue.add(new DrawImage(source, destination, awt_texture.getImage()));
+    draw_queue.add(new DrawImage(source, destination, awt_texture.getImage(),
+                        use_camera ? camera : null));
   }
   
   @Override
@@ -428,11 +429,8 @@ public class AWTCanvas extends JPanel implements ICanvas
                                   (int)img_cmd.source.w, (int)img_cmd.source.h)
                           : img_cmd.image;
           // Draw it on the screen
-          
-          Rect p_dest = (use_camera) ? camera.getPerspective(img_cmd.dest).ceil() 
-                                    : img_cmd.dest;
-          g2d.drawImage(subimage, (int)p_dest.x, (int)p_dest.y, 
-                                  (int)p_dest.w, (int)p_dest.h, 
+          g2d.drawImage(subimage, (int)img_cmd.dest.x, (int)img_cmd.dest.y, 
+                                  (int)img_cmd.dest.w, (int)img_cmd.dest.h, 
                                   null);
           
           /*          
