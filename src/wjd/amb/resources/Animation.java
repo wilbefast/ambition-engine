@@ -62,20 +62,24 @@ public class Animation extends Graphic
   }
 
   // query
-  public Rect getFrame(double frame_number)
+  public void getFrame(double frame_number, Rect result)
   {
     if (frame_number == 0)
-      return getFrame();
+      result.reset(frame);
 
-    // check that the requested area is not out of bounds
-    int offset = (int) (Math.floor(frame_number) * frame.w);
-    if (offset + frame.w > strip.w)
-      return frame;
+    else
+    {
+      // check that the requested area is not out of bounds
+      int offset = (int) (Math.floor(frame_number) * frame.w);
+      if (offset + frame.w > strip.w)
+        result.reset(frame);
 
-    // return a translated version of the frame
-    Rect result = frame.clone();
-    result.shift(offset, 0);
-    return result;
+      else
+      {
+        // return a translated version of the frame
+        result.reset(frame.x + offset, frame.y, frame.w, frame.h);
+      }
+    }
   }
 
   public int getNumFrames()

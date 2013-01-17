@@ -100,9 +100,9 @@ public class AnimationCanvas extends GraphicCanvas implements IDynamic
   
   /* SUBROUTINES */
   @Override
-  protected Rect getSubrect()
+  protected void getSubrect(Rect result)
   {
     // offset the frame based on current animation subimage
-    return ((Animation) graphic).getFrame(current_frame);
+    ((Animation) graphic).getFrame(current_frame, result);
   }
 }

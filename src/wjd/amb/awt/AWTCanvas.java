@@ -318,7 +318,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   public synchronized void box(Rect rect, boolean fill)
   {
     // move based on camera position where applicable
-    Rect pov_rect = (use_camera) ? camera.getPerspective(rect) : rect;
+    Rect pov_rect = (use_camera) ? camera.getPerspective(rect).ceil() : rect;
     
     draw_queue.add(new DrawShape(
       new Rectangle2D.Float(pov_rect.x, pov_rect.y, 
@@ -426,8 +426,11 @@ public class AWTCanvas extends JPanel implements ICanvas
                                   (int)img_cmd.source.w, (int)img_cmd.source.h)
                           : img_cmd.image;
           // Draw it on the screen
-          g2d.drawImage(subimage, (int)img_cmd.dest.x, (int)img_cmd.dest.y, 
-                                  (int)img_cmd.dest.w, (int)img_cmd.dest.h, 
+          
+          Rect p_dest = (use_camera) ? camera.getPerspective(img_cmd.dest).ceil() 
+                                    : img_cmd.dest;
+          g2d.drawImage(subimage, (int)p_dest.x, (int)p_dest.y, 
+                                  (int)p_dest.w, (int)p_dest.h, 
                                   null);
         }
         catch (java.awt.image.RasterFormatException e)

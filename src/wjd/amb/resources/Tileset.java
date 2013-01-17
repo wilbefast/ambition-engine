@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2012 William James Dyce
+ Copyright (C) 2013 William James Dyce
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -20,34 +20,33 @@ package wjd.amb.resources;
 import wjd.math.Rect;
 
 /**
- * 
- * 
- * @author wjd
- * @since jan-2012
+ *
+ * @author wdyce
+ * @since Jan 16, 2013
  */
-public class Graphic
+public class Tileset extends Graphic
 {
   /* ATTRIBUTES */
-  protected ITexture image;
-  protected Rect frame;
+  private int n_across, n_high;
 
   /* METHODS */
   
   // constructors
-  public Graphic(ITexture texture, Rect frame)
+  public Tileset(ITexture _texture, Rect _frame, int _n_across, int _n_high)
   {
-    this.image = texture;
-    this.frame = frame;
+    super(_texture, _frame);
+    this.n_across = _n_across;
+    this.n_high = _n_high;
   }
-
-  // accessors
-  public ITexture getTexture()
+  
+  // query
+  public void getFrame(int n, Rect result)
   {
-    return image;
-  }
+    
+    //convert from 'n'th image to 'y'th line and 'x'th collumn
+    int row = n / n_across;
+    int col = n % n_across;
 
-  public void getFrame(Rect result)
-  {
-    result.reset(frame);
+    result.reset(col * frame.w, row * frame.h, frame.w, frame.h);
   }
 }

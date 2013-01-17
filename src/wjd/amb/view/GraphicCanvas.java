@@ -31,7 +31,7 @@ public class GraphicCanvas implements IVisible
   /* ATTRIBUTES */
 
   protected Graphic graphic;
-  protected Rect dest;
+  protected Rect src = new Rect(), dest;
   protected boolean flip = false;
 
   /* METHODS */
@@ -40,7 +40,7 @@ public class GraphicCanvas implements IVisible
   public GraphicCanvas(Graphic init_graphic, Rect init_dest)
   {
     graphic = init_graphic;
-    dest = init_dest;
+    dest = init_dest.clone();
   }
   
   // mutators
@@ -66,15 +66,16 @@ public class GraphicCanvas implements IVisible
   @Override
   public void render(ICanvas canvas)
   {
-    canvas.texture(graphic.getTexture(), getSubrect(), dest);
+    getSubrect(src);
+    canvas.texture(graphic.getTexture(), src, dest);
   }
 
   
   /* SUBROUTINES */
   
-  protected Rect getSubrect()
+  protected void getSubrect(Rect result)
   {
     // This is overriden for animated canvases
-    return graphic.getFrame();
+    graphic.getFrame(result);
   }
 }

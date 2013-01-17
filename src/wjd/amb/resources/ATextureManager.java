@@ -47,6 +47,7 @@ public abstract class ATextureManager
   private HashMap<String, ITexture> textures;
   private HashMap<String, Graphic> graphics;
   private HashMap<String, Animation> animations;
+  private HashMap<String, Tileset> tilesets;
 
   /* METHODS */
   // creation
@@ -55,6 +56,7 @@ public abstract class ATextureManager
     textures = new HashMap<String, ITexture>();
     graphics = new HashMap<String, Graphic>();
     animations = new HashMap<String, Animation>();
+    tilesets = new HashMap<String, Tileset>();
   }
 
   // accessors
@@ -71,6 +73,11 @@ public abstract class ATextureManager
   public Animation getAnimation(String animation_name)
   {
     return animations.get(animation_name);
+  }
+  
+  public Tileset getTileset(String tileset_name)
+  {
+    return tilesets.get(tileset_name);
   }
 
   // mutators
@@ -96,6 +103,15 @@ public abstract class ATextureManager
     animations.put(anim_name, new_anim);
   }
   
+  public void addTileset(String tileset_name, String texture_name,
+                              Rect frame, int n_across, int n_high)
+  {
+    Tileset new_tileset = new Tileset(getTexture(texture_name), frame,
+                                       n_across, n_high);
+    tilesets.put(tileset_name, new_tileset);
+  }
+  
+    
   /* INTERFACE */
   
   protected abstract ITexture loadTexture(String filename, ImageFileType type);

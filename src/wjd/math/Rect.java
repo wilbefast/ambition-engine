@@ -420,7 +420,9 @@ public class Rect implements Serializable
    */
   public Rect shift(float shift_x, float shift_y)
   {
-    return xy(x + shift_x, y + shift_y);
+    x += shift_x;
+    y += shift_y;
+    return this;
   }
 
   /**
@@ -433,7 +435,16 @@ public class Rect implements Serializable
    */
   public Rect stretch(float multiplier)
   {
-    return wh(w * multiplier, h * multiplier);
+    w *= multiplier;
+    h *= multiplier;
+    return this;
+  }
+  
+  public Rect stretch(int dw, int dh)
+  {
+    w += dw;
+    h += dh;
+    return this;
   }
 
   // element-wise arithmetic mutators
@@ -446,7 +457,9 @@ public class Rect implements Serializable
    */
   public Rect pos(V2 position)
   {
-    return xy(position.x, position.y);
+    x = position.x;
+    y = position.y;
+    return this;
   }
   
   public Rect endpos(V2 endposition)
@@ -711,6 +724,11 @@ public class Rect implements Serializable
     return this;
   }
   
+  /**
+   * Swap the width and height.
+   * 
+   * @return this, so that multiple operations can be queued.
+   */
   public Rect turn90()
   {
     float old_w = w, 
